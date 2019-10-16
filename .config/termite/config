@@ -1,0 +1,42 @@
+[options]
+font = iA Writer Mono S 10
+
+[colors]
+
+# special
+foreground      = #cfccbe
+foreground_bold = #cfccbe
+cursor          = #cfccbe
+background      = rgba(45, 49, 68)
+
+# black
+color0  = #2f3447
+color8  = #525a69
+
+# red
+color1  = #8d6d5c
+color9  = #8d6d5c
+
+# green
+color2  = #6d806d
+color10  = #6d806d
+
+# yellow
+color3  = #96915d
+color11 = #96915d
+
+# blue
+color4  = #68758d
+color12 = #68758d
+
+# magenta
+color5  = #8a747b
+color13 = #8a747b
+
+# cyan
+color6  = #8d97a8
+color14 = #8d97a8
+
+# white
+color7  = #cfccbe
+color15 = #f0efeb

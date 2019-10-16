@@ -1,0 +1,16 @@
+# configuration file for betterlockscreen
+
+insidecolor=22222200
+ringcolor=c2c2c2ff
+keyhlcolor=4d4d4dff
+bshlcolor=4d4d4dff
+separatorcolor=22222200
+insidevercolor=22222200
+insidewrongcolor=4d4d4dff
+ringvercolor=c2c2c2ff
+ringwrongcolor=c2c2c2ff
+verifcolor=c2c2c2ff
+timecolor=c2c2c2ff
+datecolor=c2c2c2ff
+loginbox=22222266
+locktext="Type password to unlock..."

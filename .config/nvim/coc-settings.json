@@ -1,0 +1,18 @@
+{
+	"suggest.autoTrigger": "always",
+	"suggest.timeout": 1500,
+
+	"diagnostic.displayByAle": true,
+
+	"python.jediEnabled": false,
+
+	"java.completion.overwrite": true,
+
+	"languageserver": {
+	    "lua": {
+	      "command": "/home/yack/.luarocks/bin/lua-lsp",
+	      "filetypes": ["lua"]
+	    }
+  },
+  "java.errors.incompleteClasspath.severity": "ignore"
+}
