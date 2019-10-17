@@ -94,9 +94,15 @@ let g:ale_fixers = {
 			\ 'python': ['autopep8', 'yapf', 'remove_trailing_lines', 'trim_whitespace'],
 			\ 'javascript': ['eslint', 'prettier', 'importjs'],
 			\ 'java': ['google_java_format', 'remove_trailing_lines', 'trim_whitespace'],
+			\ 'html': ['prettier'],
 			\ '*': ['remove_trailing_lines', 'trim_whitespace']
 			\}
-let g:ale_linters = { 'python': ['flake8', 'mypy']}
+let g:ale_linters = {
+			\ 'python': ['bandit'],
+			\ 'javascript': ['prettier'],
+			\ 'java': ['javac'],
+			\ 'html': ['prettier'],
+			\}
 let g:ale_java_javac_executable='/home/yack/.sdkman/candidates/java/current/bin/javac'
 let g:ale_java_eclipselsp_path='/usr/bin/'
 let g:ale_java_eclipselsp_executable='jdtls'
@@ -111,6 +117,15 @@ let g:lightline.enable = {
 	\ 'tabline': 1
 	\}
 
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+
+let g:lightline.component_function = {
+	\ 'cocstatus': 'coc#status',
+	\ 'currentfunction': 'CocCurrentFunction'
+	\ }
+
 let g:lightline.component_expand = {
       \  'linter_checking': 'lightline#ale#checking',
       \  'linter_warnings': 'lightline#ale#warnings',
@@ -123,9 +138,12 @@ let g:lightline.component_type = {
       \     'linter_errors': 'error',
       \     'linter_ok': 'left',
       \ }
-let g:lightline.active = { 'right': [ ['lineinfo'],
-			\ ['percent'], ['fileformat', 'fileencoding', 'filetype'],
-			\ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]] }
+let g:lightline.active = {
+			\ 'left': [ [ 'mode', 'paste' ],
+      				\ [ 'cocstatus', 'currentfunction', 'readonly', 'filename', 'modified' ] ],
+			\ 'right': [ ['lineinfo'],
+				\ ['percent'], ['fileformat', 'fileencoding', 'filetype'],
+				\ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]] }
 let g:lightline.colorscheme = 'hybrid'
 set noshowmode " Only show mode in lightline
 
