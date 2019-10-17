@@ -92,9 +92,10 @@ let g:netrw_banner = 0
 " ALE
 let g:ale_fixers = {
 			\ 'python': ['autopep8', 'yapf', 'remove_trailing_lines', 'trim_whitespace'],
-			\ 'javascript': ['eslint', 'prettier', 'importjs'],
 			\ 'java': ['google_java_format', 'remove_trailing_lines', 'trim_whitespace'],
+			\ 'javascript': ['prettier'],
 			\ 'html': ['prettier'],
+			\ 'json': ['prettier'],
 			\ '*': ['remove_trailing_lines', 'trim_whitespace']
 			\}
 let g:ale_linters = {
@@ -209,9 +210,9 @@ let g:gutentags_cache_dir = '/home/yack/.cache/gutentags'
 " Startify
 let g:startify_bookmarks = [
 			\ {'h': '~/doc/sbu/cse/'},
-			\ {'p' : '~/doc/pyt/'},
-			\ {'d': '~/etc/dots/'},
-			\ {'v': '~/etc/dots/nvim/.config/nvim/init.vim'}
+			\ {'c' : '~/doc/code/'},
+			\ {'s': '~/doc/code/cur/opensmash'},
+			\ {'v': '~/.config/nvim/init.vim'},
 			\]
 " Tagbar
 " let g:tagbar_ctags_bin = '/home/yack/shr/ctags/bin/ctags'
