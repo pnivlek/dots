@@ -409,14 +409,6 @@ let g:lightline.colorscheme = 'deus'
 set noshowmode " Only show mode in lightline
 
 let g:tmuxline_powerline_separators = 0
-let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'b'    : '#W',
-      \'win'  : '#I #W',
-      \'cwin' : '#I #W',
-      \'y'    : ['%R','%a', '%D'],
-      \'z'    : '#H'
-      \}
 " }}}
 
 " Git ----------------------------------------{{{
