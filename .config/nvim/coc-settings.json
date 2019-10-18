@@ -17,6 +17,15 @@
 		"lua": {
 			"command": "/home/yack/.luarocks/bin/lua-lsp",
 			"filetypes": ["lua"]
-		}
+		},
+		"flow": {
+		      "command": "flow",
+		      "args": ["lsp"],
+		      "filetypes": ["javascript", "javascriptreact"],
+		      "initializationOptions": {},
+		      "requireRootPattern": true,
+		      "settings": {},
+		      "rootPatterns": [".flowconfig"]
+    		}
 	}
 }
