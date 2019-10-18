@@ -35,6 +35,7 @@ Plug 'editorconfig/editorconfig-vim'
 " UI {{{
 Plug 'Shougo/defx.nvim'
 Plug 'kristijanhusak/defx-git'
+Plug 'mbbill/undotree'
 Plug 'maximbaz/lightline-ale'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
@@ -94,6 +95,7 @@ set visualbell
 set termguicolors
 set undofile
 set undodir="~/.local/share/nvim/undo"
+set inccommand=nosplit
 
 set background=dark
 colorscheme deus
@@ -130,8 +132,8 @@ let g:gutentags_cache_dir = '/home/yack/.cache/gutentags'
 
 " Startify
 let g:startify_bookmarks = [
-			\ {'h': '~/doc/sbu/cse/'},
-			\ {'c' : '~/doc/code/'},
+			\ {'h': '~/doc/code/edu/'},
+			\ {'c' : '~/doc/code/cur/'},
 			\ {'s': '~/doc/code/cur/opensmash'},
 			\ {'d': '~/doc/code/cur/sbso'},
 			\ {'v': '~/.config/nvim/init.vim'},
@@ -143,8 +145,18 @@ let g:startify_bookmarks = [
 let mapleader = '\'
 map <space> \
 
-" Files
-map <Leader>of :Explore<CR>
+" Repeat last macro, instead of ex mode.
+nnoremap Q @@
+
+" Window switching
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+
+
+" Undotree
+map <Leader>ou :UndotreeToggle<CR>
 " toggle
 map <Leader>ot :TagbarToggle<CR>
 " open and focus
@@ -225,7 +237,7 @@ map <Leader>bd :Bdelete<CR>
     nnoremap <silent><buffer><expr> m defx#do_action('create_directory')
     nnoremap <silent><buffer><expr> P defx#do_action('paste')
     nnoremap <silent><buffer><expr> R defx#do_action('rename')
-    nnoremap <silent><buffer><expr> D defx#do_action('remove_trash')
+    nnoremap <silent><buffer><expr> D defx#do_action('remove')
     nnoremap <silent><buffer><expr> a defx#do_action('new_multiple_files')
     nnoremap <silent><buffer><expr> A defx#do_action('new_multiple_files')
     nnoremap <silent><buffer><expr> l defx#do_action('open', 'vsplit')
