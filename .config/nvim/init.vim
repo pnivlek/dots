@@ -153,8 +153,7 @@ map <Leader>oo :TagbarOpen fj<CR>
 map <Leader>og :TagbarOpen fjc<CR>
 
 " Highlighting searches
-map <Leader>hh :set hlsearch<CR>
-map <Leader>hn :set nohlsearch<CR>
+map <Leader>hh :set hlsearch!<CR>
 
 " Tabs
 map <Leader>tp :tabp<CR>
@@ -355,7 +354,8 @@ call deoplete#custom#source('LanguageClient', 'mark', '')
 call deoplete#custom#source('file', 'mark', '')
 call deoplete#custom#source('buffer', 'mark', 'ℬ')
 
-let g:neosnippet#snippets_directory='~/.config/nvim/plugged/vim-snippets/snippets'
+let g:neosnippet#snippets_directory = ['~/.config/nvim/plugged/vim-snippets/snippets',
+				     \ '~/.config/nvim/custom_snippets']
 let g:neosnippet#enable_snipmate_compatibility = 1
 
 " AutoPairs + Neosnippets + Deoplete hotkeys
