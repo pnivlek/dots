@@ -9,10 +9,11 @@ windows:
         - editor:
                 panes:
                         - nvim
-        - status:
+        - music:
                 panes:
-                        - htop
+                        - ncmpcpp
+                        -
         - persist:
                 panes:
                         - ana fml && redbot fml
-                        -
+                        - htop

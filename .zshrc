@@ -28,8 +28,13 @@ export PATH=$PATH:/home/yack/bin
 alias ana="source /home/yack/doc/ana/bin/activate"
 alias dana="conda deactivate"
 
-cd_home() { cd "/home/yack" ; }
-cd_home
+# Music downloading
+mp3 () {
+	youtube-dl --ignore-errors -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o '~/usr/mus/yt/%(title)s.%(ext)s' "$1"
+}
+mp3p () {
+	youtube-dl --ignore-errors -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o '~/usr/mus/yt/%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' "$1"
+}
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/yack/.sdkman"

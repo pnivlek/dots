@@ -41,7 +41,6 @@ Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'moll/vim-bbye'
 Plug 'mhinz/vim-startify'
-Plug 'IMOKURI/line-number-interval.nvim'
 Plug 'Yggdroot/indentLine'
 Plug 'ajmwagar/vim-deus'
 Plug 'ajmwagar/lightline-deus'
@@ -58,8 +57,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'rhysd/git-messenger.vim'
 " }}}
 " snippets {{{
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'SirVer/Ultisnips'
 Plug 'honza/vim-snippets'
 " }}}
 " python {{{
@@ -97,8 +95,15 @@ set undofile
 set undodir="~/.local/share/nvim/undo"
 set inccommand=nosplit
 
-set background=dark
+set t_Co=256
+set termguicolors
+
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+set background=dark    " Setting dark mode
 colorscheme deus
+let g:deus_termcolors=256
 
 augroup general
 	" Remember cursor position between vim sessions
@@ -120,15 +125,10 @@ let g:LanguageClient_serverCommands = {}
 " leave diagnostics to ALE
 let g:LanguageClient_diagnosticsEnable = 0
 
-" Line Number Interval
-let g:line_number_interval#enable_at_startup = 1
-let g:line_number_interval#use_custom = 1
-" set colors of custom lines
-highlight HighlightedLineNr guifg=White ctermfg=7
-highlight DimLineNr guifg=Magenta ctermfg=5
-
 " Gutentags
 let g:gutentags_cache_dir = '/home/yack/.cache/gutentags'
+let g:gutentags_ctags_exclude = ["*.min.js", "*.min.css", "build", "vendor",
+			\ ".git", "node_modules", "*.class"]
 
 " Startify
 let g:startify_bookmarks = [
@@ -191,6 +191,9 @@ map T <Plug>Sneak_T
 
 " BBYE
 map <Leader>bd :Bdelete<CR>
+
+" Save with sudo
+nnoremap <silent><Leader>W! :w !sudo tee %>/dev/null<CR>
 " }}}
 
 " Defx ---------------------------------------{{{
@@ -334,8 +337,7 @@ nnoremap <silent> <Leader>dl :Denite line<CR>
 nnoremap <silent> <Leader>ds :Denite session<CR>
 " }}}
 
-" Deoplete/Neosnippets -----------------------{{{
-
+" Deoplete -------------------------{{{
 let g:deoplete#enable_at_startup = 1
 
 call deoplete#custom#option({
@@ -366,15 +368,26 @@ call deoplete#custom#source('LanguageClient', 'mark', '')
 call deoplete#custom#source('file', 'mark', '')
 call deoplete#custom#source('buffer', 'mark', 'ℬ')
 
-let g:neosnippet#snippets_directory = ['~/.config/nvim/plugged/vim-snippets/snippets',
-				     \ '~/.config/nvim/custom_snippets']
-let g:neosnippet#enable_snipmate_compatibility = 1
-
-" AutoPairs + Neosnippets + Deoplete hotkeys
-let g:AutoPairsMapCR = 0
-imap <expr><TAB> pumvisible() ? "\<C-n>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>")
+" Tab completion + AutoPairs integration
+let g:AutoPairsMapCR=0
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 imap <expr><CR> pumvisible() ? deoplete#close_popup() : "\<CR>\<Plug>AutoPairsReturn"
+" }}}
+
+" Ultisnips ----------------------------------{{{
+let g:UltiSnipsExpandTrigger       = "<C-s>"
+let g:UltiSnipsJumpForwardTrigger  = "<C-s>"
+
+inoremap <silent> <C-s> <C-r>=LoadUltiSnipsAndExpand()<CR>
+
+function! LoadUltiSnipsAndExpand()
+    let l:curpos = getcurpos()
+    execute plug#load('ultisnips')
+    call cursor(l:curpos[1], l:curpos[2])
+    call UltiSnips#ExpandSnippet()
+    return ""
+endfunction
 " }}}
 
 " Linting ------------------------------------{{{
