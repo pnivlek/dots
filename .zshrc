@@ -41,3 +41,5 @@ export SDKMAN_DIR="/home/yack/.sdkman"
 [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"
 
 alias dots='git --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

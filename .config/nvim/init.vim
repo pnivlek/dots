@@ -1,6 +1,6 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Neovim Configuration
-" Kelvin Porter 2019
+" Kelvin Porter CURRENT_YEAR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Plugins    ---------------------------------{{{
@@ -13,7 +13,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tommcdo/vim-lion'
-Plug 'jiangmiao/auto-pairs'
 Plug 'edkolev/tmuxline.vim'
 Plug 'Konfekt/FastFold'
 " }}}
@@ -45,12 +44,9 @@ Plug 'Yggdroot/indentLine'
 Plug 'ajmwagar/vim-deus'
 Plug 'ajmwagar/lightline-deus'
 " }}}
-" denite {{{
-Plug 'Shougo/denite.nvim'
-Plug 'raghur/fruzzy', {'do': { -> fruzzy#install()}}
-Plug 'Shougo/neomru.vim'
-Plug 'neoclide/denite-git'
-Plug 'neoclide/denite-extra'
+" fzf {{{
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 " }}}
 " git {{{
 Plug 'tpope/vim-fugitive'
@@ -291,60 +287,65 @@ nnoremap <silent><Leader>W! :w !sudo tee %>/dev/null<CR>
 
 "  }}}
 
-" Denite -------------------------------------{{{
+" fzf ----------------------------------------{{{
 
-call denite#custom#var('file/rec', 'command',
-			\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-call denite#custom#option('_', {
-       \ 'prompt': '>',
-       \ 'winheight': 10,
-       \ 'updatetime': 1,
-       \ 'auto_resize': 0,
-       \ 'highlight_matched_char': 'Underlined',
-       \ 'highlight_mode_normal': 'CursorLine',
-       \ 'reversed': 1,
-       \ 'auto-accel': 1,
-       \ 'start_filter': 1,
-       \})
+nmap <Leader><Tab> :Files<CR>
+nmap <Leader>b :Buffers<CR>
+nmap <Leader>l :Lines<CR>
+nmap <Leader>h :History<CR>
+nmap <Leader>gs :GFiles?<CR>
+nmap <Leader>fb :BLines<CR>
+nmap <Leader>ft :Tags<CR>
+nmap <Leader>fa :BTags<CR>
+nmap <Leader>m :Marks<CR>
 
-autocmd FileType denite call s:denite_settings()
+augroup fzf
+	" quit with ctrl q
+	au FileType fzf map <C-q> <Esc>:q<CR>
+augroup end
 
-function! s:denite_settings() abort
-  nnoremap <silent><buffer><expr> <CR>
-        \ denite#do_map('do_action')
-  nnoremap <silent><buffer><expr> <C-v>
-        \ denite#do_map('do_action', 'vsplit')
-  nnoremap <silent><buffer><expr> d
-        \ denite#do_map('do_action', 'delete')
-  nnoremap <silent><buffer><expr> p
-        \ denite#do_map('do_action', 'preview')
-  nnoremap <silent><buffer><expr> <Esc>
-        \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> q
-        \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> i
-        \ denite#do_map('open_filter_buffer')
-  nnoremap <silent><buffer><expr> l
-	\ denite#do_map('do_action', 'load')
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+" Jump to existing window if possible
+let g:fzf_buffers_jump = 1
+
+" Floating layout from https://www.reddit.com/r/neovim/comments/djmehv/im_probably_really_late_to_the_party_but_fzf_in_a/f463fxr/
+let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:15,bg:-1,hl:1,fg+:#ffffff,bg+:0,hl+:1 --color=info:0,prompt:0,pointer:12,marker:4,spinner:11,header:-1 --layout=reverse  --margin=1,4'
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+function! FloatingFZF()
+  let buf = nvim_create_buf(v:false, v:true)
+  call setbufvar(buf, '&signcolumn', 'no')
+
+  let height = float2nr(20)
+  let width = float2nr(120)
+  let horizontal = float2nr((&columns - width) / 2)
+  let vertical = 1
+
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style': 'minimal'
+        \ }
+
+  call nvim_open_win(buf, v:true, opts)
 endfunction
 
-nnoremap <silent> <c-p> :Denite file/rec<CR>
-nnoremap <silent> <Leader>db :Denite buffer<CR>
-nnoremap <silent> <Leader>dh :Denite help<CR>
-nnoremap <silent> <Leader>dv :Denite vison<CR>
-nnoremap <silent> <Leader>dg :Denite grep:::!<CR>
-nnoremap <silent> <Leader>dl :Denite line<CR>
-nnoremap <silent> <Leader>ds :Denite session<CR>
 " }}}
 
-" Deoplete -------------------------{{{
+" Deoplete -----------------------------------{{{
 let g:deoplete#enable_at_startup = 1
 
 call deoplete#custom#option({
    \ 'auto_complete_delay': 0,
+   \ 'enable_smart_case': 1,
    \ 'smart_case': v:true,
    \})
-  call deoplete#custom#option('omni_patterns', {
+call deoplete#custom#option('omni_patterns', {
    \ 'html': '',
    \ 'css': '',
    \ 'scss': ''
@@ -368,11 +369,15 @@ call deoplete#custom#source('LanguageClient', 'mark', '')
 call deoplete#custom#source('file', 'mark', '')
 call deoplete#custom#source('buffer', 'mark', 'ℬ')
 
-" Tab completion + AutoPairs integration
-let g:AutoPairsMapCR=0
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-imap <expr><CR> pumvisible() ? deoplete#close_popup() : "\<CR>\<Plug>AutoPairsReturn"
+" use TAB as the mapping
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ?  "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ deoplete#manual_complete()
+function! s:check_back_space() abort "" {{{
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction "" }}}
 " }}}
 
 " Ultisnips ----------------------------------{{{
@@ -439,12 +444,6 @@ let g:tmuxline_powerline_separators = 0
 " Git ----------------------------------------{{{
 map <Leader>gg :Git<CR>
 map <Leader>gc :Git
-nnoremap <Leader>gf :Denite gitfiles<CR>
-nnoremap <Leader>gl :Denite gitlog<CR>
-nnoremap <Leader>gh :Denite gitlog<CR>
-nnoremap <Leader>gs :Denite gitfiles:
-nnoremap <Leader>gb :Denite gitbranch<CR>
-nnoremap <Leader>ge :Denite gitchanged<CR>
 " }}}
 
 " Python -------------------------------------{{{
@@ -465,10 +464,9 @@ augroup end
 " Java ---------------------------------------{{{
 let g:ale_linters.java = ['javac']
 let g:ale_fixers.java = ['google_java_format']
-let g:LanguageClient_serverCommands.java = ['/usr/bin/jdtls']
+let g:LanguageClient_serverCommands.java = ['/usr/bin/jdtls', '-data', getcwd()]
 augroup java
 	au Filetype java setl et ts=2 sw=2
-	autocmd FileType java setlocal omnifunc=javacomplete#Complete
 augroup end
 let g:ale_java_javac_executable='/home/yack/.sdkman/candidates/java/current/bin/javac'
 let g:ale_java_eclipselsp_path='/usr/bin/'
