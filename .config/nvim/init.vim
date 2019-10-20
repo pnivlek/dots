@@ -89,6 +89,7 @@ set visualbell
 set termguicolors
 set undofile
 set undodir="~/.local/share/nvim/undo"
+set splitright
 set inccommand=nosplit
 
 set t_Co=256
