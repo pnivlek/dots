@@ -57,9 +57,8 @@ Plug 'SirVer/Ultisnips'
 Plug 'honza/vim-snippets'
 " }}}
 " python {{{
-Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'deoplete-plugins/deoplete-jedi', {'for': 'python'}
 Plug 'davidhalter/jedi-vim', {'for': 'python'}
-Plug 'tmhedberg/SimpylFold', {'for': 'python'}
 " }}}
 " javascript {{{
 Plug 'pangloss/vim-javascript'
@@ -291,7 +290,7 @@ nnoremap <silent><Leader>W! :w !sudo tee %>/dev/null<CR>
 " fzf ----------------------------------------{{{
 
 nmap <Leader><Tab> :Files<CR>
-nmap <Leader>b :Buffers<CR>
+nmap <Leader>bb :Buffers<CR>
 nmap <Leader>l :Lines<CR>
 nmap <Leader>h :History<CR>
 nmap <Leader>gs :GFiles?<CR>
@@ -299,11 +298,6 @@ nmap <Leader>fb :BLines<CR>
 nmap <Leader>ft :Tags<CR>
 nmap <Leader>fa :BTags<CR>
 nmap <Leader>m :Marks<CR>
-
-augroup fzf
-	" quit with ctrl q
-	au FileType fzf map <C-q> <Esc>:q<CR>
-augroup end
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
@@ -448,7 +442,7 @@ map <Leader>gc :Git
 " }}}
 
 " Python -------------------------------------{{{
-let g:ale_linters.python = ['bandit']
+let g:ale_linters.python = ['bandit', 'flake8']
 let g:ale_fixers.python = ['autopep8']
 let g:LanguageClient_serverCommands.python = ['/usr/bin/pyls']
 let g:loaded_python_provider = 0
@@ -465,7 +459,7 @@ augroup end
 " Java ---------------------------------------{{{
 let g:ale_linters.java = ['javac']
 let g:ale_fixers.java = ['google_java_format']
-let g:LanguageClient_serverCommands.java = ['/usr/bin/jdtls', '-data', getcwd()]
+let g:LanguageClient_serverCommands.java = ['/usr/bin/jdtls']
 augroup java
 	au Filetype java setl et ts=2 sw=2
 augroup end
