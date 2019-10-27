@@ -69,10 +69,6 @@ Plug 'Quramy/vison'
 Plug 'othree/html5.vim'
 Plug 'mattn/emmet-vim'
 " }}}
-" go {{{
-Plug 'fatih/vim-go'
-Plug 'deoplete-plugins/deoplete-go', {'do': 'make'}
-" }}}
 " java {{{
 " }}}
 " mips {{{
@@ -490,12 +486,6 @@ let g:ale_fixers.json = ['prettier']
 augroup json
 	au FileType json syntax match Comment +\/\/.\+$+
 augroup end
-" }}}
-
-" Go -----------------------------------------{{{
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:ale_linters.go = ['golint']
-let g:ale_fixers.go = ['gofmt']
 " }}}
 
 " MIPS Assembly -----------------------------{{{
