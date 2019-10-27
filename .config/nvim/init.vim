@@ -75,6 +75,9 @@ Plug 'deoplete-plugins/deoplete-go', {'do': 'make'}
 " }}}
 " java {{{
 " }}}
+" mips {{{
+Plug 'ARM9/mips-syntax-vim'
+" }}}
 call plug#end()
 " }}}
 
@@ -493,6 +496,13 @@ augroup end
 let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 let g:ale_linters.go = ['golint']
 let g:ale_fixers.go = ['gofmt']
+" }}}
+
+" MIPS Assembly -----------------------------{{{
+" Yes, this section is really here. Yes, I do use MARS too.
+let g:ale_linters.asm = []
+au BufNewFile,BufRead *.asm set filetype=mips
+au FileType asm set et ts=4 sw=4
 " }}}
 
 " Vimscript ----------------------------------{{{
