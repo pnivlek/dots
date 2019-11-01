@@ -15,6 +15,8 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tommcdo/vim-lion'
 Plug 'edkolev/tmuxline.vim'
 Plug 'Konfekt/FastFold'
+Plug 'desmap/ale-sensible' | Plug 'dense-analysis/ale'
+Plug 'editorconfig/editorconfig-vim'
 " }}}
 " completion / tags {{{
 Plug 'Shougo/deoplete.nvim'
@@ -26,10 +28,6 @@ Plug 'tweekmonster/deoplete-clang2'
 Plug 'Shougo/echodoc.vim'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'majutsushi/tagbar'
-" }}}
-" code style / linting {{{
-Plug 'desmap/ale-sensible' | Plug 'dense-analysis/ale'
-Plug 'editorconfig/editorconfig-vim'
 " }}}
 " UI {{{
 Plug 'Shougo/defx.nvim'
@@ -70,6 +68,10 @@ Plug 'othree/html5.vim'
 Plug 'mattn/emmet-vim'
 " }}}
 " java {{{
+Plug 'artur-shaik/vim-javacomplete2'
+" }}}
+" c# {{{
+Plug 'omnisharp/omnisharp-vim'
 " }}}
 " mips {{{
 Plug 'ARM9/mips-syntax-vim'
@@ -115,7 +117,7 @@ augroup general
 		\ endif
 augroup end
 
-" Initialize this variable for language specifc sections to deal with.
+" Initalize variable.
 let g:LanguageClient_serverCommands = {}
 " leave diagnostics to ALE
 let g:LanguageClient_diagnosticsEnable = 0
@@ -149,6 +151,24 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 
+" LSP
+function SetLSPShortcuts()
+  nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
+  nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
+  nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+  nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
+  nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
+  nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
+  nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
+  nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+endfunction()
+
+augroup LSP
+  autocmd!
+  autocmd FileType java,python call SetLSPShortcuts()
+augroup END
 
 " Undotree
 map <Leader>ou :UndotreeToggle<CR>
@@ -290,13 +310,13 @@ nnoremap <silent><Leader>W! :w !sudo tee %>/dev/null<CR>
 
 nmap <Leader><Tab> :Files<CR>
 nmap <Leader>bb :Buffers<CR>
-nmap <Leader>l :Lines<CR>
+nmap <Leader>fl :Lines<CR>
 nmap <Leader>h :History<CR>
 nmap <Leader>gs :GFiles?<CR>
 nmap <Leader>fb :BLines<CR>
 nmap <Leader>ft :Tags<CR>
 nmap <Leader>fa :BTags<CR>
-nmap <Leader>m :Marks<CR>
+nmap <Leader>fm :Marks<CR>
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
@@ -345,7 +365,8 @@ call deoplete#custom#option('omni_patterns', {
    \ 'scss': ''
    \})
 let g:echodoc_enable_at_startup=1
-let g:echodoc#type='virtual'
+let g:echodoc#type='floating'
+hi link EchoDocFloat Pmenu
 set splitbelow
 set completeopt+=menuone,noinsert,noselect
 set completeopt-=preview
@@ -443,11 +464,10 @@ map <Leader>gc :Git
 " Python -------------------------------------{{{
 let g:ale_linters.python = ['bandit', 'flake8']
 let g:ale_fixers.python = ['autopep8']
-let g:LanguageClient_serverCommands.python = ['/usr/bin/pyls']
+let g:LanguageClient_serverCommands.python = ['pyls']
 let g:loaded_python_provider = 0
 let g:python3_host_prog = '/usr/bin/python3'
 let g:jedi#auto_vim_configuration = 0
-let g:jedi#documentation_command = '<leader>k'
 let g:jedi#completions_enabled = 0
 let g:jedi#force_py_version=3
 augroup python
@@ -465,6 +485,7 @@ augroup end
 let g:ale_java_javac_executable='/home/yack/.sdkman/candidates/java/current/bin/javac'
 let g:ale_java_eclipselsp_path='/usr/bin/'
 let g:ale_java_eclipselsp_executable='jdtls'
+let g:JavaComplete_EnableDefaultMappings=0
 " }}}
 
 " Javascript ---------------------------------{{{
@@ -488,11 +509,17 @@ augroup json
 augroup end
 " }}}
 
-" MIPS Assembly -----------------------------{{{
+" MIPS Assembly ------------------------------{{{
 " Yes, this section is really here. Yes, I do use MARS too.
 let g:ale_linters.asm = []
 au BufNewFile,BufRead *.asm set filetype=mips
 au FileType asm set et ts=4 sw=4
+" }}}
+
+" C# -----------------------------------------{{{
+let g:OmniSharp_server_stdio = 1
+let g:ale_fixers.cs = ['uncrustify']
+let g:ale_linters.cs = ['OmniSharp']
 " }}}
 
 " Vimscript ----------------------------------{{{
