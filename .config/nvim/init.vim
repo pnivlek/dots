@@ -7,6 +7,7 @@
 call plug#begin()
 " system {{{
 Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-dispatch'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -15,8 +16,10 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tommcdo/vim-lion'
 Plug 'edkolev/tmuxline.vim'
 Plug 'Konfekt/FastFold'
+Plug 'jeetsukumaran/vim-indentwise'
 Plug 'desmap/ale-sensible' | Plug 'dense-analysis/ale'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'jiangmiao/auto-pairs'
 " }}}
 " completion / tags {{{
 Plug 'Shougo/deoplete.nvim'
@@ -91,6 +94,9 @@ set undofile
 set undodir="~/.local/share/nvim/undo"
 set splitright
 set inccommand=nosplit
+set shiftwidth=4
+let &softtabstop = &shiftwidth
+set expandtab
 
 set t_Co=256
 set termguicolors
@@ -364,6 +370,9 @@ call deoplete#custom#option('omni_patterns', {
    \ 'css': '',
    \ 'scss': ''
    \})
+call deoplete#custom#option('sources', {
+   \ 'cs': 'omnisharp'
+   \})
 let g:echodoc_enable_at_startup=1
 let g:echodoc#type='floating'
 hi link EchoDocFloat Pmenu
@@ -393,6 +402,10 @@ function! s:check_back_space() abort "" {{{
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction "" }}}
+
+let g:AutoPairsMapCR=0
+imap <expr><CR> pumvisible() ? deoplete#close_popup() : '<CR><Plug>AutoPairsReturn'
+
 " }}}
 
 " Ultisnips ----------------------------------{{{
@@ -520,6 +533,33 @@ au FileType asm set et ts=4 sw=4
 let g:OmniSharp_server_stdio = 1
 let g:ale_fixers.cs = ['uncrustify']
 let g:ale_linters.cs = ['OmniSharp']
+let g:OmniSharp_timeout = 100
+
+function! s:omnisharpMappings() abort
+	nnoremap <buffer> <silent> mi :OmniSharpFindImplementations<cr>
+	nnoremap <buffer> <silent> mu :OmniSharpFindUsages<cr>
+	nnoremap <buffer> <silent> mf :OmniSharpFindMembers<cr>
+	nnoremap <buffer> <silent> mx :OmniSharpFixIssue<cr>
+	nnoremap <buffer> <silent> mX :OmniSharpFixUsings<cr>
+	nnoremap <buffer> <silent> ml :OmniSharpTypeLookup<cr>
+	nnoremap <buffer> <silent> mr :OmniSharpRename<cr>
+	nnoremap <buffer> <silent> mR :OmniSharpReloadSolution<cr>
+	nnoremap <buffer> <silent> mF :OmniSharpCodeFormat<cr>
+	nnoremap <buffer> <silent> mh :OmniSharpHighlightTypes<cr>
+endfunction
+
+autocmd FileType cs call s:omnisharpMappings()
+
+" Override Vim Gotodefinition
+autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+"navigate up by method/property/field
+autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
+"navigate down by method/property/field
+autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
+" rename without dialog - with cursor on the symbol to rename... ':Rename newname'
+command! -nargs=1 ORename :call OmniSharp#RenameTo("<args>")
+
+autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 " }}}
 
 " Vimscript ----------------------------------{{{
