@@ -1,42 +1,53 @@
 [options]
-font = FantasqueSansMono Nerd Font 12
+font = Iosevka Nerd Font 12
+font = Iosevka 12
 
 [colors]
+# Base16 Zenburn
+# Author: elnawe
 
-# special
-foreground      = #cfccbe
-foreground_bold = #cfccbe
-cursor          = #cfccbe
-background      = rgba(45, 49, 68)
+foreground          = #dcdccc
+foreground_bold     = #c0c0c0
+cursor              = #c0c0c0
+cursor_foreground   = #3f3f3f
+background          = rgba(63, 63, 63)
 
-# black
-color0  = #2f3447
-color8  = #525a69
+# 16 color space
 
-# red
-color1  = #8d6d5c
-color9  = #8d6d5c
+# Black, Gray, Silver, White
+color0  = #3f3f3f
+color8  = #4f4f4f
+color7  = #dcdccc
+color15 = #ffffff
 
-# green
-color2  = #6d806d
-color10  = #6d806d
+# Red
+color1  = #dca3a3
+color9  = #dca3a3
 
-# yellow
-color3  = #96915d
-color11 = #96915d
+# Green
+color2  = #5f7f5f
+color10 = #5f7f5f
 
-# blue
-color4  = #68758d
-color12 = #68758d
+# Yellow
+color3  = #e0cf9f
+color11 = #e0cf9f
 
-# magenta
-color5  = #8a747b
-color13 = #8a747b
+# Blue
+color4  = #7cb8bb
+color12 = #7cb8bb
 
-# cyan
-color6  = #8d97a8
-color14 = #8d97a8
+# Purple
+color5  = #dc8cc3
+color13 = #dc8cc3
 
-# white
-color7  = #cfccbe
-color15 = #f0efeb
+# Teal
+color6  = #93e0e3
+color14 = #93e0e3
+
+# Extra colors
+color16 = #dfaf8f
+color17 = #000000
+color18 = #404040
+color19 = #606060
+color20 = #808080
+color21 = #c0c0c0

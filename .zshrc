@@ -43,3 +43,4 @@ export SDKMAN_DIR="/home/yack/.sdkman"
 alias dots='git --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.fzf.colors ] && source ~/.fzf.colors

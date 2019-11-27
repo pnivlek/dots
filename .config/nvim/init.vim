@@ -1,569 +1,169 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Neovim Configuration
 " Kelvin Porter CURRENT_YEAR
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Plugins    ---------------------------------{{{
-call plug#begin()
-" system {{{
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-dispatch'
-Plug 'justinmk/vim-sneak'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-commentary'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'tommcdo/vim-lion'
-Plug 'edkolev/tmuxline.vim'
-Plug 'Konfekt/FastFold'
-Plug 'jeetsukumaran/vim-indentwise'
-Plug 'desmap/ale-sensible' | Plug 'dense-analysis/ale'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'jiangmiao/auto-pairs'
-" }}}
-" completion / tags {{{
-Plug 'Shougo/deoplete.nvim'
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-Plug 'tweekmonster/deoplete-clang2'
-Plug 'Shougo/echodoc.vim'
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'majutsushi/tagbar'
-" }}}
-" UI {{{
-Plug 'Shougo/defx.nvim'
-Plug 'kristijanhusak/defx-git'
-Plug 'mbbill/undotree'
-Plug 'maximbaz/lightline-ale'
-Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
-Plug 'moll/vim-bbye'
-Plug 'mhinz/vim-startify'
-Plug 'Yggdroot/indentLine'
-Plug 'ajmwagar/vim-deus'
-Plug 'ajmwagar/lightline-deus'
-" }}}
-" fzf {{{
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-" }}}
-" git {{{
-Plug 'tpope/vim-fugitive'
-Plug 'rhysd/git-messenger.vim'
-" }}}
-" snippets {{{
-Plug 'SirVer/Ultisnips'
-Plug 'honza/vim-snippets'
-" }}}
-" python {{{
-Plug 'deoplete-plugins/deoplete-jedi', {'for': 'python'}
-Plug 'davidhalter/jedi-vim', {'for': 'python'}
-" }}}
-" javascript {{{
-Plug 'pangloss/vim-javascript'
-Plug 'MaxMEllon/vim-jsx-pretty'
-Plug 'Quramy/vison'
-" }}}
-" html {{{
-Plug 'othree/html5.vim'
-Plug 'mattn/emmet-vim'
-" }}}
-" java {{{
-Plug 'artur-shaik/vim-javacomplete2'
-" }}}
-" c# {{{
-Plug 'omnisharp/omnisharp-vim'
-" }}}
-" mips {{{
-Plug 'ARM9/mips-syntax-vim'
-" }}}
-call plug#end()
-" }}}
+" Plugins {{{
+packadd minpac
+let s:plugins = exists('*minpac#init')
 
-" System settings ----------------------------{{{
-set confirm
-set hidden
-set number relativenumber
-set showcmd " show leader key bindings
-set smartcase " case insensitive searching if only lowercase
-set visualbell
-set termguicolors
-set undofile
-set undodir="~/.local/share/nvim/undo"
-set splitright
-set inccommand=nosplit
-set shiftwidth=4
-let &softtabstop = &shiftwidth
-set expandtab
+if !s:plugins
+	fun! InstallPlug() " Bootstrap plugin manager on new systems.
+		exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
+	endfun
+	call InstallPlug()
+else
 
-set t_Co=256
-set termguicolors
+	call minpac#init()
 
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+	call minpac#add('SirVer/ultisnips')
+	call minpac#add('honza/vim-snippets')
+	let g:UltiSnipsSnippetDirectories=['UltiSnips', 'custom-snippets']
+	let g:UltiSnipsExpandTrigger="<tab>"
+	let g:UltiSnipsJumpForwardTrigger="<tab>"
+	let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 
-set background=dark    " Setting dark mode
-colorscheme deus
-let g:deus_termcolors=256
 
-augroup general
-	" Remember cursor position between vim sessions
-	autocmd BufReadPost *
-		\ if line("'\"") > 0 && line ("'\"") <= line("$") |
-		\   exe "normal! g'\"" |
-		\ endif
-             " center buffer around cursor when opening files
-	autocmd BufRead * normal zz
-	" Create new dirs when writing a file in a non-existent directory.
+	call minpac#add('Shougo/vimproc.vim', { 'do': 'make'} )
+	call minpac#add('idanarye/vim-vebugger')
+	call minpac#add('tpope/vim-dispatch')
+
+	call minpac#add('tpope/vim-dadbod')
+
+	call minpac#add('tpope/vim-fugitive')
+	call minpac#add('junegunn/gv.vim')
+
+	call minpac#add('justinmk/vim-sneak')
+	call minpac#add('tpope/vim-surround')
+	call minpac#add('tommcdo/vim-lion')
+	call minpac#add('tpope/vim-repeat')
+	call minpac#add('tpope/vim-eunuch')
+
+	call minpac#add('junegunn/fzf', { 'do': '!yes n | ./install' })
+	call minpac#add('junegunn/fzf.vim')
+	let g:fzf_command_prefix = 'Fz'
+
+	call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
+	augroup javaPlugins
+		autocmd FileType java packadd vim-javacomplete2
+		autocmd FileType java setlocal omnifunc=javacomplete#Complete
+		autocmd Filetype java setlocal completefunc=javacomplete#CompleteParamsInfo
+	augroup end
+
+	call minpac#add('lervag/vimtex', {'type': 'opt'})
+	let g:tex_flavor='latex'
+	augroup texPlugins
+		autocmd FileType tex packadd vimtex
+		autocmd Filetype tex setlocal spell
+		autocmd FileType tex let g:vimtex_view_method='zathura'
+		autocmd FileType tex let g:vimtex_compiler_method='latexmk'
+		autocmd FileType tex let g:vimtex_quickfix_mode=0
+		autocmd Filetype tex autocmd BufWritePost lec*.tex :Dispatch!
+	augroup end
+
+	call minpac#add('moll/vim-bbye')
+	call minpac#add('christoomey/vim-tmux-navigator')
+	call minpac#add('drzel/vim-scrolloff-fraction')
+	let g:scrolloff_fraction=0.2
+
+	call minpac#add('dylanaraps/wal.vim')
+	call minpac#add('itchyny/lightline.vim')
+	let g:lightline = {'colorscheme': 'wal'}
+endif " }}}
+
+" Set leader key to space
+let mapleader = '\'
+map <space> \
+
+" Enabling filetype support provides filetype-specific indenting,
+" syntax highlighting, omni-completion and other useful settings.
+filetype plugin indent on
+set omnifunc+=syntaxcomplete#Complete
+syntax on
+
+" `matchit.vim` is built-in so let's enable it!
+" Hit `%` on `if` to jump to `else`.
+runtime macros/matchit.vim
+
+" various settings
+set autoindent                 " Minimal automatic indenting for any filetype.
+set backspace=indent,eol,start " Proper backspace behavior.
+set hidden                     " Possibility to have more than one unsaved buffers.
+set splitright		       " Vertical split buffers open on the right
+set incsearch                  " Incremental search.
+set foldmethod=marker
+set smartcase 		       " Both cases if search term is all lowercase, ignores ignorecase command.
+set ruler                      " Shows the current line number at the bottom-right of the screen.
+set wildmenu                   " Great command-line completion, use `<Tab>` to move
+" around and `<CR>` to validate.
+set wildignore+=tags,*/__pycache__/*,build/*,build.?/*
+set suffixes+=.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,
+			\,.o,.obj,.dll,.class,.pyc,.ipynb,.so,.swp,.zip,.exe,.jar,.gz
+set suffixesadd=.java
+set relativenumber 	  " set line number = distance from currently selected one
+set number 		" set current line number to not 0.
+set dictionary+=/usr/share/dict/words
+
+augroup fileAuto
+	" Create directories before saving if they don't exist.
 	autocmd BufWritePre *
 		\ if '<afile>' !~ '^scp:' && !isdirectory(expand('<afile>:h')) |
 		\ call mkdir(expand('<afile>:h'), 'p') |
 		\ endif
 augroup end
 
-" Initalize variable.
-let g:LanguageClient_serverCommands = {}
-" leave diagnostics to ALE
-let g:LanguageClient_diagnosticsEnable = 0
-
-" Gutentags
-let g:gutentags_cache_dir = '/home/yack/.cache/gutentags'
-let g:gutentags_ctags_exclude = ["*.min.js", "*.min.css", "build", "vendor",
-			\ ".git", "node_modules", "*.class"]
-
-" Startify
-let g:startify_bookmarks = [
-			\ {'h': '~/doc/code/edu/'},
-			\ {'c' : '~/doc/code/cur/'},
-			\ {'s': '~/doc/code/cur/opensmash'},
-			\ {'d': '~/doc/code/cur/sbso'},
-			\ {'v': '~/.config/nvim/init.vim'},
-			\]
-" }}}
-
-" System mappings ----------------------------{{{
-" Space as leader workaround
-let mapleader = '\'
-map <space> \
-
 " Repeat last macro, instead of ex mode.
 nnoremap Q @@
+" The opposite of J in normal mode, this splits a line into two and auto
+" indents.
+nnoremap gS :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
 
-" Window switching
-nnoremap <c-h> <c-w>h
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-l> <c-w>l
+" NetRW settings/UI stuff
+let g:netrw_banner=0
+let g:netrw_winsize=25
+silent! colorscheme wal
+let $FZF_DEFAULT_COMMAND =  'rg --files --hidden -S'
+" search current project directory
+nmap <Leader><Tab> :FzFiles<CR>
+" search home directory
+nmap <Leader>h :FzFiles ~<CR>
+nmap <Leader>c :FzFiles ~/doc/code<CR>
+" buffers and lines
+nmap <Leader>b :FzBuffers<CR>
+nmap <Leader>l :FzLines<CR>
 
-" LSP
-function SetLSPShortcuts()
-  nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-  nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-  nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-  nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-  nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-  nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-  nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-  nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-endfunction()
-
-augroup LSP
-  autocmd!
-  autocmd FileType java,python call SetLSPShortcuts()
-augroup END
-
-" Undotree
-map <Leader>ou :UndotreeToggle<CR>
-" toggle
-map <Leader>ot :TagbarToggle<CR>
-" open and focus
-map <Leader>oo :TagbarOpen fj<CR>
-" open and close on jump
-map <Leader>og :TagbarOpen fjc<CR>
-
-" Highlighting searches
-map <Leader>hh :set hlsearch!<CR>
-
-" Tabs
-map <Leader>tp :tabp<CR>
-map <Leader>tn :tabn<CR>
-map <Leader>tq :tabclose<CR>
-map <Leader>ti :tabnew<CR>
-map <Leader>tt :tabs<CR>
-map <Leader>tP :tabfirst<CR>
-map <Leader>tN :tablast<CR>
-
-" Neovim terminal mode escape
-tmap <esc> <c-\><c-n><esc><esc>
-
-" Align and keep selected
-vmap < <gv
-vmap > >gv
-
-" Sneak
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
-
-" BBYE
-map <Leader>bd :Bdelete<CR>
-
-" Save with sudo
-nnoremap <silent><Leader>W! :w !sudo tee %>/dev/null<CR>
-" }}}
-
-" Defx ---------------------------------------{{{
-
-  set conceallevel=2
-  set concealcursor=nc
-  map <Leader>of :Defx<cr>
-  autocmd FileType defx call s:defx_my_settings()
-  call defx#custom#column('icon', {
-     \ 'directory_icon': '',
-     \ 'opened_icon':  '',
-     \ 'root_icon': '',
-     \ 'root_marker_highlight': 'Ignore',
-     \ })
-  call defx#custom#column('filename', {
-     \ 'root_marker_highlight': 'Ignore',
-     \ })
-  call defx#custom#column('mark', {
-        \ 'readonly_icon': '✗',
-        \ 'selected_icon': '',
-        \ })
-  call defx#custom#option('_', {
-      \ 'winwidth': 45,
-      \ 'columns': 'mark:indent:icon:icons:filename:git',
-      \ 'split': 'floating',
-      \ 'direction': 'topleft',
-      \ 'show_ignored_files': 1,
-      \ 'buffer_name': '',
-      \ 'toggle': 1,
-      \ 'resume': 1,
-      \ 'root_marker': ':',
-      \ })
-  function! s:defx_my_settings() abort
-
-    IndentLinesDisable
-    setl nospell
-    setl signcolumn=no
-    setl nonumber
-    nnoremap <silent><buffer><expr> <CR> defx#is_directory() ? defx#do_action('open_or_close_tree') : defx#do_action('drop')
-    nnoremap <silent><buffer><expr> h defx#do_action('close_tree')
-    nnoremap <silent><buffer><expr> c defx#do_action('change_vim_cwd')
-    nnoremap <silent><buffer><expr> d defx#do_action('move')
-    nnoremap <silent><buffer><expr> Y defx#do_action('copy')
-    nnoremap <silent><buffer><expr> m defx#do_action('create_directory')
-    nnoremap <silent><buffer><expr> P defx#do_action('paste')
-    nnoremap <silent><buffer><expr> R defx#do_action('rename')
-    nnoremap <silent><buffer><expr> D defx#do_action('remove')
-    nnoremap <silent><buffer><expr> a defx#do_action('new_multiple_files')
-    nnoremap <silent><buffer><expr> A defx#do_action('new_multiple_files')
-    nnoremap <silent><buffer><expr> l defx#do_action('open', 'vsplit')
-    nnoremap <silent><buffer><expr> U defx#do_action('cd', ['..'])
-    nnoremap <silent><buffer><expr> . defx#do_action('toggle_ignored_files')
-    nnoremap <silent><buffer><expr> <Space> defx#do_action('toggle_select')
-    nnoremap <silent><buffer><expr> r defx#do_action('redraw')
-    nnoremap <silent><buffer><expr> <Tab> <SID>defx_toggle_zoom()
-    nnoremap <silent><buffer><expr> <C-Q> defx#do_action('quit')
-
-  endfunction
-
-  function s:defx_toggle_zoom() abort "{{{
-    let b:DefxOldWindowSize = get(b:, 'DefxOldWindowSize', winwidth('%'))
-    let size = b:DefxOldWindowSize
-    if exists('b:DefxZoomed') && b:DefxZoomed
-        exec 'silent vertical resize '. size
-        let b:DefxZoomed = 0
-    else
-        exec 'vertical resize '. get(g:, 'DefxWinSizeMax', '')
-        let b:DefxZoomed = 1
-    endif
-  endfunction "}}}
-
-  let g:defx_git#show_ignored = 0
-  let g:defx_git#column_length = 1
-
-  hi def link Defx_filename_directory NERDTreeDirSlash
-  hi def link Defx_git_Modified Special
-  hi def link Defx_git_Staged Function
-  hi def link Defx_git_Renamed Title
-  hi def link Defx_git_Unmerged Label
-  hi def link Defx_git_Untracked Tag
-  hi def link Defx_git_Ignored Comment
-
-  let g:defx_icons_parent_icon = ''
-  let g:defx_icons_mark_icon = ''
-  let g:defx_icons_enable_syntax_highlight = 1
-  let g:defx_icons_column_length = 1
-  let g:defx_icons_mark_icon = '*'
-  let g:defx_icons_default_icon = ''
-  let g:defx_icons_directory_symlink_icon = ''
-  " Options below are applicable only when using "tree" feature
-  let g:defx_icons_directory_icon = ''
-  let g:defx_icons_root_opened_tree_icon = ''
-  let g:defx_icons_nested_opened_tree_icon = ''
-  let g:defx_icons_nested_closed_tree_icon = ''
-
-"  }}}
-
-" fzf ----------------------------------------{{{
-
-nmap <Leader><Tab> :Files<CR>
-nmap <Leader>bb :Buffers<CR>
-nmap <Leader>fl :Lines<CR>
-nmap <Leader>h :History<CR>
-nmap <Leader>gs :GFiles?<CR>
-nmap <Leader>fb :BLines<CR>
-nmap <Leader>ft :Tags<CR>
-nmap <Leader>fa :BTags<CR>
-nmap <Leader>fm :Marks<CR>
-
-let g:fzf_history_dir = '~/.local/share/fzf-history'
-
-" Jump to existing window if possible
-let g:fzf_buffers_jump = 1
-
-" Floating layout from https://www.reddit.com/r/neovim/comments/djmehv/im_probably_really_late_to_the_party_but_fzf_in_a/f463fxr/
-let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:15,bg:-1,hl:1,fg+:#ffffff,bg+:0,hl+:1 --color=info:0,prompt:0,pointer:12,marker:4,spinner:11,header:-1 --layout=reverse  --margin=1,4'
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-
-function! FloatingFZF()
-  let buf = nvim_create_buf(v:false, v:true)
-  call setbufvar(buf, '&signcolumn', 'no')
-
-  let height = float2nr(20)
-  let width = float2nr(120)
-  let horizontal = float2nr((&columns - width) / 2)
-  let vertical = 1
-
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': vertical,
-        \ 'col': horizontal,
-        \ 'width': width,
-        \ 'height': height,
-        \ 'style': 'minimal'
-        \ }
-
-  call nvim_open_win(buf, v:true, opts)
-endfunction
-
-" }}}
-
-" Deoplete -----------------------------------{{{
-let g:deoplete#enable_at_startup = 1
-
-call deoplete#custom#option({
-   \ 'auto_complete_delay': 0,
-   \ 'enable_smart_case': 1,
-   \ 'smart_case': v:true,
-   \})
-call deoplete#custom#option('omni_patterns', {
-   \ 'html': '',
-   \ 'css': '',
-   \ 'scss': ''
-   \})
-call deoplete#custom#option('sources', {
-   \ 'cs': 'omnisharp'
-   \})
-let g:echodoc_enable_at_startup=1
-let g:echodoc#type='floating'
-hi link EchoDocFloat Pmenu
-set splitbelow
-set completeopt+=menuone,noinsert,noselect
-set completeopt-=preview
-autocmd CompleteDone * pclose
-
-function g:Multiple_cursors_before()
-	call deoplete#custom#buffer_option('auto_complete', v:false)
-endfunction
-function g:Multiple_cursors_after()
-	call deoplete#custom#buffer_option('auto_complete', v:true)
-endfunction
-
-call deoplete#custom#source('jedi', 'mark', '')
-call deoplete#custom#source('LanguageClient', 'mark', '')
-call deoplete#custom#source('file', 'mark', '')
-call deoplete#custom#source('buffer', 'mark', 'ℬ')
-
-" use TAB as the mapping
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ?  "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ deoplete#manual_complete()
-function! s:check_back_space() abort "" {{{
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction "" }}}
-
-let g:AutoPairsMapCR=0
-imap <expr><CR> pumvisible() ? deoplete#close_popup() : '<CR><Plug>AutoPairsReturn'
-
-" }}}
-
-" Ultisnips ----------------------------------{{{
-let g:UltiSnipsExpandTrigger       = "<C-s>"
-let g:UltiSnipsJumpForwardTrigger  = "<C-s>"
-
-inoremap <silent> <C-s> <C-r>=LoadUltiSnipsAndExpand()<CR>
-
-function! LoadUltiSnipsAndExpand()
-    let l:curpos = getcurpos()
-    execute plug#load('ultisnips')
-    call cursor(l:curpos[1], l:curpos[2])
-    call UltiSnips#ExpandSnippet()
-    return ""
-endfunction
-" }}}
-
-" Linting ------------------------------------{{{
-
-let g:ale_linters = {}
-let g:ale_fixers = { '*': ['remove_trailing_lines', 'trim_whitespace'] }
-let g:ale_lint_on_text_changed = 'always'
-let g:ale_fix_on_save = 1
-
-map <Leader>ai :ALEInfo<CR>
-map <Leader>at :ALEToggle<CR>
-map <Leader>ab :ALEToggle<CR>
-
-" }}}
-
-" Lightline/Tmuxline -------------------------{{{
-
-let g:lightline = {}
-
-let g:lightline.enable = {
-	\ 'statusline': 1,
-	\ 'tabline': 1
-	\}
-
-let g:lightline.component_expand = {
-      \  'linter_checking': 'lightline#ale#checking',
-      \  'linter_warnings': 'lightline#ale#warnings',
-      \  'linter_errors': 'lightline#ale#errors',
-      \  'linter_ok': 'lightline#ale#ok',
-      \ }
-let g:lightline.component_type = {
-      \     'linter_checking': 'left',
-      \     'linter_warnings': 'warning',
-      \     'linter_errors': 'error',
-      \     'linter_ok': 'left',
-      \ }
-let g:lightline.active = {
-			\ 'left': [ [ 'mode', 'paste' ],
-      				\ [ 'readonly', 'filename', 'modified' ] ],
-			\ 'right': [ ['lineinfo'],
-				\ ['percent'], ['fileformat', 'fileencoding', 'filetype'],
-				\ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]] }
-let g:lightline.colorscheme = 'deus'
-set noshowmode " Only show mode in lightline
-
-let g:tmuxline_powerline_separators = 0
-" }}}
-
-" Git ----------------------------------------{{{
-map <Leader>gg :Git<CR>
-map <Leader>gc :Git
-" }}}
-
-" Python -------------------------------------{{{
-let g:ale_linters.python = ['bandit', 'flake8']
-let g:ale_fixers.python = ['autopep8']
-let g:LanguageClient_serverCommands.python = ['pyls']
-let g:loaded_python_provider = 0
-let g:python3_host_prog = '/usr/bin/python3'
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#completions_enabled = 0
-let g:jedi#force_py_version=3
-augroup python
-	au Filetype python setl et ts=4 sw=4
+" LSP/Language Formatting
+silent! call lsp#add_filetype_config({
+			\'filetype': 'java',
+			\'name':'jdtls',
+			\'cmd':'jdtls'
+			\})
+augroup javaFormat
+	autocmd Filetype java setl formatprg=google-java-format\ -
+	autocmd Filetype java setl softtabstop=2 shiftwidth=2
 augroup end
-" }}}
 
-" Java ---------------------------------------{{{
-let g:ale_linters.java = ['javac']
-let g:ale_fixers.java = ['google_java_format']
-let g:LanguageClient_serverCommands.java = ['/usr/bin/jdtls']
-augroup java
-	au Filetype java setl et ts=2 sw=2
+silent! call lsp#add_filetype_config({
+			\'filetype': 'python',
+			\'name':'pyls',
+			\'cmd':'pyls'
+			\})
+
+augroup pythonFMT
+	autocmd Filetype python setl formatprg=flake8
 augroup end
-let g:ale_java_javac_executable='/home/yack/.sdkman/candidates/java/current/bin/javac'
-let g:ale_java_eclipselsp_path='/usr/bin/'
-let g:ale_java_eclipselsp_executable='jdtls'
-let g:JavaComplete_EnableDefaultMappings=0
-" }}}
 
-" Javascript ---------------------------------{{{
-let g:vim_jsx_pretty_colorful_config = 1
-let g:ale_linters.javascript = ['prettier']
-let g:ale_fixers.javascript = ['prettier']
-let g:ale_linters.javascriptreact = ['prettier']
-let g:ale_fixers.javascriptreact = ['prettier']
-" }}}
-
-" HTML ---------------------------------------{{{
-let g:ale_linters.html = ['prettier']
-let g:ale_fixers.html = ['prettier']
-" }}}
-
-" JSON ---------------------------------------{{{
-let g:ale_linters.json = ['prettier']
-let g:ale_fixers.json = ['prettier']
-augroup json
-	au FileType json syntax match Comment +\/\/.\+$+
-augroup end
-" }}}
-
-" MIPS Assembly ------------------------------{{{
-" Yes, this section is really here. Yes, I do use MARS too.
-let g:ale_linters.asm = []
-au BufNewFile,BufRead *.asm set filetype=mips
-au FileType asm set et ts=4 sw=4
-" }}}
-
-" C# -----------------------------------------{{{
-let g:OmniSharp_server_stdio = 1
-let g:ale_fixers.cs = ['uncrustify']
-let g:ale_linters.cs = ['OmniSharp']
-let g:OmniSharp_timeout = 100
-
-function! s:omnisharpMappings() abort
-	nnoremap <buffer> <silent> mi :OmniSharpFindImplementations<cr>
-	nnoremap <buffer> <silent> mu :OmniSharpFindUsages<cr>
-	nnoremap <buffer> <silent> mf :OmniSharpFindMembers<cr>
-	nnoremap <buffer> <silent> mx :OmniSharpFixIssue<cr>
-	nnoremap <buffer> <silent> mX :OmniSharpFixUsings<cr>
-	nnoremap <buffer> <silent> ml :OmniSharpTypeLookup<cr>
-	nnoremap <buffer> <silent> mr :OmniSharpRename<cr>
-	nnoremap <buffer> <silent> mR :OmniSharpReloadSolution<cr>
-	nnoremap <buffer> <silent> mF :OmniSharpCodeFormat<cr>
-	nnoremap <buffer> <silent> mh :OmniSharpHighlightTypes<cr>
+" Debugging
+let g:vebugger_use_tags=1
+function! VBGstartJDB(main) abort
+	call vebugger#jdb#start(a:main, {
+				\'classpath':'build',
+				\'srcpath':'src',
+				\})
 endfunction
+let g:vebugger_leader = '<Leader>d'
 
-autocmd FileType cs call s:omnisharpMappings()
-
-" Override Vim Gotodefinition
-autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-"navigate up by method/property/field
-autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
-"navigate down by method/property/field
-autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
-" rename without dialog - with cursor on the symbol to rename... ':Rename newname'
-command! -nargs=1 ORename :call OmniSharp#RenameTo("<args>")
-
-autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-" }}}
-
-" Vimscript ----------------------------------{{{
-augroup vimscript
-	au Filetype vim setl foldmethod=marker
-augroup end
-" }}}
+" Tags
+set tags=./tags;~
+command! Tags !ctags -R -I EXTERN -I INIT --exclude='build*' --exclude='.vim-src/**' --exclude='node_modules/**' --exclude='venv/**' --exclude='**/site-packages/**'
+			\--exclude='data/**' --exclude='dist/**' --exclude='notebooks/**' --exclude='Notebooks/**' --exclude='*graphhopper_data/*.json' --exclude='*graphhopper/*.json' --exclude='*.json' --exclude='qgis/**'
+			\--exclude=.git --exclude=.svn --exclude=.hg --exclude="*.cache.html" --exclude="*.nocache.js" --exclude="*.min.*" --exclude="*.map" --exclude="*.swp"
+			\--exclude="*.bak" --exclude="*.pyc" --exclude="*.class" --exclude="*.sln" --exclude="*.Master" --exclude="*.csproj" --exclude="*.csproj.user"
+			\--exclude="*.cache" --exclude="*.dll" --exclude="*.pdb" --exclude=tags --exclude="cscope.*" --exclude="*.tar.*"

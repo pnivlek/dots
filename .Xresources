@@ -1,24 +1,4 @@
-#include "/home/yack/etc/crayolo/colors/sprout"
-
-*background:   bg
-*foreground:   fg
-
-*color0:      blk
-*color8:      bblk
-*color1:      red
-*color9:      bred
-*color2:      grn
-*color10:     bgrn
-*color3:      ylw
-*color11:     bylw
-*color4:      blu
-*color12:     bblu
-*color5:      mag
-*color13:     bmag
-*color6:      cyn
-*color14:     bcyn
-*color7:      wht
-*color15:     bwht
+#include "/home/yack/.cache/wal/colors.Xresources"
 
 URxvt.scrollBar: 	false
-URxvt.font: xft:FantasqueSansMono Nerd Fonts:regular:size=10
+URxvt.font: xft:Iosevka Nerd Font Mono:regular:pixelsize=14
