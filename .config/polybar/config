@@ -1,0 +1,159 @@
+;==========================================================
+; Kelvin Porter 2019
+;==========================================================
+
+[colors]
+background = ${xrdb:color0:#282828}
+background-alt = ${xrdb:color8:#454545}
+foreground = ${xrdb:color7:#666666}
+foreground-alt = ${xrdb:color15:#eeeeee}
+alert = ${xrdb:color2:#f43753}
+
+[bar/laptop]
+monitor = ${env:MONITOR:eDP1}
+width = 100%
+height = 24
+fixed-center = false
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = ${colors.alert}
+
+border-size = 4
+border-color = ${colors.background-alt}
+
+padding-right = 1
+
+module-margin-left = 2
+module-margin-right = 1
+
+font-0 = Iosevka:pixelsize=12;1
+font-1 = FontAwesome:fontformat=truetype:size=8:antialias=false;0
+font-2 = siji:pixelsize=10;1
+
+modules-left = bspwm mpd
+modules-right = pulseaudio backlight wlan battery date
+
+wm-restack = bspwm
+
+[module/backlight]
+type = internal/xbacklight
+label =  %percentage%%
+
+[module/bspwm]
+type = internal/bspwm
+
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-padding = 1
+
+label-occupied = %index%
+label-occupied-padding = 1
+
+label-urgent = %index%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 1
+
+label-empty = %index%
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-padding = 1
+
+[module/mpd]
+type = internal/mpd
+format-online =<toggle>  <label-song>
+
+
+icon-play =
+icon-pause =
+
+label-song = %title%
+label-song-maxlen = 25
+label-song-ellipsis = true
+
+[module/wlan]
+type = internal/network
+interface = wlp1s0
+interval = 3.0
+
+format-connected = <ramp-signal> <label-connected>
+label-connected = %essid%
+
+format-disconnected = Disconnected
+
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = ${colors.foreground-alt}
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = %b %d
+date-alt = " %Y-%m-%d"
+
+time = %H:%M
+time-alt = %H:%M:%S
+
+format =  <label>
+format-prefix-foreground = ${colors.foreground-alt}
+
+label = %date% %time%
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume = <label-volume>
+label-volume = VOL %percentage%%
+label-volume-foreground = ${root.foreground}
+
+label-muted =  muted
+label-muted-foreground = ${colors.foreground}
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 98
+
+time-format = %-H:%M
+format-charging = <animation-charging> <label-charging>
+
+label-discharging = %percentage%%, %time%
+format-discharging = <ramp-capacity> <label-discharging>
+
+format-full-prefix = " "
+format-full-prefix-foreground = ${colors.foreground-alt}
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-foreground = ${colors.foreground-alt}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 750
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini
