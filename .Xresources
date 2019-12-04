@@ -1,4 +1,4 @@
 #include "/home/yack/.cache/wal/colors.Xresources"
 
-URxvt.scrollBar: 	false
-URxvt.font: xft:Iosevka Nerd Font Mono:regular:pixelsize=14
+st.scrollBar: 	false
+st.font: Iosevka Nerd Font Mono:regular:pixelsize=16
