@@ -4,7 +4,7 @@
 
 # terminal emulator
 alt + Return
-	termite
+	xst
 
 # program launcher
 alt + d

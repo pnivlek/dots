@@ -36,11 +36,13 @@ mp3p () {
 	youtube-dl --ignore-errors -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o '~/usr/mus/yt/%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' "$1"
 }
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/home/yack/.sdkman"
-[[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"
-
 alias dots='git --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.fzf.colors ] && source ~/.fzf.colors
+[[ -f /usr/share/z/z.sh ]] && . /usr/share/z/z.sh # install Z
+[[ -f /bedrock/strata/arch/usr/share/z/z.sh ]] && . /bedrock/strata/arch/usr/share/z/z.sh # install Z
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/yack/.sdkman"
+[[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"

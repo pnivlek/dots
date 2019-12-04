@@ -14,15 +14,17 @@ def_key "k"
 
 def_key "ctrl-u"
     page_up
-#push_characters "kkkkkkkkkkkkkkk"
 def_key "ctrl-d"
     page_down
-#push_characters "jjjjjjjjjjjjjjj"
 
 def_key "h"
     previous_column
 def_key "l"
     next_column
+def_key "h"
+  jump_to_parent_directory
+def_key "l"
+  enter_directory
 
 def_key "."
     show_lyrics
