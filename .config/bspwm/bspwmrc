@@ -4,7 +4,7 @@ hsetroot -cover "/home/yack/usr/pic/wall.png" &
 sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
 mpdscribble
 wal -R
-dunst &
+dunst -conf ~/.cache/wal/dunstrc &
 polybar laptop &
 
 bspc monitor -d I II III IV V VI VII VIII IX X

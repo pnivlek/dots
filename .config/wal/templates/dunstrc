@@ -1,0 +1,31 @@
+[global]
+alignment = center
+follow = keyboard
+frame_width = 1
+geometry = 150x0-8+45
+padding = 5
+font = FiraSans 12
+separator_color = "{foreground}"
+frame_color = "{foreground}"
+word_wrap = true
+
+[shortcuts]
+close = ctrl+space
+close_all = ctrl+shift+space
+history = ctrl+grave
+context = ctrl+shift+period
+
+[urgency_low]
+background = "{background}"
+foreground = "{foreground}"
+timeout = 5
+
+[urgency_normal]
+background = "{color2}"
+foreground = "{background}"
+timeout = 10
+
+[urgency_critical]
+background = "{color1}"
+foreground = "{background}"
+timeout = 0
