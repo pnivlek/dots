@@ -4,7 +4,7 @@
 
 # terminal emulator
 alt + Return
-	termite
+	xst
 
 # program launcher
 alt + d
@@ -14,32 +14,27 @@ alt + d
 alt + Escape
 	pkill -USR1 -x sxhkd 
 
-alt + F1
-	pkill -USR1 -x termite
-
-alt + shift + x
-	betterlockscreen -l blur
-
 alt + F3
 	mpc toggle
-
 alt + F4
 	xbacklight -set 1
-
 alt + F5
 	xbacklight -set 80
-
 alt + F6
 	xbacklight -dec 10
-
 alt + F7
 	xbacklight -inc 10
 
-alt + ctrl + {1-4}
-	termite -e 'bash -c /home/yack/bin/lecdir.sh {ams301,ams310,cse216,cse220}'
+alt + F8
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+alt + F9
+	pactl set-sink-volume @DEFAULT_SINK@ -5%
+alt + F10
+	pactl set-sink-volume @DEFAULT_SINK@ +5%
 
-alt + ctrl + shift + {1-4}
-	termite -e 'bash -c /home/yack/bin/newlec.sh {ams301,ams310,cse216,cse220}'
+# lockscreen
+alt + shift + x
+	betterlockscreen -l pixel
 #
 # bspwm hotkeys
 #

@@ -12,6 +12,8 @@ if !s:plugins
 else
 
 	call minpac#init()
+	
+	call minpac#add('neovim/nvim-lsp', {'type': 'opt'})
 
 	call minpac#add('SirVer/ultisnips')
 	call minpac#add('honza/vim-snippets')
@@ -30,8 +32,9 @@ else
 	call minpac#add('tpope/vim-fugitive')
 	call minpac#add('junegunn/gv.vim')
 
-	call minpac#add('justinmk/vim-sneak')
 	call minpac#add('tpope/vim-surround')
+
+	call minpac#add('justinmk/vim-sneak')
 	call minpac#add('tommcdo/vim-lion')
 	call minpac#add('tpope/vim-repeat')
 	call minpac#add('tpope/vim-eunuch')
@@ -58,14 +61,20 @@ else
 		autocmd Filetype tex autocmd BufWritePost lec*.tex :Dispatch!
 	augroup end
 
+	call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
+	augroup mips
+		autocmd Filetype asm packadd vim-mipssyntax
+		autocmd Filetype asm setlocal syntax="mips"
+	augroup end
+
 	call minpac#add('moll/vim-bbye')
 	call minpac#add('christoomey/vim-tmux-navigator')
 	call minpac#add('drzel/vim-scrolloff-fraction')
 	let g:scrolloff_fraction=0.2
 
-	call minpac#add('dylanaraps/wal.vim')
+	call minpac#add('cocopon/iceberg.vim')
+	call minpac#add('rakr/vim-one')
 	call minpac#add('itchyny/lightline.vim')
-	let g:lightline = {'colorscheme': 'wal'}
 endif " }}}
 
 " Set leader key to space
@@ -118,8 +127,13 @@ nnoremap gS :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
 " NetRW settings/UI stuff
 let g:netrw_banner=0
 let g:netrw_winsize=25
-silent! colorscheme wal
 let $FZF_DEFAULT_COMMAND =  'rg --files --hidden -S'
+set termguicolors
+silent! colorscheme one
+set background=dark
+let g:lightline = {
+	\ 'colorscheme': 'one',
+	\ }
 " search current project directory
 nmap <Leader><Tab> :FzFiles<CR>
 " search home directory
@@ -130,24 +144,23 @@ nmap <Leader>b :FzBuffers<CR>
 nmap <Leader>l :FzLines<CR>
 
 " LSP/Language Formatting
-silent! call lsp#add_filetype_config({
-			\'filetype': 'java',
-			\'name':'jdtls',
-			\'cmd':'jdtls'
-			\})
+augroup lspVIM
+	autocmd Filetype python,tex,java lua require('lsp_local')
+	autocmd Filetype python,tex packadd nvim-lsp
+	autocmd FileType python lua setupPythonServer()
+	autocmd FileType tex lua setupTexlabServer()
+	autocmd FileType python,tex setlocal omnifunc=lsp#omnifunc
+augroup end
+
+" call nvim_lsp#setup("jdtls") " - no support yet
+
 augroup javaFormat
 	autocmd Filetype java setl formatprg=google-java-format\ -
 	autocmd Filetype java setl softtabstop=2 shiftwidth=2
 augroup end
 
-silent! call lsp#add_filetype_config({
-			\'filetype': 'python',
-			\'name':'pyls',
-			\'cmd':'pyls'
-			\})
-
-augroup pythonFMT
-	autocmd Filetype python setl formatprg=flake8
+augroup pythonFMT 
+	autocmd Filetype python setl formatprg=black\ -c
 augroup end
 
 " Debugging
