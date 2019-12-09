@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# Dotfiles
+alias dots='git --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
+
+# Anaconda
+alias ana="source /home/yack/doc/ana/bin/activate"
+alias dana="conda deactivate"
+
+# Programs
+alias c="clear"
+alias n="nvim"
