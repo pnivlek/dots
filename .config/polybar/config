@@ -36,6 +36,8 @@ font-2 = siji:pixelsize=10;1
 modules-left = bspwm mpd
 modules-right = pulseaudio backlight wlan battery date
 
+tray-position=right
+
 wm-restack = bspwm
 
 [module/backlight]

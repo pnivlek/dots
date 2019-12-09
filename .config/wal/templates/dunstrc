@@ -1,13 +1,15 @@
 [global]
-alignment = center
+format = "<b>%s</b>\n%b"
+markup = yes
+sort = yes
 follow = keyboard
-frame_width = 1
-geometry = 150x0-8+45
-padding = 5
-font = FiraSans 12
-separator_color = "{foreground}"
-frame_color = "{foreground}"
+alignment = center
+geometry = 550x0-8+45
+font = Iosevka 12
+padding = 8
+separator_color = "{color8}"
 word_wrap = true
+stack_duplicates = false
 
 [shortcuts]
 close = ctrl+space
@@ -15,17 +17,31 @@ close_all = ctrl+shift+space
 history = ctrl+grave
 context = ctrl+shift+period
 
+[frame]
+width = 3
+color = "{color8}"
+
 [urgency_low]
 background = "{background}"
 foreground = "{foreground}"
 timeout = 5
 
 [urgency_normal]
-background = "{color2}"
-foreground = "{background}"
+background = "{background}"
+foreground = "{color2}"
 timeout = 10
 
 [urgency_critical]
-background = "{color1}"
-foreground = "{background}"
+background = "{background}"
+foreground = "{color1}"
 timeout = 0
+
+[discord]
+appname = discord 
+summary = "*"
+urgency = low
+
+[discordeveryone]
+appname = discord 
+summary = "*@everyone*"
+urgency = normal

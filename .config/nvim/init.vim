@@ -61,12 +61,19 @@ else
 		autocmd Filetype tex autocmd BufWritePost lec*.tex :Dispatch!
 	augroup end
 
+	call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
+	augroup mips
+		autocmd Filetype asm packadd vim-mipssyntax
+		autocmd Filetype asm setlocal syntax="mips"
+	augroup end
+
 	call minpac#add('moll/vim-bbye')
 	call minpac#add('christoomey/vim-tmux-navigator')
 	call minpac#add('drzel/vim-scrolloff-fraction')
 	let g:scrolloff_fraction=0.2
 
 	call minpac#add('cocopon/iceberg.vim')
+	call minpac#add('rakr/vim-one')
 	call minpac#add('itchyny/lightline.vim')
 endif " }}}
 
@@ -102,7 +109,6 @@ set suffixesadd=.java
 set relativenumber 	  " set line number = distance from currently selected one
 set number 		" set current line number to not 0.
 set dictionary+=/usr/share/dict/words
-set termguicolors
 
 augroup fileAuto
 	" Create directories before saving if they don't exist.
@@ -122,15 +128,17 @@ nnoremap gS :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
 let g:netrw_banner=0
 let g:netrw_winsize=25
 let $FZF_DEFAULT_COMMAND =  'rg --files --hidden -S'
-silent! colorscheme iceberg
+set termguicolors
+silent! colorscheme one
+set background=dark
 let g:lightline = {
-	\ 'colorscheme': 'iceberg',
+	\ 'colorscheme': 'one',
 	\ }
 " search current project directory
 nmap <Leader><Tab> :FzFiles<CR>
 " search home directory
 nmap <Leader>h :FzFiles ~<CR>
-nmap <Leader>c :FzFiles ~/doc/edu/code<CR>
+nmap <Leader>c :FzFiles ~/doc/code<CR>
 " buffers and lines
 nmap <Leader>b :FzBuffers<CR>
 nmap <Leader>l :FzLines<CR>
@@ -152,7 +160,7 @@ augroup javaFormat
 augroup end
 
 augroup pythonFMT 
-	autocmd Filetype python setl formatprg=black -c
+	autocmd Filetype python setl formatprg=black\ -c
 augroup end
 
 " Debugging

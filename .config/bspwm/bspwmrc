@@ -5,6 +5,22 @@ sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
 mpdscribble
 wal -R
 dunst -conf ~/.cache/wal/dunstrc &
+
+# calendar notifications
+if [ -x /bedrock/cross/bin/gcalcli ]; then
+  while true; do
+    /bedrock/cross/bin/gcalcli remind 10
+    sleep 300
+  done &
+fi
+
+if [ -x /usr/bin/gcalcli ]; then
+  while true; do
+    /usr/bin/gcalcli remind 10
+    sleep 300
+  done &
+fi
+
 polybar laptop &
 
 bspc monitor -d I II III IV V VI VII VIII IX X
