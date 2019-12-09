@@ -4,7 +4,7 @@
 packadd minpac
 let s:plugins = exists('*minpac#init')
 
-if !s:plugins 
+if !s:plugins
 	fun! InstallPlug() " Bootstrap plugin manager on new systems.
 		exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
 	endfun
@@ -42,7 +42,7 @@ else
 	call minpac#add('junegunn/fzf', { 'do': '!yes n | ./install' })
 	call minpac#add('junegunn/fzf.vim')
 	let g:fzf_command_prefix = 'Fz'
-	
+
 	call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
 	augroup javaPlugins
 		autocmd FileType java packadd vim-javacomplete2
@@ -175,8 +175,8 @@ let g:vebugger_leader = '<Leader>d'
 
 " Tags
 set tags=./tags;~
-command! Tags !ctags -R -I EXTERN -I INIT --exclude='build*' --exclude='.vim-src/**' --exclude='node_modules/**' --exclude='venv/**' --exclude='**/site-packages/**' 
+command! Tags !ctags -R -I EXTERN -I INIT --exclude='build*' --exclude='.vim-src/**' --exclude='node_modules/**' --exclude='venv/**' --exclude='**/site-packages/**'
 			\--exclude='data/**' --exclude='dist/**' --exclude='notebooks/**' --exclude='Notebooks/**' --exclude='*graphhopper_data/*.json' --exclude='*graphhopper/*.json' --exclude='*.json' --exclude='qgis/**'
-			\--exclude=.git --exclude=.svn --exclude=.hg --exclude="*.cache.html" --exclude="*.nocache.js" --exclude="*.min.*" --exclude="*.map" --exclude="*.swp" 
-			\--exclude="*.bak" --exclude="*.pyc" --exclude="*.class" --exclude="*.sln" --exclude="*.Master" --exclude="*.csproj" --exclude="*.csproj.user" 
+			\--exclude=.git --exclude=.svn --exclude=.hg --exclude="*.cache.html" --exclude="*.nocache.js" --exclude="*.min.*" --exclude="*.map" --exclude="*.swp"
+			\--exclude="*.bak" --exclude="*.pyc" --exclude="*.class" --exclude="*.sln" --exclude="*.Master" --exclude="*.csproj" --exclude="*.csproj.user"
 			\--exclude="*.cache" --exclude="*.dll" --exclude="*.pdb" --exclude=tags --exclude="cscope.*" --exclude="*.tar.*"
