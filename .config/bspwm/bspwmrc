@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Remove all previous rules since we might be refreshing bspwm.
+bspc rule -r "*"
+
 hsetroot -cover "/home/yack/usr/pic/wall.png" &
 mpdscribble
 wal -R
@@ -31,8 +34,7 @@ fi
 
 bspc monitor -d I II III IV V VI VII VIII IX X
 
-bspc config border_width 2 
-bspc config window_gap           8
+bspc config border_width 2
 
 bspc config bottom_margin 4
 bspc config left_margin 4
@@ -48,4 +50,3 @@ bspc config presel_feedback_color #666666
 
 bspc rule -a MARS desktop='^2'
 bspc rule -a Gimp desktop='^8' state=floating follow=on
-bspc rule -a Chromium desktop='^1'
