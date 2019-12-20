@@ -5,77 +5,87 @@ packadd minpac
 let s:plugins = exists('*minpac#init')
 
 if !s:plugins
-	fun! InstallPlug() " Bootstrap plugin manager on new systems.
-		exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
-	endfun
-	call InstallPlug()
-else
+	echo 'Downloading minpac to manage plugins...'
+	exe '!mkdir -p ~/.config/nvim/pack/minpac/opt/minpac'
+	exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
+	autocmd VimEnter * call minpac#update()
+endif
 
-	call minpac#init()
-	
-	call minpac#add('neovim/nvim-lsp', {'type': 'opt'})
+call minpac#init()
 
-	call minpac#add('SirVer/ultisnips')
-	call minpac#add('honza/vim-snippets')
-	let g:UltiSnipsSnippetDirectories=['UltiSnips', 'custom-snippets']
-	let g:UltiSnipsExpandTrigger="<tab>"
-	let g:UltiSnipsJumpForwardTrigger="<tab>"
-	let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
+call minpac#add('neovim/nvim-lsp', {'type': 'opt'})
+
+call minpac#add('SirVer/ultisnips')
+call minpac#add('honza/vim-snippets')
+let g:UltiSnipsSnippetDirectories=['UltiSnips', 'custom-snippets']
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 
 
-	call minpac#add('Shougo/vimproc.vim', { 'do': 'make'} )
-	call minpac#add('idanarye/vim-vebugger')
-	call minpac#add('tpope/vim-dispatch')
+call minpac#add('tpope/vim-dispatch')
 
-	call minpac#add('tpope/vim-dadbod')
+call minpac#add('tpope/vim-fugitive')
+call minpac#add('junegunn/gv.vim')
 
-	call minpac#add('tpope/vim-fugitive')
-	call minpac#add('junegunn/gv.vim')
+call minpac#add('tpope/vim-surround')
 
-	call minpac#add('tpope/vim-surround')
+call minpac#add('justinmk/vim-sneak')
+call minpac#add('tommcdo/vim-lion')
+call minpac#add('tpope/vim-repeat')
 
-	call minpac#add('justinmk/vim-sneak')
-	call minpac#add('tommcdo/vim-lion')
-	call minpac#add('tpope/vim-repeat')
-	call minpac#add('tpope/vim-eunuch')
+call minpac#add('junegunn/fzf', { 'do': '!yes n | ./install' })
+call minpac#add('junegunn/fzf.vim')
+let g:fzf_command_prefix = 'Fz'
 
-	call minpac#add('junegunn/fzf', { 'do': '!yes n | ./install' })
-	call minpac#add('junegunn/fzf.vim')
-	let g:fzf_command_prefix = 'Fz'
+" note taking in class
+call minpac#add('vimwiki/vimwiki')
+call minpac#add('junegunn/goyo.vim')
+let g:goyo_width = '80%'
+let g:goyo_height = '80%'
 
-	call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
-	augroup javaPlugins
-		autocmd FileType java packadd vim-javacomplete2
-		autocmd FileType java setlocal omnifunc=javacomplete#Complete
-		autocmd Filetype java setlocal completefunc=javacomplete#CompleteParamsInfo
-	augroup end
 
-	call minpac#add('lervag/vimtex', {'type': 'opt'})
-	let g:tex_flavor='latex'
-	augroup texPlugins
-		autocmd FileType tex packadd vimtex
-		autocmd Filetype tex setlocal spell
-		autocmd FileType tex let g:vimtex_view_method='zathura'
-		autocmd FileType tex let g:vimtex_compiler_method='latexmk'
-		autocmd FileType tex let g:vimtex_quickfix_mode=0
-		autocmd Filetype tex autocmd BufWritePost lec*.tex :Dispatch!
-	augroup end
+call minpac#add('numirias/semshi', {'do': ':UpdateRemotePlugins'})
+augroup pythonPlugins
+	autocmd FileType python let g:python_highlight_all = 1
+augroup end
 
-	call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
-	augroup mips
-		autocmd Filetype asm packadd vim-mipssyntax
-		autocmd Filetype asm setlocal syntax="mips"
-	augroup end
+call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
+augroup javaPlugins
+	autocmd FileType java packadd vim-javacomplete2
+	autocmd FileType java setlocal omnifunc=javacomplete#Complete
+	autocmd Filetype java setlocal completefunc=javacomplete#CompleteParamsInfo
+augroup end
 
-	call minpac#add('moll/vim-bbye')
-	call minpac#add('christoomey/vim-tmux-navigator')
-	call minpac#add('drzel/vim-scrolloff-fraction')
-	let g:scrolloff_fraction=0.2
+call minpac#add('lervag/vimtex', {'type': 'opt'})
+let g:tex_flavor='latex'
+augroup texPlugins
+	autocmd FileType tex packadd vimtex
+	autocmd Filetype tex setlocal spell
+	autocmd FileType tex let g:vimtex_view_method='zathura'
+	autocmd FileType tex let g:vimtex_compiler_method='latexmk'
+	autocmd FileType tex let g:vimtex_quickfix_mode=0
+	autocmd Filetype tex autocmd BufWritePost lec*.tex :Dispatch!
+augroup end
 
-	call minpac#add('cocopon/iceberg.vim')
-	call minpac#add('rakr/vim-one')
-	call minpac#add('itchyny/lightline.vim')
-endif " }}}
+call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
+augroup mips
+	autocmd Filetype asm packadd vim-mipssyntax
+	autocmd Filetype asm setlocal syntax="mips"
+augroup end
+
+call minpac#add('moll/vim-bbye')
+call minpac#add('christoomey/vim-tmux-navigator')
+call minpac#add('drzel/vim-scrolloff-fraction')
+let g:scrolloff_fraction=0.2
+
+call minpac#add('arcticicestudio/nord-vim')
+call minpac#add('romainl/apprentice')
+call minpac#add('rakr/vim-one')
+call minpac#add('dikiaap/minimalist')
+call minpac#add('dylanaraps/wal.vim')
+call minpac#add('itchyny/lightline.vim')
+" }}}
 
 " Set leader key to space
 let mapleader = '\'
@@ -91,14 +101,20 @@ syntax on
 " Hit `%` on `if` to jump to `else`.
 runtime macros/matchit.vim
 
-" various settings
+" Various settings
 set autoindent                 " Minimal automatic indenting for any filetype.
 set backspace=indent,eol,start " Proper backspace behavior.
 set hidden                     " Possibility to have more than one unsaved buffers.
-set splitright		       " Vertical split buffers open on the right
 set incsearch                  " Incremental search.
+" Search highlighting with this.
+augroup vimrc-incsearch-highlight
+	autocmd!
+	autocmd CmdlineEnter /,\? :set hlsearch
+	autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
 set foldmethod=marker
-set smartcase 		       " Both cases if search term is all lowercase, ignores ignorecase command.
+set ignorecase
+set smartcase 		       " Both cases if search term is all lowercase, requires ignorecase command.
 set ruler                      " Shows the current line number at the bottom-right of the screen.
 set wildmenu                   " Great command-line completion, use `<Tab>` to move
 " around and `<CR>` to validate.
@@ -113,10 +129,55 @@ set dictionary+=/usr/share/dict/words
 augroup fileAuto
 	" Create directories before saving if they don't exist.
 	autocmd BufWritePre *
-		\ if '<afile>' !~ '^scp:' && !isdirectory(expand('<afile>:h')) |
-		\ call mkdir(expand('<afile>:h'), 'p') |
-		\ endif
+				\ if '<afile>' !~ '^scp:' && !isdirectory(expand('<afile>:h')) |
+				\ call mkdir(expand('<afile>:h'), 'p') |
+				\ endif
+	" Remove all trailing whitepace on save
+	autocmd BufWritePre * %s/\s\+$//e
 augroup end
+
+" Notes
+function! s:goyo_enter()
+	if exists('$TMUX')
+		silent !tmux set status off
+	endif
+	let b:quitting = 0
+	let b:quitting_bang = 0
+	autocmd QuitPre <buffer> let b:quitting = 1
+	cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+	set noshowcmd
+endfunction
+function! s:goyo_leave()
+	if exists('$TMUX')
+		silent !tmux set status on
+	endif
+	set showcmd
+	" Quit neovim if this is the only remaining buffer
+	if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+		if b:quitting_bang
+			qa!
+		else
+			qa
+		endif
+	endif
+endfunction
+augroup GoyoNotes
+	autocmd! User GoyoEnter call <SID>goyo_enter()
+	autocmd! User GoyoLeave call <SID>goyo_leave()
+augroup end
+let g:vimwiki_list = [{'path': '~/doc/edu/notes/text/',
+			\'path_html': '~/doc/edu/notes/html/',
+			\'template_path': '~/doc/edu/notes/templates/',
+			\'template_default': 'def_template',
+			\'template_ext': '.html'},
+			\{'path': '~/doc/rpg/notes/text/',
+			\'path_html': '~/doc/rpg/notes/html/',
+			\'template_path': '~/doc/rpg/notes/templates/',
+			\'template_default': 'def_template',
+			\'template_ext': '.html'}]
+let g:vimwiki_auto_chdir = 1
+let g:vimwiki_table_mappings = 0 " use tab for ultisnips, not the table mappings.
+let g:vimwiki_text_ignore_newline = 0
 
 " Repeat last macro, instead of ex mode.
 nnoremap Q @@
@@ -124,53 +185,53 @@ nnoremap Q @@
 " indents.
 nnoremap gS :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
 
-" NetRW settings/UI stuff
-let g:netrw_banner=0
-let g:netrw_winsize=25
 let $FZF_DEFAULT_COMMAND =  'rg --files --hidden -S'
-set termguicolors
-silent! colorscheme one
+set notermguicolors
+silent! colorscheme custom-wal
+let g:lightline = {'colorscheme': 'wal'}
 set background=dark
-let g:lightline = {
-	\ 'colorscheme': 'one',
-	\ }
 " search current project directory
 nmap <Leader><Tab> :FzFiles<CR>
-" search home directory
+" search home and code directory
 nmap <Leader>h :FzFiles ~<CR>
 nmap <Leader>c :FzFiles ~/doc/code<CR>
 " buffers and lines
 nmap <Leader>b :FzBuffers<CR>
 nmap <Leader>l :FzLines<CR>
 
+" Code Formatting
+" Disables automatic commenting on newline:
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 " LSP/Language Formatting
-augroup lspVIM
-	autocmd Filetype python,tex,java lua require('lsp_local')
-	autocmd Filetype python,tex packadd nvim-lsp
-	autocmd FileType python lua setupPythonServer()
-	autocmd FileType tex lua setupTexlabServer()
-	autocmd FileType python,tex setlocal omnifunc=lsp#omnifunc
-augroup end
+"augroup lspVIM
+"	autocmd Filetype python,tex,java lua require('lsp_local')
+"	autocmd Filetype python,tex packadd nvim-lsp
+"	autocmd FileType python lua setupPythonServer()
+"	autocmd FileType tex lua setupTexlabServer()
+"	autocmd FileType python,tex setlocal omnifunc=lsp#omnifunc
+"augroup end
 
 " call nvim_lsp#setup("jdtls") " - no support yet
 
-augroup javaFormat
+
+augroup javaFMT
 	autocmd Filetype java setl formatprg=google-java-format\ -
 	autocmd Filetype java setl softtabstop=2 shiftwidth=2
+	autocmd Filetype java let b:java_highlight_all=1
 augroup end
 
-augroup pythonFMT 
-	autocmd Filetype python setl formatprg=black\ -c
+augroup pythonFMT
+	autocmd Filetype python setlocal formatprg=yapf
+augroup end
+
+augroup webFMT
+	" this is terrible but its legitimately the only thing that works apparently.
+	autocmd FileType javascript,css setlocal formatprg=prettier\ %
 augroup end
 
 " Debugging
 let g:vebugger_use_tags=1
-function! VBGstartJDB(main) abort
-	call vebugger#jdb#start(a:main, {
-				\'classpath':'build',
-				\'srcpath':'src',
-				\})
-endfunction
 let g:vebugger_leader = '<Leader>d'
 
 " Tags

@@ -4,23 +4,23 @@
 
 # terminal emulator
 super + Return
-	termite
+	xst
 
 # program launcher
 super + d
-	rofi -show run
+	rofi -show run -theme .cache/wal/colors-rofi-dark.rasi
 
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd 
 
 super + F1
-	pkill -USR1 -x termite
+	pkill -USR1 -x xst
 
 super + shift + x
 	betterlockscreen -l blur
 
-super + F12
+super + F3
 	mpc toggle
 
 #
