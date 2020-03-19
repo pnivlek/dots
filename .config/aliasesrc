@@ -4,9 +4,15 @@
 alias dots='git --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
 
 # Anaconda
-alias ana="source /home/yack/doc/ana/bin/activate"
+alias ana="source /opt/miniconda3/bin/activate"
 alias dana="conda deactivate"
 
-# Programs
+# C-L doesn't work in tmux. This is almost as fast.
 alias c="clear"
-alias n="nvim"
+
+# Fasd
+alias e="f -e $EDITOR"
+alias m="f -e mpv"
+alias o="f -e xdg-open"
+
+alias em="TERM=xterm-256color emacs -nw"

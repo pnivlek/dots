@@ -13,7 +13,7 @@ alert = ${xrdb:color2:#f43753}
 monitor = ${env:MONITOR:eDP1}
 width = 100%
 height = 24
-fixed-center = false
+fixed-center = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -21,7 +21,7 @@ foreground = ${colors.foreground}
 line-size = 3
 line-color = ${colors.alert}
 
-border-size = 4
+border-size = 3
 border-color = ${colors.background-alt}
 
 padding-right = 1
@@ -29,7 +29,7 @@ padding-right = 1
 module-margin-left = 2
 module-margin-right = 1
 
-font-0 = Iosevka:pixelsize=12;1
+font-0 = Iosevka Nerd Font Mono:medium:pixelsize=12;1
 font-1 = FontAwesome:fontformat=truetype:size=8:antialias=false;0
 font-2 = siji:pixelsize=10;1
 
@@ -37,6 +37,8 @@ modules-left = bspwm mpd
 modules-right = pulseaudio backlight wlan battery date
 
 tray-position=right
+
+enable-ipc = true
 
 wm-restack = bspwm
 
@@ -72,8 +74,10 @@ tray-position=right
 wm-restack = bspwm
 
 [module/backlight]
-type = internal/xbacklight
-label =  %percentage%%
+type = custom/ipc
+hook-0 = echo "$(light -G | sed -e "s/\.\w*//")%"
+initial = 1
+format =  <output>
 
 [module/bspwm]
 type = internal/bspwm
@@ -96,6 +100,7 @@ label-empty-padding = 1
 [module/mpd]
 type = internal/mpd
 format-online =<toggle>  <label-song>
+format-background = ${colors.foreground}
 
 
 icon-play =
@@ -107,7 +112,7 @@ label-song-ellipsis = true
 
 [module/wlan]
 type = internal/network
-interface = wlp1s0
+interface = wlp3s0
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
@@ -149,17 +154,18 @@ label-muted-foreground = ${colors.foreground}
 
 [module/battery]
 type = internal/battery
-battery = BAT0
+battery = BAT1
 adapter = AC
-full-at = 98
-
+full-at = 99.5
 time-format = %-H:%M
+
+label-charging = %percentage%%, Ch.
 format-charging = <animation-charging> <label-charging>
 
 label-discharging = %percentage%%, %time%
 format-discharging = <ramp-capacity> <label-discharging>
 
-format-full-prefix = " "
+format-full-prefix = " "
 format-full-prefix-foreground = ${colors.foreground-alt}
 
 ramp-capacity-0 = 

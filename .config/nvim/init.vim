@@ -1,243 +1,544 @@
 " Kelvin Porter CURRENT_YEAR
+" Large parts taken from pwntester because his init.vim is awesome.
 
-" Plugins {{{
+if &compatible
+    set nocompatible
+endif
+
+" ===== BUILTIN PLUGINS ==================== {{{
+
+" Disable built-in plugins
+let g:loaded_2html_plugin      = 1
+let g:loaded_getscript         = 1
+let g:loaded_getscriptPlugin   = 1
+let g:loaded_gzip              = 1
+let g:loaded_logipat           = 1
+let g:loaded_logiPat           = 1
+let g:loaded_matchparen        = 1
+let g:loaded_netrw             = 1
+let g:loaded_netrwFileHandlers = 1
+let g:loaded_netrwPlugin       = 1
+let g:loaded_netrwSettings     = 1
+let g:loaded_rrhelper          = 1
+let g:loaded_spellfile_plugin  = 1
+let g:loaded_sql_completion    = 1
+let g:loaded_syntax_completion = 1
+let g:loaded_tar               = 1
+let g:loaded_tarPlugin         = 1
+let g:loaded_vimball           = 1
+let g:loaded_vimballPlugin     = 1
+let g:loaded_zip               = 1
+let g:loaded_zipPlugin         = 1
+let g:vimsyn_embed             = 1
+let g:loaded_matchit           = 1
+
+" }}}
+
+" ===== SETUP FUNCTIONS ==================== {{{
+
+" Creates a floating window with a most recent buffer to be used
+function! CreateCenteredFloatingWindow()
+    let width = float2nr(&columns * 0.6)
+    let height = float2nr(&lines * 0.6)
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
+    let lines = [top] + repeat([mid], height - 2) + [bot]
+    let s:buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+    call nvim_open_win(s:buf, v:true, opts)
+    set winhl=Normal:Floating
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 2
+    let opts.width -= 4
+    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+    au BufWipeout <buffer> exe 'bw '.s:buf
+endfunction
+" }}}
+
+" ===== GENERAL SETTINGS =================== {{{
+
+filetype plugin indent on                                           " Enabling filetype support.
+syntax on
+set hidden                                                          " Hide buffers when unloaded
+if &encoding != 'utf-8'                                             " Skip this on resourcing with Neovim (E905).
+    set encoding=utf-8
+    set fileencoding=utf-8
+endif
+set nrformats=alpha,hex,octal                                       " Increment/decrement numbers. C-a,a (tmux), C-x
+set shell=/bin/zsh                                                  " ZSH good
+set visualbell                                                      " Silent please
+set inccommand=nosplit                                              " Live preview for :substitute
+set updatetime=750                                                  " CursorHold waiting time
+set noequalalways                                                   " Do not auto-resize windows when opening/closing them!
+" }}}
+
+" ===== UI ================================= {{{
+set laststatus=2
+set backspace=indent,eol,start					                    " Proper backspace behavior.
+set foldmethod=marker                                               " Fold with markers {{{}}}
+set foldcolumn=0                                                    " Do not show fold levels in side bar
+set cursorline                                                      " Print cursorline
+set lazyredraw                                                      " Don't update the display while executing macros
+set number                                                          " Print the line number
+set relativenumber                                                  " Print the relative line number
+set showcmd                                                         " Show partial commands in status line
+set noshowmode                                                      " Dont show the mode in the command line
+set signcolumn=auto                                                 " Only show sign column if there are signs to be shown
+set termguicolors
+set wrap                                                            " Wrap lines visually
+set sidescroll=5                                                    " Side scroll when wrap is disabled
+set linebreak                                                       " Wrap lines at special characters instead of at max width
+set listchars=tab:>-,trail:.,extends:>,precedes:<,nbsp:%            " Show trailing whitespace
+set diffopt+=vertical                                               " Show vimdiff in vertical splits
+set diffopt+=algorithm:patience                                     " Use git diffing algorithm
+set diffopt+=context:1000000                                        " Don't fold
+
+" syntax improvements
+let g:python_highlight_all = 1
+let g:tex_flavor = 'latex'
+" }}}
+
+" ===== INDENT AND STYLE =================== {{{
+set shiftwidth=4                                                  " Reduntant with above
+set tabstop=4                                                     " How many spaces on tab
+set softtabstop=4                                                 " One tab = 4 spaces
+set expandtab                                                     " Tabs are spaces
+set autoindent                                                    " Auto-ident
+set smartindent                                                   " Smart ident
+set shiftround                                                    " Round indent to multiple of 'shiftwidth'
+set smarttab                                                      " Reset autoindent after a blank line
+" }}}
+
+" ===== UNDO FILES ========================= {{{
+silent !mkdir ~/.nvim/backups > /dev/null 2>&1
+set undodir=~/.nvim/backups
+set undofile
+" }}}
+
+" ===== SEARCH ============================= {{{
+set incsearch							  " Incremental search. Search highlighting with this.
+augroup vimrc-incsearch-highlight
+    autocmd!
+    autocmd CmdlineEnter /,\? :set hlsearch
+    autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
+set ignorecase							  " disable case sensitive searches
+set smartcase							  " only search case insensitive if all lowercase
+" }}}
+
+" ===== COMPLETION ========================= {{{
+set wildmode=longest,full                                         "stuff to ignore when tab completing
+set wildmenu
+set wildignorecase
+set wildignore+=*.swp,*.pyc,*.bak,*.class,*.orig
+set wildignore+=.git,.hg,.bzr,.svn
+set wildignore+=build/*,tmp/*,vendor/cache/*,bin/*
+set wildignore=*.o,*.obj,*~
+set wildignore+=*DS_Store*
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg,*.svg
+
+set completeopt=menu,menuone,noselect
+
+set shortmess+=c                                                    " suppress the annoying 'match x of y', 'The only match' and 'Pattern not found' messages
+set shortmess-=F
+set dictionary+=/usr/share/dict/words
+" }}}
+
+" ===== AUTOCOMMANDS ======================= {{{
+augroup active_win
+    " dont show column
+    autocmd BufEnter *.* :set colorcolumn=0
+
+    " show cursor line only in active windows
+    autocmd FocusGained,VimEnter,WinNew,WinEnter,BufWinEnter * setlocal cursorline
+    autocmd FocusLost,WinLeave * setlocal nocursorline
+
+    " highlight active window
+    autocmd FocusGained,VimEnter,WinNew,WinEnter,BufWinEnter * set winhighlight=Normal:Normal,EndOfBuffer:EndOfBuffer,SignColumn:Normal,VertSplit:EndOfBuffer
+    autocmd FocusLost,WinLeave * set winhighlight=Normal:NormalNC,EndOfBuffer:EndOfBufferNC,SignColumn:NormalNC,VertSplit:EndOfBufferNC
+augroup END
+
+augroup fileAuto
+    autocmd!
+    " Create directories before saving if they don't exist.
+    autocmd BufWritePre *
+		\ if '<afile>' !~ '^scp:' && !isdirectory(expand('<afile>:h')) |
+		\ call mkdir(expand('<afile>:h'), 'p') |
+		\ endif
+    " Remove all trailing whitepace on save
+    autocmd BufWritePre * %s/\s\+$//e
+augroup end
+
+augroup disableAutocomments
+    autocmd!
+    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+augroup end
+
+" When term starts, auto go into insert mode
+autocmd TermOpen * startinsert
+
+" Turn off line numbers etc
+autocmd TermOpen * setlocal listchars= nonumber norelativenumber
+" }}}
+
+" ===== MAPPINGS =========================== {{{
+
+" center after search
+nnoremap n nzz
+nnoremap N Nzz
+
+" shifting visual block should keep it selected
+vnoremap < <gv
+vnoremap > >gv|
+
+" automatically jump to end of text you pasted
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]
+
+" quickly select text you pasted
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+" go up/down on visual line
+map j gj
+map k gk
+
+" disable keys
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+nnoremap <space> <nop>
+nnoremap <esc> <nop>
+
+" Repeat last macro instead of ex mode.
+nnoremap Q @@
+
+" The opposite of J in normal mode, this splits a line into two and auto
+" indents.
+nnoremap gS :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
+
+" resize splits
+nnoremap <silent> > :execute "vertical resize +5"<Return>
+nnoremap <silent> < :execute "vertical resize -5"<Return>
+nnoremap <silent> + :execute "resize +5"<Return>
+nnoremap <silent> - :execute "resize -5"<Return>
+
+" buffer switching
+nnoremap <S-l> :bnext<Return>
+nnoremap <S-h> :bprevious<Return>
+
+" window navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" leader mappings
+let mapleader = "\<Space>"
+
+" navigate faster
+nnoremap <Leader>j 12j
+nnoremap <Leader>k 12k
+
+" paste keeping the default register
+vnoremap <Leader>p "_dP
+
+" copy & paste to system clipboard
+vmap <Leader>y "*y
+
+" set the current directory for the window
+nnoremap <Leader>d :lcd %:h<CR>
+" }}}
+
+" ===== PLUGINS ============================ {{{
 packadd minpac
 let s:plugins = exists('*minpac#init')
 
 if !s:plugins
-	echo 'Downloading minpac to manage plugins...'
-	exe '!mkdir -p ~/.config/nvim/pack/minpac/opt/minpac'
-	exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
-	autocmd VimEnter * call minpac#update()
+    echo 'Downloading minpac to manage plugins...'
+    exe '!mkdir -p ~/.config/nvim/pack/minpac/opt/minpac'
+    exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
+    autocmd VimEnter * call minpac#update()
 endif
 
 call minpac#init()
-
-call minpac#add('neovim/nvim-lsp', {'type': 'opt'})
-
+call minpac#add('neovim/nvim-lsp')
+call minpac#add('ervandew/supertab')
 call minpac#add('SirVer/ultisnips')
 call minpac#add('honza/vim-snippets')
+call minpac#add('tpope/vim-dispatch')
+call minpac#add('tpope/vim-fugitive')
+call minpac#add('junegunn/gv.vim')
+call minpac#add('tpope/vim-surround')
+call minpac#add('justinmk/vim-sneak')
+call minpac#add('tommcdo/vim-lion')
+call minpac#add('tpope/vim-repeat')
+call minpac#add('junegunn/fzf', { 'do': './install --all' })
+call minpac#add('junegunn/fzf.vim')
+call minpac#add('michal-h21/vim-zettel')
+call minpac#add('junegunn/goyo.vim')
+call minpac#add('numirias/semshi', {'do': ':UpdateRemotePlugins'})
+call minpac#add('jaxbot/semantic-highlight.vim')
+call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
+call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
+call minpac#add('OmniSharp/omnisharp-vim',{'type': 'opt'})
+call minpac#add('romainl/vim-devdocs')
+call minpac#add('moll/vim-bbye')
+call minpac#add('christoomey/vim-tmux-navigator')
+call minpac#add('drzel/vim-scrolloff-fraction')
+call minpac#add('psliwka/vim-smoothie')
+call minpac#add('itchyny/lightline.vim')
+" }}}
+
+" ===== PLUGIN CONFIG ====================== {{{
+" Ultisnips
 let g:UltiSnipsSnippetDirectories=['UltiSnips', 'custom-snippets']
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 
-
-call minpac#add('tpope/vim-dispatch')
-
-call minpac#add('tpope/vim-fugitive')
-call minpac#add('junegunn/gv.vim')
-
-call minpac#add('tpope/vim-surround')
-
-call minpac#add('justinmk/vim-sneak')
-call minpac#add('tommcdo/vim-lion')
-call minpac#add('tpope/vim-repeat')
-
-call minpac#add('junegunn/fzf', { 'do': '!yes n | ./install' })
-call minpac#add('junegunn/fzf.vim')
+" Fzf
 let g:fzf_command_prefix = 'Fz'
 
-" note taking in class
-call minpac#add('vimwiki/vimwiki')
-call minpac#add('junegunn/goyo.vim')
-let g:goyo_width = '80%'
-let g:goyo_height = '80%'
-
-
-call minpac#add('numirias/semshi', {'do': ':UpdateRemotePlugins'})
-augroup pythonPlugins
-	autocmd FileType python let g:python_highlight_all = 1
-augroup end
-
-call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
-augroup javaPlugins
-	autocmd FileType java packadd vim-javacomplete2
-	autocmd FileType java setlocal omnifunc=javacomplete#Complete
-	autocmd Filetype java setlocal completefunc=javacomplete#CompleteParamsInfo
-augroup end
-
-call minpac#add('lervag/vimtex', {'type': 'opt'})
-let g:tex_flavor='latex'
-augroup texPlugins
-	autocmd FileType tex packadd vimtex
-	autocmd Filetype tex setlocal spell
-	autocmd FileType tex let g:vimtex_view_method='zathura'
-	autocmd FileType tex let g:vimtex_compiler_method='latexmk'
-	autocmd FileType tex let g:vimtex_quickfix_mode=0
-	autocmd Filetype tex autocmd BufWritePost lec*.tex :Dispatch!
-augroup end
-
-call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
-augroup mips
-	autocmd Filetype asm packadd vim-mipssyntax
-	autocmd Filetype asm setlocal syntax="mips"
-augroup end
-
-call minpac#add('moll/vim-bbye')
-call minpac#add('christoomey/vim-tmux-navigator')
-call minpac#add('drzel/vim-scrolloff-fraction')
-let g:scrolloff_fraction=0.2
-
-call minpac#add('arcticicestudio/nord-vim')
-call minpac#add('romainl/apprentice')
-call minpac#add('rakr/vim-one')
-call minpac#add('dikiaap/minimalist')
-call minpac#add('dylanaraps/wal.vim')
-call minpac#add('itchyny/lightline.vim')
-" }}}
-
-" Set leader key to space
-let mapleader = '\'
-map <space> \
-
-" Enabling filetype support provides filetype-specific indenting,
-" syntax highlighting, omni-completion and other useful settings.
-filetype plugin indent on
-set omnifunc+=syntaxcomplete#Complete
-syntax on
-
-" `matchit.vim` is built-in so let's enable it!
-" Hit `%` on `if` to jump to `else`.
-runtime macros/matchit.vim
-
-" Various settings
-set autoindent                 " Minimal automatic indenting for any filetype.
-set backspace=indent,eol,start " Proper backspace behavior.
-set hidden                     " Possibility to have more than one unsaved buffers.
-set incsearch                  " Incremental search.
-" Search highlighting with this.
-augroup vimrc-incsearch-highlight
-	autocmd!
-	autocmd CmdlineEnter /,\? :set hlsearch
-	autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
-set foldmethod=marker
-set ignorecase
-set smartcase 		       " Both cases if search term is all lowercase, requires ignorecase command.
-set ruler                      " Shows the current line number at the bottom-right of the screen.
-set wildmenu                   " Great command-line completion, use `<Tab>` to move
-" around and `<CR>` to validate.
-set wildignore+=tags,*/__pycache__/*,build/*,build.?/*
-set suffixes+=.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc,
-			\,.o,.obj,.dll,.class,.pyc,.ipynb,.so,.swp,.zip,.exe,.jar,.gz
-set suffixesadd=.java
-set relativenumber 	  " set line number = distance from currently selected one
-set number 		" set current line number to not 0.
-set dictionary+=/usr/share/dict/words
-
-augroup fileAuto
-	" Create directories before saving if they don't exist.
-	autocmd BufWritePre *
-				\ if '<afile>' !~ '^scp:' && !isdirectory(expand('<afile>:h')) |
-				\ call mkdir(expand('<afile>:h'), 'p') |
-				\ endif
-	" Remove all trailing whitepace on save
-	autocmd BufWritePre * %s/\s\+$//e
-augroup end
-
-" Notes
-function! s:goyo_enter()
-	if exists('$TMUX')
-		silent !tmux set status off
-	endif
-	let b:quitting = 0
-	let b:quitting_bang = 0
-	autocmd QuitPre <buffer> let b:quitting = 1
-	cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
-	set noshowcmd
-endfunction
-function! s:goyo_leave()
-	if exists('$TMUX')
-		silent !tmux set status on
-	endif
-	set showcmd
-	" Quit neovim if this is the only remaining buffer
-	if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
-		if b:quitting_bang
-			qa!
-		else
-			qa
-		endif
-	endif
-endfunction
-augroup GoyoNotes
-	autocmd! User GoyoEnter call <SID>goyo_enter()
-	autocmd! User GoyoLeave call <SID>goyo_leave()
-augroup end
-let g:vimwiki_list = [{'path': '~/doc/edu/notes/text/',
-			\'path_html': '~/doc/edu/notes/html/',
-			\'template_path': '~/doc/edu/notes/templates/',
-			\'template_default': 'def_template',
-			\'template_ext': '.html'},
-			\{'path': '~/doc/rpg/notes/text/',
-			\'path_html': '~/doc/rpg/notes/html/',
-			\'template_path': '~/doc/rpg/notes/templates/',
-			\'template_default': 'def_template',
-			\'template_ext': '.html'}]
-let g:vimwiki_auto_chdir = 1
-let g:vimwiki_table_mappings = 0 " use tab for ultisnips, not the table mappings.
-let g:vimwiki_text_ignore_newline = 0
-
-" Repeat last macro, instead of ex mode.
-nnoremap Q @@
-" The opposite of J in normal mode, this splits a line into two and auto
-" indents.
-nnoremap gS :keeppatterns substitute/\s*\%#\s*/\r/e <bar> normal! ==<CR>
-
 let $FZF_DEFAULT_COMMAND =  'rg --files --hidden -S'
-set notermguicolors
-silent! colorscheme custom-wal
-let g:lightline = {'colorscheme': 'wal'}
-set background=dark
+
+let height = (&lines - 3) * 4 / 6 - 2
+let prev_str = '--preview="head -n ' . height . ' {}"'
+let $FZF_DEFAULT_OPTS= '--layout=reverse ' . prev_str . '
+    \ --color=dark --color=fg:-1,bg:-1,hl:#c678dd,fg+:#ffffff,bg+:#4b5263,hl+:#d858fe
+    \ --color=info:#98c379,prompt:#61afef,pointer:#be5046,marker:#e5c07b,spinner:#61afef,header:#61afef'
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+function! FloatingFZF()
+    let buf = nvim_create_buf(v:false, v:true)
+    call setbufvar(buf, '&signcolumn', 'no')
+
+    let height = &lines - 3
+    let width = float2nr(&columns - (&columns * 2 / 10))
+    let col = float2nr((&columns - width) / 2)
+
+    let opts = {
+		\ 'relative': 'editor',
+		\ 'row': height / 6,
+		\ 'col': col,
+		\ 'width': width,
+		\ 'height': height * 4 / 6
+		\ }
+
+    call nvim_open_win(buf, v:true, opts)
+endfunction
+
 " search current project directory
 nmap <Leader><Tab> :FzFiles<CR>
 " search home and code directory
-nmap <Leader>h :FzFiles ~<CR>
+nmap <Leader>f :FzFiles ~<CR>
 nmap <Leader>c :FzFiles ~/doc/code<CR>
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always --ignore-case '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
+nnoremap <leader>n :Rg
 " buffers and lines
 nmap <Leader>b :FzBuffers<CR>
 nmap <Leader>l :FzLines<CR>
 
-" Code Formatting
-" Disables automatic commenting on newline:
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" Goyo
+let g:goyo_width = '80%'
+let g:goyo_height = '80%'
 
-" LSP/Language Formatting
-"augroup lspVIM
-"	autocmd Filetype python,tex,java lua require('lsp_local')
-"	autocmd Filetype python,tex packadd nvim-lsp
-"	autocmd FileType python lua setupPythonServer()
-"	autocmd FileType tex lua setupTexlabServer()
-"	autocmd FileType python,tex setlocal omnifunc=lsp#omnifunc
-"augroup end
+" Notetaking
+function! s:goyo_enter()
+    if exists('$TMUX')
+    endif
+    let b:quitting = 0
+    let b:quitting_bang = 0
+    autocmd QuitPre <buffer> let b:quitting = 1
+    cabbrev <buffer> q! let b:quitting_bang = 1 <bar> q!
+    set noshowcmd
+endfunction
+function! s:goyo_leave()
+    if exists('$TMUX')
+    endif
+    set showcmd
+    " Quit neovim if this is the only remaining buffer
+    if b:quitting && len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+	if b:quitting_bang
+	    qa!
+	else
+	    qa
+	endif
+    endif
+endfunction
+augroup GoyoNotes
+    autocmd! User GoyoEnter call <SID>goyo_enter()
+    autocmd! User GoyoLeave call <SID>goyo_leave()
+augroup end
+" Goyo down, time for zettel
+" Filename format. The filename is created using strftime() function
+let g:zettel_format = "%y%m%d-%H%M"
+" Disable default keymappings
+let g:zettel_default_mappings = 0
+" This is basically the same as the default configuration
+augroup filetype_markdown
+  autocmd!
+  autocmd Filetype markdown
+              \ if expand('%:h:t') == 'notes' |
+              \     set path+=/home/yack/doc/notes |
+              \ endif
+  autocmd FileType markdown imap <silent> [[ [[<esc><Plug>ZettelSearchMap
+  autocmd FileType markdown nmap T <Plug>ZettelYankNameMap
+  autocmd FileType markdown xmap z <Plug>ZettelNewSelectedMap
+  autocmd FileType markdown nmap gZ <Plug>ZettelReplaceFileWithLink
+augroup END
 
-" call nvim_lsp#setup("jdtls") " - no support yet
+nnoremap <Leader>s :SemanticHighlightToggle<cr>
 
-
-augroup javaFMT
-	autocmd Filetype java setl formatprg=google-java-format\ -
-	autocmd Filetype java setl softtabstop=2 shiftwidth=2
-	autocmd Filetype java let b:java_highlight_all=1
+augroup javaPlugins
+    autocmd FileType java packadd vim-javacomplete2
+    autocmd FileType java setlocal omnifunc=javacomplete#Complete
+    autocmd Filetype java setlocal completefunc=javacomplete#CompleteParamsInfo
 augroup end
 
-augroup pythonFMT
-	autocmd Filetype python setlocal formatprg=yapf
+augroup mipsPlugins
+    autocmd Filetype asm packadd vim-mipssyntax
+    autocmd Filetype asm setlocal syntax="mips"
 augroup end
 
-augroup webFMT
-	" this is terrible but its legitimately the only thing that works apparently.
-	autocmd FileType javascript,css setlocal formatprg=prettier\ %
+augroup csharpPlugins
+    autocmd Filetype cs packadd omnisharp-vim
 augroup end
 
-" Debugging
 let g:vebugger_use_tags=1
 let g:vebugger_leader = '<Leader>d'
 
-" Tags
-set tags=./tags;~
-command! Tags !ctags -R -I EXTERN -I INIT --exclude='build*' --exclude='.vim-src/**' --exclude='node_modules/**' --exclude='venv/**' --exclude='**/site-packages/**'
-			\--exclude='data/**' --exclude='dist/**' --exclude='notebooks/**' --exclude='Notebooks/**' --exclude='*graphhopper_data/*.json' --exclude='*graphhopper/*.json' --exclude='*.json' --exclude='qgis/**'
-			\--exclude=.git --exclude=.svn --exclude=.hg --exclude="*.cache.html" --exclude="*.nocache.js" --exclude="*.min.*" --exclude="*.map" --exclude="*.swp"
-			\--exclude="*.bak" --exclude="*.pyc" --exclude="*.class" --exclude="*.sln" --exclude="*.Master" --exclude="*.csproj" --exclude="*.csproj.user"
-			\--exclude="*.cache" --exclude="*.dll" --exclude="*.pdb" --exclude=tags --exclude="cscope.*" --exclude="*.tar.*"
+let g:scrolloff_fraction=0.2
+" }}}
+
+" ===== LSP ================================ {{{
+packadd nvim-lsp
+
+lua << EOF
+require('nvim_lsp').pyls.setup({
+})
+EOF
+
+lua << EOF
+require('nvim_lsp').texlab.setup{
+    latex = {
+        build = {
+            args = { "-pdf", "-interaction=nonstopmode", "-synctex=1" },
+            executable = "latexmk",
+            onSave = true
+        },
+        lint = {
+            onChange = false
+        }
+    }
+}
+EOF
+lua require('nvim_lsp').gopls.setup{}
+" lua require('nvim_lsp').jdtls.setup{}
+
+augroup lspVIM
+    autocmd FileType python,tex,go nnoremap <silent> <buffer> <leader>h <cmd>lua vim.lsp.buf.hover()<CR>
+    autocmd FileType python,tex,go nnoremap <silent> <buffer> gK <cmd>lua vim.lsp.buf.signature_help()<CR>
+    autocmd FileType python,tex,go setlocal omnifunc=v:lua.vim.lsp.omnifunc
+augroup end
+" }}}
+
+" ===== LANGUAGE FORMATTING ================ {{{
+augroup javaFMT
+    autocmd Filetype java setlocal softtabstop=2 shiftwidth=2
+    autocmd Filetype java let g:java_highlight_all = 1
+    autocmd Filetype java let g:java_space_errors = 1
+    autocmd Filetype java let g:java_comment_strings = 1
+    autocmd Filetype java let g:java_highlight_functions = 1
+    autocmd Filetype java let g:java_highlight_debug = 1
+    autocmd Filetype java let g:java_mark_braces_in_parens_as_errors = 1
+augroup end
+
+augroup pythonFMT
+    autocmd Filetype python setlocal formatprg=yapf
+    autocmd FileType python let g:python_highlight_all = 1
+    autocmd FileType python let g:semshi#error_sign=v:false
+    autocmd FileType python let g:semshi#always_update_all_highlights=v:true
+augroup end
+
+augroup webFMT
+    autocmd FileType javascript,css,javascriptreact setlocal formatprg=prettier\ --stdin\ --stdin-filepath\ %
+augroup end
+
+augroup csharpFMT
+    autocmd Filetype cs let g:OmniSharp_server_stdio = 1
+    autocmd Filetype cs let g:OmniSharp_highlight_types = 3
+augroup end
+" }}}
+
+" ===== TERMINAL =========================== {{{
+
+function! OpenTerm(cmd)
+    call CreateCenteredFloatingWindow()
+    call termopen(a:cmd, { 'on_exit': function('OnTermExit') })
+endfunction
+
+" Open Project
+let s:project_open = 0
+function! ToggleProject()
+    if s:project_open
+        bd!
+        let s:project_open = 0
+    else
+        call OpenTerm('tmuxinator-fzf-start.sh')
+        let s:project_open = 1
+    endif
+endfunction
+let s:scratch_open = 0
+function! ToggleScratchTerm()
+    if s:scratch_open
+        bd!
+        let s:scratch_open = 0
+    else
+        call OpenTerm('bash')
+        let s:scratch_open = 1
+    endif
+endfunction
+
+let s:lazygit_open = 0
+function! ToggleLazyGit()
+    if s:lazygit_open
+        bd!
+        let s:lazygit_open = 0
+    else
+        call OpenTerm('lazygit')
+        let s:lazygit_open = 1
+    endif
+endfunction
+
+function! OnTermExit(job_id, code, event) dict
+    if a:code == 0
+        bd!
+    endif
+endfunction
+" }}}
+
+" ===== COLORS ============================= {{{
+packadd onedark-custom
+let g:lightline = {'colorscheme': 'onedark'}
+colorscheme onedark
+set background=dark
+" }}}
