@@ -23,32 +23,29 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. These are the defaults.
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-ephemeral)
 
 (after! ivy-posframe
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))))
 
 ;; Org and Notes
-(use-package org-roam
+(use-package! org-roam
     :after org
     :hook (org-mode . org-roam-mode)
+    :commands (org-roam-insert org-roam-find-file org-roam)
     :custom
-    (org-roam-directory "~/doc/org/deft/")
-    :bind
-    ("C-c n l" . org-roam)
-    ("C-c n t" . org-roam-today)
-    ("C-c n f" . org-roam-find-file)
-    ("C-c n i" . org-roam-insert)
-    ("C-c n g" . org-roam-show-graph))
-(use-package zetteldeft
-  :custom
-  (deft-default-extension "org")
-  (deft-extensions '("org"))
-  (deft-directory "~/doc/org/deft/")
-  :config
-  (set-file-template! 'org-mode :ignore t))
+    (org-roam-directory "~/doc/org/roam/")
+    (org-roam-capture-templates '(("d" "default" plain (function org-roam--capture-get-point)
+                                   "%?"
+                                   :file-name "%<%Y%m%d%H%M%S>-${slug}"
+                                   :head "#+TITLE: ${title}\n"
+                                   :unnarrowed t)))
+    :config
+    (org-roam-mode +1))
 
-(use-package org-super-agenda
+(use-package! org-roam-protocol)
+
+(use-package! org-super-agenda
   :config
   (setq org-agenda-start-day "0d"
         org-agenda-span 1
@@ -100,7 +97,7 @@
                  :order 90)
           (:discard (:tag ("Chore" "Routine" "Daily"))))))
 
-(use-package org-agenda-property
+(use-package! org-agenda-property
   :config
   (setq org-agenda-property-list '("LOCATION" "TEACHER")
         org-agenda-property-position 'where-it-fits
@@ -144,8 +141,7 @@
         ("ee" "Event" entry (file+headline "~/doc/org/schedule.org" "Events")
          "* %?")
         ("ec" "Club Event" entry (file+headline "~/doc/org/schedule.org" "Clubs")
-         "* %?")
-        ))
+         "* %?")))
 
 (after! org-gcal
   (add-to-list 'load-path "~/.config/doom")
@@ -168,33 +164,16 @@
 ;; they are implemented.
 
 (map! :leader
-      (:prefix-map ("f" . "file")
+      (:prefix ("f" . "file")
         :desc "Fzf find file" "f" (lambda()
                                     (interactive)
                                     (counsel-fzf "" "/home/yack" "" ))
         :desc "Find file at point" "o" #'find-file-at-point)
-
-      (:prefix-map ("d" . "deft")
-        :desc "Deft" "d" #'deft
-        :desc "Seach zettel" "D" #'zetteldeft-deft-new-search
-        :desc "Refresh" "R" #'deft-refresh
-        :desc "Search at point" "s" #'zetteldeft-search-at-point
-        :desc "Search current id" "c" #'zetteldeft-search-current-id
-        :desc "Follow link" "f" #'zetteldeft-follow-link
-        :desc "Follow link in new window" "F" #'zetteldeft-avy-file-search-ace-window
-        :desc "Deft search on zetteldeft link" "l" #'zetteldeft-avy-link-search
-        :desc "Zettel link note" "L" #'zetteldeft-insert-list-links
-        :desc "Search for tags" "t" #'zetteldeft-avy-tag-search
-        :desc "Switch to the tag buffer" "T" #'zetteldeft-tag-buffer
-        :desc "Find and insert a file id" "i" #'zetteldeft-find-file-id-insert
-        :desc "Find and insert a full file id" "I" #'zetteldeft-find-file-full-title-insert
-        :desc "Find zettel file" "o" #'zetteldeft-find-file
-        :desc "Create new zettel file" "n" #'zetteldeft-new-file
-        :desc "Create and link to new zettel file" "N" #'zetteldeft-new-file-and-link
-        :desc "Rename zettel file" "r" #'zetteldeft-file-rename)
-      (:prefix-map ("p" . "project")
-        :desc "Search project" "SPC" #'+ivy/project-search
-        ))
+      (:prefix-map ("n" . "notes")
+        (:prefix ("r" . "roam")
+          :desc "Capture" "x" (lambda()
+                                 (interactive)
+                                 (org-roam-capture)))))
 
 
 
@@ -208,3 +187,9 @@
       conda-env-home-directory "/home/yack/.conda/"
       display-line-numbers-type 'relative)
 
+(add-hook 'web-mode-hook
+          (lambda ()
+            ;; short circuit js mode and just do everything in jsx-mode
+            (if (equal web-mode-content-type "javascript")
+                (web-mode-set-content-type "jsx")
+              (message "now set to: %s" web-mode-content-type))))
