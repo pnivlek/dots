@@ -1,52 +1,115 @@
-;; [[file:~/.config/doom/config.org::*Personal%20Information][Personal Information:1]]
+#+TITLE: Doom Emacs Literate Config
+#+AUTHOR: Kelvin Porter
+#+EMAIL: kporter@protonmail.com
+#+PROPERTY: header-args:emacs-lisp :tangle yes :cache yes :results silent :comments link
+#+LANGUAGE: en
+
+* Config
+** Personal Information
+Set my name and email address for environment vars and stuff.
+#+BEGIN_SRC emacs-lisp
 (setq user-full-name "Kelvin Porter"
       user-mail-address "kporter@protonmail.com")
-;; Personal Information:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Startup%20Time][Startup Time:1]]
+#+END_SRC
+** Startup Time
+#+BEGIN_SRC emacs-lisp
 (use-package! esup
   :commands (esup))
-;; Startup Time:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Ivy][Ivy:1]]
+#+END_SRC
+** Package Loading/Unloading
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle "packages.el" :comments link
+:END:
+I don't like these ones.
+#+BEGIN_SRC emacs-lisp
+(package! solaire-mode :disable t)
+(package! anaconda-mode :disable t)
+#+END_SRC
+I like these ones.
+#+BEGIN_SRC emacs-lisp
+(package! esup)
+#+END_SRC
+More org properties.
+#+BEGIN_SRC emacs-lisp
+(package! org-agenda-property
+  :recipe (:host github :repo "Malabarba/org-agenda-property"))
+#+END_SRC
+A cool agenda.
+#+BEGIN_SRC emacs-lisp
+(package! org-super-agenda
+  :recipe (:host github :repo "alphapapa/org-super-agenda"))
+#+END_SRC
+JSX major mode for Javascript work.
+#+BEGIN_SRC emacs-lisp
+(package! rjsx-mode
+  :recipe (:host github :repo "felipeochoa/rjsx-mode"))
+#+END_SRC
+Sometimes I show off.
+#+BEGIN_SRC emacs-lisp
+(package! elcord :pin "94b0afb9ba")
+#+END_SRC
+* Completion
+** Ivy
+I use Ivy, but like to display it at the top of the screen as a posframe. Let's
+set that after ivy-posframe is loaded.
+#+BEGIN_SRC emacs-lisp
 (after! ivy-posframe
   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))))
-;; Ivy:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Theme][Theme:1]]
+#+END_SRC
+* UI
+** Theme
+Doom's theme is set by the doom-theme variable. I like vibrant right now.
+#+BEGIN_SRC emacs-lisp
 (setq doom-theme 'doom-vibrant)
-;; Theme:1 ends here
+#+END_SRC
+** Font
+Doom exposes five (optional) variables for controlling fonts in Doom. Here
+are the three important ones:
 
-;; [[file:~/.config/doom/config.org::*Font][Font:1]]
++ `doom-font'
++ `doom-variable-pitch-font'
++ `doom-big-font' -- used for `doom-big-font-mode'
+
+They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+font string. You generally only need these two:
+#+BEGIN_SRC emacs-lisp
 (setq doom-font (font-spec :family "JetBrains Mono" :size 14))
-;; Font:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Deft][Deft:1]]
+#+END_SRC
+** Deft
+Deft allows you to quickly search/filter/edit your notes. I set my deft
+directory to be my org-roam directory.
+#+BEGIN_SRC emacs-lisp
 (setq deft-directory "~/doc/org/roam")
-;; Deft:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Deft][Deft:2]]
+#+END_SRC
+I also disable evil while inside deft in favor of deft's hotkeys.
+#+BEGIN_SRC emacs-lisp
 (evil-set-initial-state 'deft-mode 'emacs)
-;; Deft:2 ends here
-
-;; [[file:~/.config/doom/config.org::*Basic%20Settings][Basic Settings:1]]
+#+END_SRC
+* Editor
+** Basic Settings
+#+BEGIN_SRC  emacs-lisp
 (setq display-line-numbers-type 'relative)
-;; Basic Settings:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Evil%20Snipe][Evil Snipe:1]]
+#+END_SRC
+** Evil
+*** Evil Snipe
+#+BEGIN_SRC emacs-lisp
 (setq evil-snipe-scope 'buffer
       evil-snipe-repeat-scope 'whole-buffer)
-;; Evil Snipe:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Vterm][Vterm:1]]
+#+END_SRC
+* Term
+** Vterm
+Let's set vterm to be in emacs mode, not evil mode.
+#+BEGIN_SRC emacs-lisp
 (evil-set-initial-state 'vterm-mode 'emacs)
-;; Vterm:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Directory][Org Directory:1]]
+#+END_SRC
+* Lang
+** Org
+*** Org Directory
+#+BEGIN_SRC emacs-lisp
 (setq org-directory "~/doc/org/" )
-;; Org Directory:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Capture%20Templates][Org Capture Templates:1]]
+#+END_SRC
+*** Org Capture Templates
+#+BEGIN_SRC emacs-lisp
 (setq org-capture-templates
       '(
         ("t" "Tasks")
@@ -61,13 +124,13 @@
          "* %?")
         ("ec" "Club Event" entry (file+headline "~/doc/org/schedule.org" "Clubs")
          "* %?")))
-;; Org Capture Templates:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Todo][Org Todo:1]]
+#+END_SRC
+*** Org Todo
+#+BEGIN_SRC emacs-lisp
 (setq org-todo-keywords '((sequence "TODO(t)" "HOLD(h)" "WIP(w)" "PROJECT(p)" "|" "DONE(d)")))
-;; Org Todo:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Tags][Org Tags:1]]
+#+END_SRC
+*** Org Tags
+#+BEGIN_SRC emacs-lisp
 (setq org-tag-alist '((:startgroup nil)
                       ("Trivial" . ?t) ("Unimportant" . ?u) ("Important" . ?i)
                       (:endgroup nil)
@@ -77,9 +140,9 @@
                       ("Project" . ?p)
                       ("Dotfiles" . ?d)
                       (:endgroup nil)))
-;; Org Tags:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Agenda][Org Agenda:1]]
+#+END_SRC
+*** Org Agenda
+#+BEGIN_SRC emacs-lisp
 (setq org-agenda-files (list org-directory)
       org-agenda-time-grid '((daily today require-timed) nil nil "---------------")
       org-agenda-skip-scheduled-if-done t
@@ -100,17 +163,23 @@
       org-agenda-block-separator nil
       org-agenda-overriding-header ""
       org-agenda-compact-blocks t)
-;; Org Agenda:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Agenda%20Property][Org Agenda Property:1]]
+#+END_SRC
+*** Org Agenda Property
+Org Agenda Property creates a few new properties so I can include classes on my
+agenda. It is likely I may delete this section soon though, as I'm not sure how
+relevant it is when I already have this information memorized.
+#+BEGIN_SRC emacs-lisp
 (use-package! org-agenda-property
   :config
   (setq org-agenda-property-list '("LOCATION" "TEACHER")
         org-agenda-property-position 'where-it-fits
         org-agenda-property-separator "|"))
-;; Org Agenda Property:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Super%20Agenda][Org Super Agenda:1]]
+#+END_SRC
+*** Org Super Agenda
+Org Super Agenda redefines the agenda to be a lot better. I have custom groups
+for where things go and the order they show up in, mostly based on deadlines and
+whether or not they are related to my education.
+#+BEGIN_SRC emacs-lisp
 (use-package! org-super-agenda
   :after org
   :config
@@ -153,9 +222,13 @@
                  :tag ("Trivial" "Unimportant")
                  :order 90)
           (:discard (:tag ("Chore" "Routine" "Daily"))))))
-;; Org Super Agenda:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Roam][Org Roam:1]]
+#+END_SRC
+*** Org Roam
+I use Org Roam as a way to organize my notes. Roam is similar to a mind map of
+sorts, with different files being different topics. I auto activate it on
+entering org mode, which decreases my startup time but allows capture commands
+to work without any additional things running.
+#+BEGIN_SRC emacs-lisp
 (use-package! org-roam
     :after org
     :hook (org-mode . org-roam-mode)
@@ -168,15 +241,27 @@
                                    :head "#+TITLE: ${title}\n"
                                    :unnarrowed t))))
 (use-package! org-roam-protocol)
-;; Org Roam:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Gcal][Org Gcal:1]]
+#+END_SRC
+*** Org Gcal
+Add google calendar events to an org file. Loads config_private.el which
+contains the api key and calendars to load.
+#+BEGIN_SRC emacs-lisp
 (after! org-gcal
   (add-to-list 'load-path "~/.config/doom")
   (require 'config_private))
-;; Org Gcal:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Org%20Screenshot][Org Screenshot:1]]
+#+END_SRC
+An example of what might be in config_private, where the Google Calendar ID is
+probably an email address.
+#+BEGIN_EXAMPLE emacs-lisp
+(setq org-gcal-client-id "googleclientid"
+      org-gcal-client-secret "googleclientsecret"
+      org-gcal-file-alist '(("google_calendar_id" .  "org_file")))
+(provide 'config_private)
+#+END_EXAMPLE
+*** Org Screenshot
+Sometimes I want to take screenshots and put them into org files.
+This is a script modified from https://stackoverflow.com/questions/17435995/
+#+BEGIN_SRC emacs-lisp
 (defun org-screenshot-area ()
   "Take a screenshot into a time stamped unique-named file in the
 same directory as the org-buffer and insert a link to this file."
@@ -190,26 +275,31 @@ same directory as the org-buffer and insert a link to this file."
   (call-process "escrotum" nil nil nil "-s" filename)
   (insert (concat "[[" filename "]]"))
   (org-display-inline-images))
-;; Org Screenshot:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Conda][Conda:1]]
+#+END_SRC
+** Python
+*** Conda
+Set the home directory for Conda.
+#+BEGIN_SRC emacs-lisp
 (setq conda-env-home-directory "/home/yack/.conda/")
-;; Conda:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Web][Web:1]]
-
-;; Web:1 ends here
-
-;; [[file:~/.config/doom/config.org::*Web][Web:2]]
+#+END_SRC
+** Web
+Let's use rjsx mode for JSX files.
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+Javascript -> JSX
+#+BEGIN_SRC emacs-lisp
 (add-hook 'web-mode-hook
           (lambda ()
             short circuit js mode and just do everything in jsx-mode
             (if (equal web-mode-content-type "javascript")
                 (web-mode-set-content-type "jsx")
               (message "now set to: %s" web-mode-content-type))))
-;; Web:2 ends here
-
-;; [[file:~/.config/doom/config.org::*elcord][elcord:1]]
+#+END_SRC
+* Tools
+** elcord
+Show off.
+(Discord Rich Presence for Emacs)
+#+BEGIN_SRC emacs-lisp
 (use-package! elcord
   :defer t)
-;; elcord:1 ends here
+#+END_SRC
