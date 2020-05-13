@@ -1547,23 +1547,20 @@ Taken from here: https://emacs.stackexchange.com/a/46913.
 ;;;
 ;;; NOTE: This setting will apply for the entire Emacs process,
 ;;; regardless of magit invocation in other directories.
-(unless (boundp 'myconf-magit-hook?)
-  ;; Only run this hook once, even if Emacs reloads configuration.
-  (eval-after-load 'magit
-    '(let ((myconf-path (expand-file-name ".dots.git")))
-       (when (and (file-exists-p myconf-path)
-                  (not (file-exists-p ".git")))
-         ;; Insert git directory and working tree into magit's git
-         ;; global arguments, while preserving magit's existing
-         ;; command-line settings; `add-to-list' adds to the
-         ;; beginning of the list.
-         (add-to-list 'magit-git-global-arguments
-                      (format "--work-tree=%s"
-                              ;; Drop trailing slash.
-                              (directory-file-name
-                               ;; Get directory part (`dirname`).
-                               (file-name-directory myconf-path))))
-         (add-to-list 'magit-git-global-arguments
-                      (format "--git-dir=%s" myconf-path)))))
-  (setq myconf-magit-hook? t))
+(after! magit
+  (let ((myconf-path (expand-file-name ".dots.git")))
+     (when (and (file-exists-p myconf-path)
+                (not (file-exists-p ".git")))
+       ;; Insert git directory and working tree into magit's git
+       ;; global arguments, while preserving magit's existing
+       ;; command-line settings; `add-to-list' adds to the
+       ;; beginning of the list.
+       (add-to-list 'magit-git-global-arguments
+                    (format "--work-tree=%s"
+                            ;; Drop trailing slash.
+                            (directory-file-name
+                             ;; Get directory part (`dirname`).
+                             (file-name-directory myconf-path))))
+       (add-to-list 'magit-git-global-arguments
+                    (format "--git-dir=%s" myconf-path)))))
 #+END_SRC
