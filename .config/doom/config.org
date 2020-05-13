@@ -2,7 +2,6 @@
 #+AUTHOR: Kelvin Porter
 #+EMAIL: kporter@protonmail.com
 #+PROPERTY: header-args:emacs-lisp :tangle yes :cache yes :results silent :comments link
-#+OPTIONS: toc:nil
 #+LANGUAGE: en
 
 * Configuration
@@ -800,7 +799,7 @@ Make headings bigger
 
 (after! org
   (setq org-ellipsis " ▾ "
-        org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-headline-bullets-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷" "☷" "☷" "☷")
         org-priority-faces '((?A . all-the-icons-red)
                              (?B . all-the-icons-orange)
                              (?C . all-the-icons-yellow)
