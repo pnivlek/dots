@@ -2,38 +2,38 @@ st.scrollBar: 	false
 st.font: Iosevka Nerd Font Mono:medium:size=11
 
 ! special
-*.foreground:   #ABB2BF
-*.background:   #282C34
-*.cursorColor:  #ABB2BF
+*.foreground:   #c5c8c6
+*.background:   #1d1f21
+*.cursorColor:  #c5c8c6
 
 ! black
-*.color0:       #282C34
-*.color8:       #3E4452
+*.color0:       #1d1f21
+*.color8:       #969896
 
 ! red
-*.color1:       #E06C75
-*.color9:       #BE5046
+*.color1:       #cc6666
+*.color9:       #cc6666
 
 ! green
-*.color2:       #98C379
-*.color10:      #98C379
+*.color2:       #b5bd68
+*.color10:      #b5bd68
 
 ! yellow
-*.color3:       #E5C07B
-*.color11:      #D19A66
+*.color3:       #f0c674
+*.color11:      #f0c674
 
 ! blue
-*.color4:       #61AFEF
-*.color12:      #61AFEF
+*.color4:       #81a2be
+*.color12:      #81a2be
 
 ! magenta
-*.color5:       #C678DD
-*.color13:      #C678DD
+*.color5:       #b294bb
+*.color13:      #b294bb
 
 ! cyan
-*.color6:       #56B6C2
-*.color14:      #56B6C2
+*.color6:       #8abeb7
+*.color14:      #8abeb7
 
 ! white
-*.color7:       #ABB2BF
-*.color15:      #5C6370
+*.color7:       #c5c8c6
+*.color15:      #ffffff

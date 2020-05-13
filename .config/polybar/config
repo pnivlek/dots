@@ -2,74 +2,58 @@
 ; Kelvin Porter 2019
 ;==========================================================
 
+
 [colors]
-background = ${xrdb:color0:#282828}
-background-alt = ${xrdb:color8:#454545}
-foreground = ${xrdb:color7:#666666}
-foreground-alt = ${xrdb:color15:#eeeeee}
-alert = ${xrdb:color2:#f43753}
+background = ${xrdb:color0:#3d4c5f}
+foreground = ${xrdb:color7:#f8f8f2}
+color0 = ${xrdb:color0:#3d4c5f}
+color1 = ${xrdb:color1:#F48FB1}
+color2 = ${xrdb:color2:#A1EFD3}
+color3 = ${xrdb:color3:#F1FA8C}
+color4 = ${xrdb:color4:#92B6F4}
+color5 = ${xrdb:color5:#BD99FF}
+color6 = ${xrdb:color6:#87DFEB}
+color7 = ${xrdb:color7:#F8F8F2}
+color8 = ${xrdb:color8:#56687E}
+color9 = ${xrdb:color9:#EE4F84}
+color10 = ${xrdb:color10:#53E2AE}
+color11 = ${xrdb:color11:#F1FF52}
+color12 = ${xrdb:color12:#6498EF}
+color13 = ${xrdb:color13:#985EFF}
+color14 = ${xrdb:color14:#24D1E7}
+color15 = ${xrdb:color15:#E5E5E5}
+
+[settings]
+pseudo-transparency = true
 
 [bar/laptop]
 monitor = ${env:MONITOR:eDP1}
 width = 100%
-height = 24
+height = 28
 fixed-center = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 3
-line-color = ${colors.alert}
+line-size = 2
+line-color = ${colors.color9}
 
-border-size = 3
-border-color = ${colors.background-alt}
+padding = 2
 
-padding-right = 1
+module-margin = 0
 
-module-margin-left = 2
-module-margin-right = 1
-
-font-0 = Iosevka Nerd Font Mono:medium:pixelsize=12;1
+font-0 = Overpass Regular:medium:pixelsize=11;1
 font-1 = FontAwesome:fontformat=truetype:size=8:antialias=false;0
 font-2 = siji:pixelsize=10;1
 
-modules-left = bspwm mpd
-modules-right = pulseaudio backlight wlan battery date
+modules-left = mpd pad pulseaudio
+modules-center = bspwm
+modules-right = backlight pad wlan pad battery battery2 pad date
+bottom = true
 
-tray-position=right
+tray-position = none
 
 enable-ipc = true
-
-wm-restack = bspwm
-
-[bar/desktop]
-monitor = ${env:MONITOR:HDMI-2}
-width = 100%
-height = 24
-fixed-center = false
-
-background = ${colors.background}
-foreground = ${colors.foreground}
-
-line-size = 3
-line-color = ${colors.alert}
-
-border-size = 4
-border-color = ${colors.background-alt}
-
-padding-right = 1
-
-module-margin-left = 2
-module-margin-right = 1
-
-font-0 = Iosevka:pixelsize=12;1
-font-1 = FontAwesome:fontformat=truetype:size=8:antialias=false;0
-font-2 = siji:pixelsize=10;1
-
-modules-left = bspwm mpd
-modules-right = pulseaudio date
-
-tray-position=right
 
 wm-restack = bspwm
 
@@ -78,24 +62,26 @@ type = custom/ipc
 hook-0 = echo "$(light -G | sed -e "s/\.\w*//")%"
 initial = 1
 format =  <output>
+format-foreground = ${colors.color2}
 
 [module/bspwm]
 type = internal/bspwm
 
-label-focused = %index%
-label-focused-background = ${colors.background-alt}
-label-focused-padding = 1
+label-focused= 
+label-occupied = 
+label-urgent = 
+label-empty = 
 
-label-occupied = %index%
-label-occupied-padding = 1
+format = <label-state>
 
-label-urgent = %index%!
-label-urgent-background = ${colors.alert}
-label-urgent-padding = 1
+label-monitor = %name%
+label-focused-foreground = ${colors.color2}
+label-occupied-foreground = ${colors.color3}
+label-urgent-foreground = ${colors.color1}
+label-empty-foreground = ${colors.color7}
 
-label-empty = %index%
-label-empty-foreground = ${colors.foreground-alt}
-label-empty-padding = 1
+label-separator = " "
+label-separator-padding = 1
 
 [module/mpd]
 type = internal/mpd
@@ -117,15 +103,18 @@ interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
 label-connected = %essid%
+label-connected-foreground = ${colors.color5}
 
-format-disconnected = Disconnected
+format-disconnected = <label-disconnected>
+label-disconnected = Disconnected
+label-disconnected-foreground = ${colors.color1}
 
 ramp-signal-0 = 
 ramp-signal-1 = 
 ramp-signal-2 = 
 ramp-signal-3 = 
 ramp-signal-4 = 
-ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-foreground = ${colors.color7}
 
 [module/date]
 type = internal/date
@@ -138,19 +127,20 @@ time = %H:%M
 time-alt = %H:%M:%S
 
 format =  <label>
-format-prefix-foreground = ${colors.foreground-alt}
+format-foreground = ${colors.color6}
 
 label = %date% %time%
 
 [module/pulseaudio]
 type = internal/pulseaudio
 
-format-volume = <label-volume>
-label-volume = VOL %percentage%%
-label-volume-foreground = ${root.foreground}
-
-label-muted =  muted
-label-muted-foreground = ${colors.foreground}
+format-volume = <ramp-volume> <label-volume>
+format-volume-foreground = ${colors.color5}
+format-muted-foreground = ${colors.color1}
+label-muted =  Muted
+ramp-volume-0 =
+ramp-volume-1 =
+ramp-volume-2 =
 
 [module/battery]
 type = internal/battery
@@ -159,40 +149,50 @@ adapter = AC
 full-at = 99.5
 time-format = %-H:%M
 
-label-charging = %percentage%%, Ch.
 format-charging = <animation-charging> <label-charging>
+label-charging = %percentage%%, Ch.
 
-label-discharging = %percentage%%, %time%
 format-discharging = <ramp-capacity> <label-discharging>
+label-discharging = %percentage%%
 
 format-full-prefix = " "
-format-full-prefix-foreground = ${colors.foreground-alt}
+format-full-prefix-foreground = ${colors.color5}
 
 ramp-capacity-0 = 
 ramp-capacity-1 = 
 ramp-capacity-2 = 
 ramp-capacity-3 = 
 ramp-capacity-4 = 
-ramp-capacity-foreground = ${colors.foreground-alt}
+ramp-capacity-foreground = ${colors.color5}
 
 animation-charging-0 = 
 animation-charging-1 = 
 animation-charging-2 = 
 animation-charging-3 = 
 animation-charging-4 = 
-animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-foreground = ${colors.color7}
 animation-charging-framerate = 750
+
+[module/battery2]
+inherit=module/battery
+battery=BAT0
+format-charging=
+format-discharging=,<label-discharging>
+
+[module/xkeyboard]
+type = internal/xkeyboard
+
+; List of indicators to ignore
+blacklist-0 = num lock
+blacklist-1 = scroll lock
+format =  <label-layout>
 
 [settings]
 screenchange-reload = true
-;compositing-background = xor
-;compositing-background = screen
-;compositing-foreground = source
-;compositing-border = over
-;pseudo-transparency = false
+throttle-input-for = 50
 
-[global/wm]
-margin-top = 5
-margin-bottom = 5
-
+[module/pad]
+type = custom/text
+content = "  "
+content-foreground = ${colors.color0}
 ; vim:ft=dosini
