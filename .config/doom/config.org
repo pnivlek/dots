@@ -123,9 +123,9 @@ are the three important ones:
 They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 font string. You generally only need these two:
 #+BEGIN_SRC emacs-lisp
-(setq doom-font (font-spec :family "JetBrains Mono" :size 16)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 24)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 16))
+(setq doom-font (font-spec :family "Recursive Mono Linear Static" :size 14)
+      doom-big-font (font-spec :family "Recursive Mono Linear Static" :size 24)
+      doom-variable-pitch-font (font-spec :family "Recursive Sans Casual Static" :size 16))
 #+END_SRC
 ** Notdeft
 *** Custom Functions
