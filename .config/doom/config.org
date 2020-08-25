@@ -13,7 +13,7 @@ Set my name and email address for environment vars and stuff.
 #+END_SRC
 ** Package Loading/Unloading
 :PROPERTIES:
-:header-args:emacs-lisp: :tangle "packages.el" :comments link
+:header-args:emacs-lisp: :tangle "packages.el"
 :END:
 *** User Interface Packages
 I don't like this one.
@@ -63,6 +63,13 @@ Disable emmet mode because it doesn't work with rjsx-mode.
 #+BEGIN_SRC emacs-lisp
 (package! emmet-mode :disable t)
 #+END_SRC
+**** C# Packages
+Sharper, a transient (like Magit) client for the dotnet core.
+#+begin_src emacs-lisp
+(package! sharper
+  :recipe (:host github
+           :repo "sebasmonia/sharper"))
+#+end_src
 *** Fun Packages
 Sometimes I show off.
 #+BEGIN_SRC emacs-lisp
@@ -578,17 +585,36 @@ Let's setup some org-capture templates
                               (,(format "%s\tArticle" (all-the-icons-octicon "file-text" :face 'all-the-icons-yellow :v-adjust 0.01))
                                :keys "a"
                                :desc ""
-                               :i-type "read:reaserch"
-                               )
-                              (,(format "%s\tInformation" (all-the-icons-faicon "info-circle" :face 'all-the-icons-blue :v-adjust 0.01))
-                               :keys "i"
-                               :desc ""
-                               :i-type "read:info"
+                               :i-type "read:research"
                                )
                               (,(format "%s\tIdea" (all-the-icons-material "bubble_chart" :face 'all-the-icons-silver :v-adjust 0.01))
-                               :keys "I"
+                               :keys "i"
                                :desc ""
                                :i-type "idea"
+                               )
+                              (,(format "%s\tBook" (all-the-icons-faicon "book" :face 'all-the-icons-red :v-adjust 0.01))
+                               :keys "b"
+                               :desc ""
+                               :template ("* [ ] %{desc}%? :%{i-type}:"
+                                          "%i")
+                               :headline "Books"
+                               :i-type "read:book"
+                               )
+                              (,(format "%s\tTelevision" (all-the-icons-faicon "television" :face 'all-the-icons-orange :v-adjust 0.01))
+                               :keys "t"
+                               :desc ""
+                               :template ("* [ ] %{desc}%? :%{i-type}:"
+                                          "%i")
+                               :headline "Television"
+                               :i-type "watch:tv"
+                               )
+                              (,(format "%s\tMovie" (all-the-icons-faicon "film" :face 'all-the-icons-purple :v-adjust 0.01))
+                               :keys "m"
+                               :desc ""
+                               :template ("* [ ] %{desc}%? :%{i-type}:"
+                                          "%i")
+                               :headline "Movies"
+                               :i-type "film:Movie"
                                )))
                   (,(format "%s\tTasks" (all-the-icons-octicon "inbox" :face 'all-the-icons-yellow :v-adjust 0.01))
                    :keys "k"
@@ -1340,6 +1366,14 @@ Set the home directory for Conda.
 #+BEGIN_SRC emacs-lisp
 (setq conda-env-home-directory "/home/yack/.conda/")
 #+END_SRC
+** C#
+#+begin_src emacs-lisp :tangle yes
+(use-package! sharper
+  :after csharp-mode)
+(map! :map csharp-mode-map
+      :localleader
+      :desc "Sharper" "g" #'sharper-main-transient)
+#+end_src
 * Tools
 ** elcord
 Show off, but don't load it unless I want it.
@@ -1351,7 +1385,9 @@ Show off, but don't load it unless I want it.
 ** exwm
 *Note: this is a self contained custom module. To enable it, add 'exwm' to the tools section of your init.el. Then run doom sync.*
 
-For some reason I decided to try out exwm, so here's my config for it. This tangles into "$DOOMDIR/modules/tools/exwm". I've split this into two parts - a packages.el and a config.el.
+For some reason I decided to try out exwm, so here's my config for it. This
+tangles into "$DOOMDIR/modules/tools/exwm". I've split this into two parts - a
+packages.el and a config.el.
 Most of the ideas were taken from evertedsphere's config for using exwm with doom emacs.
 *** Configuration
 :PROPERTIES:
