@@ -92,7 +92,6 @@
        ;;docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
-       ;;exwm              ; CUSTOM MODULE: idk why i did this send help
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
@@ -113,8 +112,7 @@
 
        :lang
        ;;agda              ; types of types of types of types...
-       ;;assembly          ; assembly for fun or debugging
-       ;;cc                ; C/C++/Obj-C madness
+       (cc +lsp)           ; C/C++/Obj-C madness
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
@@ -154,8 +152,8 @@
         +jupyter         ; ipython/jupyter support for babel
         +pandoc          ; export-with-pandoc support
         ;;+present         ; using org-mode for presentations
-        +pretty)         ; shine like a superstar
-        ;;+roam)           ; note taking on an open field, Ned!
+        ;;+pretty          ; shine like a superstar
+        +roam)           ; note taking on an open field, Ned!
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more

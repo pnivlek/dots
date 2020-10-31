@@ -7,7 +7,6 @@ xrdb -merge ~/.Xresources
 hsetroot -cover "/home/yack/usr/pic/theme/stars/bg.jpg" &
 mpdscribble
 dunst -conf ~/.config/dunst/dunstrc &
-setxkbmap -option ctrl:nocaps
 
 # if on PC
 if [ ! -z "$(echo $(xrandr) | grep -o HDMI-2)" ]; then
@@ -18,7 +17,7 @@ else
 	sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
 fi
 
-# setxkbmap -model 'pc104curl-z' -layout 'us(cmk_ed_us)' -option 'misc:extend,lv5:ralt_switch_lock,grp:shifts_toggle,compose:menu,misc:cmk_curl_dh,ctrl:nocaps'
+setxkbmap -model 'pc104curl-z' -layout 'us(cmk_ed_us)' -option 'misc:extend,lv5:ralt_switch_lock,grp:shifts_toggle,compose:menu,misc:cmk_curl_dh,ctrl:nocaps'
 
 bspc monitor -d I II III IV V VI
 

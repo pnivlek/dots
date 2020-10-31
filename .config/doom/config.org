@@ -24,12 +24,6 @@ Zetteldeft
 #+begin_src emacs-lisp :tangle no
 (package! zetteldeft :pin "63ae029")
 #+end_src
-Notdeft
-#+begin_src emacs-lisp
-(package! notdeft
-  :recipe (:host github :repo "hasu/notdeft")
-  :pin "662ff6d")
-#+end_src
 *** Language Packages
 **** Org Packages
 Declarative Org Capture Templates
@@ -134,186 +128,6 @@ font string. You generally only need these two:
       doom-big-font (font-spec :family "Recursive Mono Linear Static" :size 24)
       doom-variable-pitch-font (font-spec :family "Recursive Sans Casual Static" :size 16))
 #+END_SRC
-** Notdeft
-*** Custom Functions
-**** Notdeft New File
-[[https://github.com/alex-a-soto/.doom.d/blob/4b615dc905001f412886d588192af257aaf03211/config.el#L234][Source]]
-#+BEGIN_SRC emacs-lisp
-(defun as/notdeft-new-file-named ()
-  (interactive)
-  (let ((title (read-string "New zettel: ")))
-    (pnivlek/new-zettel-with-title title)
-    ))
-#+END_SRC
-New File With Title
-#+begin_src emacs-lisp
-(defun pnivlek/new-zettel-with-title (title)
-    (progn
-      (notdeft-new-file-named nil title notdeft-template)
-      (pnivlek/new-zettel-fill title)))
-#+end_src
-New File Fill Template
-#+BEGIN_SRC emacs-lisp
-(defun pnivlek/new-zettel-fill (title)
-    (goto-char (point-min))
-    (re-search-forward "^#\\+TITLE:.*$" nil t)
-    (insert " " title)
-    (re-search-forward "^#\\+DATE:.*$" nil t)
-    (insert (format-time-string " [%Y-%m-%d-%H%M]"))
-    (re-search-forward "^#\\+KEYWORDS:.*$" nil t)
-    (insert " ")
-    (evil-append-line 1))
-#+END_SRC
-**** Filenames
-Add Zettelkasten ID to filename, my way.
-#+begin_src emacs-lisp
-(defun pnivlek/notdeft-title-to-notename (str)
-  (when (string-match "^[^a-zA-Z0-9-]+" str)
-    (setq str (replace-match "" t t str)))
-  (when (string-match "[^a-zA-Z0-9-]+$" str)
-    (setq str (replace-match "" t t str)))
-  (while (string-match "[`'“”\"]" str)
-    (setq str (replace-match "" t t str)))
-  (and (not (string= "" str))
-       (concat (format-time-string "%Y-%m-%d-%H%M") " " str)))
-#+end_src
-**** Notdeft/Deft Link Completion Function
-The default complete function for notdeft links uses ido, not ivy. Let's override that.
-#+BEGIN_SRC emacs-lisp
-(after! 'notdeft-org
-  (defun notdeft-org-read-deft-link-name ()
-    "Query for a \"deft:\" link name.
-Do so interactively. Return the name component of a link, without
-the \"deft:\" prefix."
-    (let ((name-lst (notdeft-make-basename-list)))
-      ;; `ido` has been a part of Emacs since version 22
-      (when name-lst
-        (ivy-completing-read "NotDeft note: " name-lst))))
-  (defun notdeft-org-complete-deft-link (&optional prefix)
-    "Define completion for Org \"deft:\" links.
-The optional PREFIX argument is ignored."
-    (let ((name (notdeft-org-read-deft-link-name)))
-      (concat "deft:" (or name "")))))
-#+END_SRC
-**** New Zettel Related Link
-Create a new Zettel and add it to the related links section of the current Zettel.
-#+begin_src emacs-lisp
-(defun pnivlek/new-zettel-related-link ()
-  (interactive)
-  (let* ((title (read-string "New zettel: "))
-         (filename (funcall notdeft-notename-function title)))
-    (progn
-      (pnivlek/org-insert-related-zettel filename title)
-      (pnivlek/new-zettel-with-title title))))
-#+end_src
-**** Related Links
-Modified from [[https://github.com/DynamicMetaFlow/.emacs.d/blob/582b768bc75c18c8d0675c5f31dc4770c7851d95/emacs.el#L3212][here]], credits to DynamicMetaFlow. This function returns an org deft link instead of what link system DynamicMetaFlow was using.
-#+BEGIN_SRC emacs-lisp
-(defun pnivlek/org-insert-zettel ()
-  "Finds a file and inserts in the related links section as a link with the title as the link name."
-  (interactive
-   (progn
-     (barf-if-buffer-read-only)
-     (let* ((name-lst (notdeft-make-basename-list))
-            (name (when name-lst
-                    (ivy-completing-read "NotDeft note: " name-lst)))
-            (file (and name (notdeft-file-by-basename name)))
-            (desc
-             (notdeft-org-read-link-description
-              (when file
-                (notdeft-chomp-nullify
-                 (funcall notdeft-describe-link file)))
-              )))
-       (pnivlek/org-insert-related-zettel file desc)))))
-#+END_SRC
-#+begin_src emacs-lisp :tangle yes
-(defun pnivlek/org-insert-related-zettel (file desc)
-    (save-excursion
-      (when file
-        (goto-char (point-min))
-        (re-search-forward "^\\* Related.*$" nil t)
-        (insert "\n")
-        (insert "- ")
-        (insert
-         (notdeft-make-deft-link
-          (concat
-           (notdeft-base-filename file) ".org")
-          desc)))))
-#+end_src
-**** External Links
-Also taken from DynamicMetaFlow.
-#+BEGIN_SRC emacs-lisp
-(defun dmf/org-insert-external-link ()
-    (interactive)
-    (goto-char (point-min))
-    (re-search-forward "^\\* External Links.*$" nil t)
-    (insert "\n")
-    (insert "- ")
-    (call-interactively 'org-cliplink))
-#+END_SRC
-*** Behavior
-**** Basics
-#+begin_src emacs-lisp
-(use-package! notdeft
-  :hook
-  (notdeft-mode . #'doom-mark-buffer-as-real-h)
-  :config
-  (require 'notdeft-autoloads)
-  (set-evil-initial-state! 'notdeft-mode 'insert)
-  :custom
-  (notdeft-directories '("~/doc/Dropbox/notes"))
-  (notdeft-extension "org")
-  (notdeft-secondary-extensions '("md" "txt"))
-  (notdeft-notename-function #'pnivlek/notdeft-title-to-notename
-                             )
-  (notdeft-template "#+TITLE:
-,#+DATE:
-,#+KEYWORDS:
-
-
-
-,* Related
-,* External Links"))
-(after! (org notdeft)
-  (require 'notdeft-org))
-#+end_src
-*** UI
-**** Keybindings
-Some are for custom functions below.
-#+begin_src emacs-lisp
-(map!
- :leader
- (:prefix-map ("n" . "notes")
-  :desc "Open notdeft" "d" #'notdeft )
- (:prefix-map ("nj" . "zettel")
-  :desc "New zettel note" "n" #'as/notdeft-new-file-named
-  :desc "Insert related link" "r" #'pnivlek/org-insert-zettel
-  :desc "Insert external link" "e" #'dmf/org-insert-external-link
-  :desc "New zettel related link" "R" #'pnivlek/new-zettel-related-link ))
-(map! :map notdeft-mode-map
-      :n "gr"  #'notdeft-refresh
-      :n "C-s" #'notdeft-filter
-      :i "C-n" #'notdeft-new-file
-      :i "C-m" #'notdeft-new-file-named
-      :i "C-d" #'notdeft-delete-file
-      :i "C-r" #'notdeft-rename-file
-      :n "r"   #'notdeft-rename-file
-      :n "e"   #'pnivlek/org-insert-zettel
-      :n "d"   #'notdeft-delete-file
-      :n "D"   #'notdeft-archive-file
-      :n "q"   #'kill-current-buffer
-      :localleader
-      "a"   #'notdeft-archive-file
-      "c"   #'notdeft-filter-clear
-      "d"   #'otdeft-delete-file
-      "f"   #'notdeft-find-file
-      "g"   #'notdeft-refresh
-      "l"   #'notdeft-filter
-      "n"   #'pnivlek/org-insert-zettel
-      "r"   #'notdeft-rename-file
-      "s"   #'notdeft-toggle-sort-method
-      "t"   #'notdeft-toggle-incremental-search)
-#+end_src
 * Editor
 ** Basic Settings
 #+BEGIN_SRC  emacs-lisp
@@ -330,6 +144,15 @@ Some are for custom functions below.
 (setq evil-snipe-scope 'buffer
       evil-snipe-repeat-scope 'whole-buffer)
 #+END_SRC
+** Format
+#+begin_src emacs-lisp
+(setq +format-on-save-enabled-modes
+      '(not c-mode           ; I work on hw assignments in C where I can't change parts of the code.
+            emacs-lisp-mode  ; elisp's mechanisms are good enough
+            sql-mode         ; sqlformat is currently broken
+            tex-mode         ; latexindent is broken
+            latex-mode))
+#+end_src
 * Checkers
 ** Spell
 Getting a bigger dictionary for Ispell and therefore Flyspell.
@@ -342,10 +165,13 @@ Downloaded from [[http://app.aspell.net/create][here]], with options en_US, 80, 
 *** Behavior
 **** Basics
 #+BEGIN_SRC emacs-lisp
-(setq org-directory "~/doc/Dropbox/org/"
+(setq org-directory "~/.local/share/org/"
       org-use-property-inheritance t
       org-log-done 'time
-      org-catch-invisible-edits t)
+      org-catch-invisible-edits 'smart
+      org-export-in-background t
+      org-export-with-toc nil
+      org-export-with-section-numbers nil)
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 (setq org-babel-default-header-args '((:session . "none")
@@ -370,7 +196,7 @@ New Taglist
                       (:endgroup nil)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-(after! org (setq org-todo-keywords '((sequence "TODO(t)" "HOLD(h)" "WIP(w)" "|" "DONE(d)" "KILL(k)"))))
+(after! org (setq org-todo-keywords '((sequence "TODO(t)" "HOLD(h)" "|" "DONE(d)" "KILL(k)"))))
 #+END_SRC
 **** Functionality
 List bullets change with depth.
@@ -406,16 +232,19 @@ Sometimes I want to take screenshots and put them into org files.
 This is a script from https://stackoverflow.com/questions/17435995/ that I modified for my screenshot program.
 TODO: more screenshot functions.
 #+BEGIN_SRC emacs-lisp
-(defun org-screenshot-area ()
-  "Take a screenshot into a time stamped unique-named file in the
+(defun org-screenshot-area (&optional DELAY)
+  "Take a screenshot after into a time stamped unique-named file in the
 same directory as the org-buffer and insert a link to this file."
   (interactive)
+  (if (boundp 'DELAY)
+      (sleep-for DELAY))
   (setq filename
         (concat
          (make-temp-name
           (concat (buffer-file-name)
                   "_"
                   (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+
   (call-process "escrotum" nil nil nil "-s" filename)
   (insert (concat "[[" filename "]]"))
   (org-display-inline-images))
@@ -426,12 +255,27 @@ same directory as the org-buffer and insert a link to this file."
   :after org
   :custom
   (org-ref-completion-library 'org-ref-ivy-cite)
-  (org-ref-bibliography-notes "~/doc/Dropbox/bib/notes.org")
-  (org-ref-default-bibliography '("~/doc/Dropbox/bib/references.bib"))
-  (reftex-default-bibliography '("~/doc/Dropbox/bib/references.bib"))
-  (org-ref-pdf-directory "~/doc/Dropbox/bib/pdfs/"))
+  (org-ref-bibliography-notes "~/.local/share/org/bib/notes.org")
+  (org-ref-default-bibliography '("~/.local/share/org/bib/references.bib"))
+  (reftex-default-bibliography '("~/.local/share/org/bib/references.bib"))
+  (org-ref-pdf-directory "~/.local/share/org/bib/pdfs/"))
 #+END_SRC
 **** Agenda
+Some general org agenda settings.
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-compact-blocks t
+      org-agenda-use-time-grid nil
+      ;; don't see scheduled tasks until the scheduled data
+      org-agenda-todo-ignore-scheduled 'future
+      org-agenda-tags-todo-honor-ignore-options t
+      org-agenda-tags-column 100
+      org-deadline-warning-days 7
+      org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+#+END_SRC
 Org Super Agenda redefines the agenda to be a lot better. I have custom groups
 or where things go and the order they show up in, mostly based on deadlines and
 whether or not they are related to my education.
@@ -448,70 +292,55 @@ whether or not they are related to my education.
                       (org-agenda-span 'day)
                       (org-super-agenda-groups
                        '((:name "Today"
-                                :time-grid t
-                                :date today
-                                :todo "TODAY"
-                                :scheduled today
-                                :order 1)))))
+                          :time-grid t
+                          :date today
+                          :todo "TODAY"
+                          :scheduled today
+                          :order 1)))))
           (alltodo "" ((org-agenda-overriding-header "")
                        (org-agenda-sorting-strategy '(priority-down timestamp-up))
                        (org-super-agenda-groups
-                        '((:name "Next to do"
-                                 :todo "NEXT"
-                                 :order 1)
-                          (:name "Important"
-                                 :tag "Important"
-                                 :priority "A"
-                                 :order 6)
-                          (:name "Due Today"
-                                 :deadline today
-                                 :order 2)
-                          (:name "Due Soon"
-                                 :deadline future
-                                 :order 8)
+                        `((:name "Important"
+                           :tag "Important"
+                           :priority "A"
+                           :order 0)
                           (:name "Overdue"
-                                 :deadline past
-                                 :face error
-                                 :order 7)
+                           :deadline past
+                           :face error
+                           :order 1)
+                          (:name "Due Today"
+                           :deadline today
+                           :order 2)
+                          (:name "Next 7 Days"
+                           :and (:deadline future :deadline (before ,(org-read-date nil nil "+1w")))
+                           :order 8)
                           (:name "Assignments"
-                                 :tag "Assignment"
-                                 :order 10)
+                           :tag "Assignment"
+                           :order 10)
                           (:name "Issues"
-                                 :tag "Issue"
-                                 :order 12)
+                           :tag "Issue"
+                           :order 12)
                           (:name "Projects"
-                                 :tag "Project"
-                                 :order 14)
+                           :tag "Project"
+                           :order 14)
                           (:name "Emacs"
-                                 :tag "Emacs"
-                                 :order 13)
+                           :tag "Emacs"
+                           :order 13)
                           (:name "University"
-                                 :tag "uni"
-                                 :order 15)
+                           :tag "uni"
+                           :order 15)
                           (:name "To read"
-                                 :tag "Read"
-                                 :order 30)
+                           :tag "Read"
+                           :order 30)
                           (:name "Waiting"
-                                 :todo "WAITING"
-                                 :order 20)
+                           :todo "WAITING"
+                           :order 20)
                           (:name "Trivial"
-                                 :priority<= "E"
-                                 :tag ("Trivial" "Unimportant")
-                                 :todo ("SOMEDAY" )
-                                 :order 90)
+                           :priority<= "E"
+                           :tag ("Trivial" "Unimportant")
+                           :todo ("SOMEDAY" )
+                           :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
-#+END_SRC
-Some general org agenda settings.
-#+BEGIN_SRC emacs-lisp
-(setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-compact-blocks t
-      org-agenda-use-time-grid nil
-      ;; don't see scheduled tasks until the scheduled data
-      org-agenda-todo-ignore-scheduled 'future
-      org-agenda-tags-todo-honor-ignore-options t)
 #+END_SRC
 **** Capture
 Let's setup some org-capture templates
@@ -520,7 +349,7 @@ Let's setup some org-capture templates
   :commands (doct))
 
 (after! org-capture
-  <<prettify-capture>>
+  (setq +org-capture-uni-units (split-string (f-read-text "~/.local/share/org/.uni-units")))
   (add-transient-hook! 'org-capture-select-template
     (setq org-capture-templates
           (doct `((,(format "%s\tPersonal todo" (all-the-icons-octicon "checklist" :face 'all-the-icons-green :v-adjust 0.01))
@@ -545,23 +374,27 @@ Let's setup some org-capture templates
                    :keys "u"
                    :file +org-capture-todo-file
                    :headline "University"
+                   :unit-prompt ,(format "%%^{Unit|%s}" (string-join +org-capture-uni-units "|"))
                    :prepend t
                    :type entry
-                   :children ((,(format "%s\tTest" (all-the-icons-material "timer" :face 'all-the-icons-red :v-adjust 0.01))
-                               :keys "t"
-                               :template ("* TODO [#C] %? :uni:tests:"
+                   :children (("Test" :keys "t"
+                               :icon ("timer" :set "material" :color "red")
+                               :template ("* TODO [#C] %{unit-prompt} %? :uni:tests:"
                                           "SCHEDULED: %^{Test date:}T"
-                                          "%i %a"))
-                              (,(format "%s\tAssignment" (all-the-icons-material "library_books" :face 'all-the-icons-orange :v-adjust 0.01))
-                               :keys "a"
-                               :template ("* TODO [#B] %? :uni:assignments:"
+                                          "%i"))
+                              ("Assignment" :keys "a"
+                               :icon ("library_books" :set "material" :color "orange")
+                               :template ("* TODO [#B] %{unit-prompt} %? :uni:assignments:"
                                           "DEADLINE: %^{Due date:}T"
-                                          "%i %a"))
-                              (,(format "%s\tMiscellaneous task" (all-the-icons-faicon "list" :face 'all-the-icons-yellow :v-adjust 0.01))
-                               :keys "u"
-                               :template ("* TODO [#C] %? :uni:"
-                                          "%i %a"))))
-                  (,(format "%s\tEmail" (all-the-icons-faicon "envelope" :face 'all-the-icons-blue :v-adjust 0.01))
+                                          "%i"))
+                              ("Lecture" :keys "l"
+                               :icon ("keynote" :set "fileicon" :color "orange")
+                               :template ("* TODO [#C] %{unit-prompt} %? :uni:lecture:"
+                                          "%i"))
+                              ("Miscellaneous task" :keys "u"
+                               :icon ("list" :set "faicon" :color "yellow")
+                               :template ("* TODO [#D] %{unit-prompt} %? :uni:"
+                                          "%i"))))                  (,(format "%s\tEmail" (all-the-icons-faicon "envelope" :face 'all-the-icons-blue :v-adjust 0.01))
                    :keys "e"
                    :file +org-capture-todo-file
                    :prepend t
@@ -799,6 +632,11 @@ probably an email address.
       org-gcal-file-alist '(("google_calendar_id" .  "org_file")))
 (provide 'config_private)
 #+END_EXAMPLE
+**** Roam
+***** Basics
+#+begin_src emacs-lisp
+(setq org-roam-directory "~/.local/share/roam/")
+#+end_src
 *** UI
 **** In Editor
 ***** Font Display
@@ -820,12 +658,8 @@ Make headings bigger
 #+END_SRC
 ***** Symbols
 #+BEGIN_SRC emacs-lisp
-(use-package! org-superstar ; "prettier" bullets
-  :hook (org-mode . org-superstar-mode))
-
 (after! org
   (setq org-ellipsis " ▾ "
-        org-superstar-headline-bullets-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷" "☷" "☷" "☷")
         org-priority-faces '((?A . all-the-icons-red)
                              (?B . all-the-icons-orange)
                              (?C . all-the-icons-yellow)
@@ -1210,9 +1044,319 @@ Add apa7 to the list of org-latex-classes for export.
                  ("\\subsubsection{%s}" . "\\paragraph*{%s}")
                  ("\\paragraph{%s}" . "\\subparagraph*{%s}"))))
 #+END_SRC
-#+BEGIN_SRC emacs-lisp
-(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-#+END_SRC
+Add fancy document class from tecosaur.
+#+begin_src emacs-lisp
+(after! ox-latex
+  (add-to-list 'org-latex-classes
+               '("fancy-article"
+                 "\\documentclass{scrartcl}\n\
+\\usepackage[T1]{fontenc}\n\
+\\usepackage[osf,largesc,helvratio=0.9]{newpxtext}\n\
+\\usepackage[scale=0.92]{sourcecodepro}\n\
+\\usepackage[sfdefault]{roboto}\n\
+\\usepackage[varbb]{newpxmath}\n\
+
+\\usepackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=2000]{microtype}\n\
+\\usepackage{xcolor}\n\
+\\usepackage{booktabs}
+
+\\usepackage{subcaption}
+\\usepackage[hypcap=true]{caption}
+\\setkomafont{caption}{\\sffamily\\small}
+\\setkomafont{captionlabel}{\\upshape\\bfseries}
+\\captionsetup{justification=raggedright,singlelinecheck=true}
+\\setcapindent{0pt}
+
+\\setlength{\\parskip}{\\baselineskip}\n\
+\\setlength{\\parindent}{0pt}\n\
+
+\\usepackage{pifont}
+\\newcommand{\\checkboxUnchecked}{$\\square$}
+\\newcommand{\\checkboxTransitive}{\\rlap{\\raisebox{0.0ex}{\\hspace{0.35ex}\\Large\\textbf -}}$\\square$}
+\\newcommand{\\checkboxChecked}{\\rlap{\\raisebox{0.2ex}{\\hspace{0.35ex}\\scriptsize \\ding{56}}}$\\square$}
+
+\\newenvironment{warning}
+    {\\begin{center}
+    \\begin{tabular}{rp{0.9\\textwidth}}
+    \\ding{82} & \\textbf{Warning} \\\\ &
+    }
+    {
+    \\end{tabular}
+    \\end{center}
+    }
+"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("blank"
+               "[NO-DEFAULT-PACKAGES]
+               [NO-PACKAGES]
+               [EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("bmc-article"
+               "\\documentclass[article,code,maths]{bmc}
+               [NO-DEFAULT-PACKAGES]
+               [NO-PACKAGES]
+               [EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("bmc"
+               "\\documentclass[code,maths]{bmc}
+               [NO-DEFAULT-PACKAGES]
+               [NO-PACKAGES]
+               [EXTRA]"
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (setq org-latex-default-class "fancy-article")
+
+  (after! org
+    (defadvice! org-latex-header-smart-minted (orig-fn tpl def-pkg pkg snippets-p &optional extra)
+      "Include minted config if src blocks are detected."
+      :around #'org-splice-latex-header
+      (let ((header (funcall orig-fn tpl def-pkg pkg snippets-p extra))
+            (src-p (when (save-excursion
+                           (goto-char (point-min))
+                           (search-forward-regexp "#\\+BEGIN_SRC\\|#\\+begin_src" nil t))
+                     t)))
+        (if snippets-p header
+          (concat header
+                  org-latex-universal-preamble
+                  (when src-p org-latex-minted-preamble)))))
+
+    (defvar org-latex-minted-preamble "
+  \\usepackage{minted}
+  \\usepackage[many]{tcolorbox}
+  \\setminted{
+    frame=none,
+    % framesep=2mm,
+    baselinestretch=1.2,
+    fontsize=\\footnotesize,
+    highlightcolor=white!95!black!80!blue,
+    linenos,
+    breakanywhere=true,
+    breakautoindent=true,
+    breaklines=true,
+    tabsize=4,
+    xleftmargin=3.5em,
+    autogobble=true,
+    obeytabs=true,
+    python3=true,
+    % texcomments=true,
+    framesep=2mm,
+    breakbefore=\\\\\.+,
+    breakafter=\\,
+    style=autumn,
+    breaksymbol=\\color{white!60!black}\\tiny\\ensuremath{\\hookrightarrow},
+    breakanywheresymbolpre=\\,\\footnotesize\\ensuremath{_{\\color{white!60!black}\\rfloor}},
+    breakbeforesymbolpre=\\,\\footnotesize\\ensuremath{_{\\color{white!60!black}\\rfloor}},
+    breakaftersymbolpre=\\,\\footnotesize\\ensuremath{_{\\color{white!60!black}\\rfloor}},
+  }
+
+  \\BeforeBeginEnvironment{minted}{
+    \\begin{tcolorbox}[
+      enhanced,
+      overlay={\\fill[white!90!black] (frame.south west) rectangle ([xshift=2.8em]frame.north west);},
+      colback=white!95!black,
+      colframe=white!95!black, % make frame colour same as background
+      breakable,% Allow white breaks
+      arc=0pt,outer arc=0pt,sharp corners, % sharp corners
+      boxsep=0pt,left=0pt,right=0pt,top=0pt,bottom=0pt % no margin/paddding
+    ]
+  }
+  \\AfterEndEnvironment{minted}{\\end{tcolorbox}}
+  \\renewcommand\\theFancyVerbLine{\\color{black!60!white}\\arabic{FancyVerbLine}} % minted line numbering
+  "
+      "Preamble to be inserted when minted is used.")
+
+    (defvar org-latex-universal-preamble "
+  \\usepackage[main,include]{embedall}
+  \\IfFileExists{./\\jobname.org}{\\embedfile[desc=The original file]{\\jobname.org}}{}
+  "
+      "Preamble to be included in every export."))
+
+  (setq org-latex-listings 'minted
+        org-latex-minted-options
+        '())
+
+  (setq org-latex-tables-booktabs t)
+
+  (setq org-latex-hyperref-template "
+\\colorlet{greenyblue}{blue!70!green}
+\\colorlet{blueygreen}{blue!40!green}
+\\providecolor{link}{named}{greenyblue}
+\\providecolor{cite}{named}{blueygreen}
+\\hypersetup{
+  pdfauthor={%a},
+  pdftitle={%t},
+  pdfkeywords={%k},
+  pdfsubject={%d},
+  pdfcreator={%c},
+  pdflang={%L},
+  breaklinks=true,
+  colorlinks=true,
+  linkcolor=,
+  urlcolor=link,
+  citecolor=cite\n}
+\\urlstyle{same}\n")
+  (setq org-latex-pdf-process
+        '("latexmk -shell-escape -interaction=nonstopmode -f -pdf -output-directory=%o %f")))
+#+end_src
+Chameleon theme, also from tecosaur.
+#+begin_src emacs-lisp
+(after! ox
+  (defvar ox-chameleon-base-class "fancy-article"
+    "The base class that chameleon builds on")
+
+  (defvar ox-chameleon--p nil
+    "Used to indicate whether the current export is trying to blend in. Set just before being accessed.")
+
+  ;; (setf (alist-get :filter-latex-class
+  ;;                  (org-export-backend-filters
+  ;;                   (org-export-get-backend 'latex)))
+  ;;       'ox-chameleon-latex-class-detector-filter)
+
+  ;; (defun ox-chameleon-latex-class-detector-filter (info backend)
+  ;;   ""
+  ;;   (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
+  ;;                                      "chameleon")
+  ;;                           (plist-put info :latex-class ox-chameleon-base-class)
+  ;;                           t)))
+
+  ;; TODO make this less hacky. One ideas was as follows
+  ;; (map-put (org-export-backend-filters (org-export-get-backend 'latex))
+  ;;           :filter-latex-class 'ox-chameleon-latex-class-detector-filter))
+  ;; Never seemed to execute though
+  (defadvice! ox-chameleon-org-latex-detect (orig-fun info)
+    :around #'org-export-install-filters
+    (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
+                                       "chameleon")
+                            (plist-put info :latex-class ox-chameleon-base-class)
+                            t))
+    (funcall orig-fun info))
+
+  (defadvice! ox-chameleon-org-latex-export (orig-fn info &optional template snippet?)
+    :around #'org-latex-make-preamble
+    (funcall orig-fn info)
+    (if (not ox-chameleon--p)
+        (funcall orig-fn info template snippet?)
+      (concat (funcall orig-fn info template snippet?)
+              (ox-chameleon-generate-colourings))))
+
+  (defun ox-chameleon-generate-colourings ()
+    (apply #'format
+           "%% make document follow Emacs theme
+\\definecolor{bg}{HTML}{%s}
+\\definecolor{fg}{HTML}{%s}
+
+\\definecolor{red}{HTML}{%s}
+\\definecolor{orange}{HTML}{%s}
+\\definecolor{green}{HTML}{%s}
+\\definecolor{teal}{HTML}{%s}
+\\definecolor{yellow}{HTML}{%s}
+\\definecolor{blue}{HTML}{%s}
+\\definecolor{dark-blue}{HTML}{%s}
+\\definecolor{magenta}{HTML}{%s}
+\\definecolor{violet}{HTML}{%s}
+\\definecolor{cyan}{HTML}{%s}
+\\definecolor{dark-cyan}{HTML}{%s}
+
+\\definecolor{level1}{HTML}{%s}
+\\definecolor{level2}{HTML}{%s}
+\\definecolor{level3}{HTML}{%s}
+\\definecolor{level4}{HTML}{%s}
+\\definecolor{level5}{HTML}{%s}
+\\definecolor{level6}{HTML}{%s}
+\\definecolor{level7}{HTML}{%s}
+\\definecolor{level8}{HTML}{%s}
+
+\\definecolor{link}{HTML}{%s}
+\\definecolor{cite}{HTML}{%s}
+\\definecolor{itemlabel}{HTML}{%s}
+\\definecolor{code}{HTML}{%s}
+\\definecolor{verbatim}{HTML}{%s}
+
+\\pagecolor{bg}
+\\color{fg}
+
+\\addtokomafont{section}{\\color{level1}}
+\\newkomafont{sectionprefix}{\\color{level1}}
+\\addtokomafont{subsection}{\\color{level2}}
+\\newkomafont{subsectionprefix}{\\color{level2}}
+\\addtokomafont{subsubsection}{\\color{level3}}
+\\newkomafont{subsubsectionprefix}{\\color{level3}}
+\\addtokomafont{paragraph}{\\color{level4}}
+\\newkomafont{paragraphprefix}{\\color{level4}}
+\\addtokomafont{subparagraph}{\\color{level5}}
+\\newkomafont{subparagraphprefix}{\\color{level5}}
+
+\\renewcommand{\\labelitemi}{\\textcolor{itemlabel}{\\textbullet}}
+\\renewcommand{\\labelitemii}{\\textcolor{itemlabel}{\\normalfont\\bfseries \\textendash}}
+\\renewcommand{\\labelitemiii}{\\textcolor{itemlabel}{\\textasteriskcentered}}
+\\renewcommand{\\labelitemiv}{\\textcolor{itemlabel}{\\textperiodcentered}}
+
+\\renewcommand{\\labelenumi}{\\textcolor{itemlabel}{\\theenumi.}}
+\\renewcommand{\\labelenumii}{\\textcolor{itemlabel}{(\\theenumii)}}
+\\renewcommand{\\labelenumiii}{\\textcolor{itemlabel}{\\theenumiii.}}
+\\renewcommand{\\labelenumiv}{\\textcolor{itemlabel}{\\theenumiv.}}
+
+\\DeclareTextFontCommand{\\texttt}{\\color{code}\\ttfamily}
+\\makeatletter
+\\def\\verbatim@font{\\color{verbatim}\\normalfont\\ttfamily}
+\\makeatother
+%% end customisations
+"
+           (mapcar (doom-rpartial #'substring 1)
+                   (list
+                    ;; I dont use solaire
+                    ;; (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'default :background)
+                    (face-attribute 'default :foreground)
+                    ;;
+                    (doom-color 'red)
+                    (doom-color 'orange)
+                    (doom-color 'green)
+                    (doom-color 'teal)
+                    (doom-color 'yellow)
+                    (doom-color 'blue)
+                    (doom-color 'dark-blue)
+                    (doom-color 'magenta)
+                    (doom-color 'violet)
+                    (doom-color 'cyan)
+                    (doom-color 'dark-cyan)
+                    ;;
+                    (face-attribute 'outline-1 :foreground)
+                    (face-attribute 'outline-2 :foreground)
+                    (face-attribute 'outline-3 :foreground)
+                    (face-attribute 'outline-4 :foreground)
+                    (face-attribute 'outline-5 :foreground)
+                    (face-attribute 'outline-6 :foreground)
+                    (face-attribute 'outline-7 :foreground)
+                    (face-attribute 'outline-8 :foreground)
+                    ;;
+                    (face-attribute 'link :foreground)
+                    (or (face-attribute 'org-ref-cite-face :foreground) (doom-color 'yellow))
+                    (face-attribute 'org-list-dt :foreground)
+                    (face-attribute 'org-code :foreground)
+                    (face-attribute 'org-verbatim :foreground)
+                    ))))
+  )
+#+end_src
 ** Java
 Enable google-java-format plugin
 #+BEGIN_SRC emacs-lisp
@@ -1338,6 +1482,7 @@ View keybinding.
 *** CDLaTeX
 Changing around some symbols.
 #+BEGIN_SRC emacs-lisp
+(after! org (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
 (after! cdlatex
   (setq ;; cdlatex-math-symbol-prefix ?\; ;; doesn't work at the moment :(
    cdlatex-math-symbol-alist

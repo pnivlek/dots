@@ -176,7 +176,8 @@ animation-charging-framerate = 750
 [module/battery2]
 inherit=module/battery
 battery=BAT0
-format-charging=
+format-charging=,<label-charging>
+label-charging=%percentage%%
 format-discharging=,<label-discharging>
 
 [module/xkeyboard]
