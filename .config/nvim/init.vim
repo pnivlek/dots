@@ -5,7 +5,7 @@ if &compatible
     set nocompatible
 endif
 
-" ===== BUILTIN PLUGINS ==================== {{{
+" ===== BUILTIN PLUGINS ==================== {{{{{{
 
 " Disable built-in plugins
 let g:loaded_2html_plugin      = 1
@@ -32,7 +32,7 @@ let g:loaded_zipPlugin         = 1
 let g:vimsyn_embed             = 1
 let g:loaded_matchit           = 1
 
-" }}}
+" }}}}}}
 
 " ===== SETUP FUNCTIONS ==================== {{{
 
@@ -265,9 +265,8 @@ nnoremap <Leader>d :lcd %:h<CR>
 
 " ===== PLUGINS ============================ {{{
 packadd minpac
-let s:plugins = exists('*minpac#init')
 
-if !s:plugins
+if !exists('g:loaded_minpac')
     echo 'Downloading minpac to manage plugins...'
     exe '!mkdir -p ~/.config/nvim/pack/minpac/opt/minpac'
     exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
@@ -275,7 +274,7 @@ if !s:plugins
 endif
 
 call minpac#init()
-call minpac#add('neovim/nvim-lsp')
+call minpac#add('neovim/nvim-lspconfig')
 call minpac#add('ervandew/supertab')
 call minpac#add('SirVer/ultisnips')
 call minpac#add('honza/vim-snippets')
@@ -290,7 +289,6 @@ call minpac#add('junegunn/fzf', { 'do': './install --all' })
 call minpac#add('junegunn/fzf.vim')
 call minpac#add('michal-h21/vim-zettel')
 call minpac#add('junegunn/goyo.vim')
-call minpac#add('numirias/semshi', {'do': ':UpdateRemotePlugins'})
 call minpac#add('jaxbot/semantic-highlight.vim')
 call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
 call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
@@ -301,6 +299,7 @@ call minpac#add('christoomey/vim-tmux-navigator')
 call minpac#add('drzel/vim-scrolloff-fraction')
 call minpac#add('psliwka/vim-smoothie')
 call minpac#add('itchyny/lightline.vim')
+call minpac#add('romainl/Apprentice')
 " }}}
 
 " ===== PLUGIN CONFIG ====================== {{{
@@ -430,35 +429,12 @@ let g:scrolloff_fraction=0.2
 " }}}
 
 " ===== LSP ================================ {{{
-packadd nvim-lsp
-
-lua << EOF
-require('nvim_lsp').pyls.setup({
-})
+lua <<EOF
+require('lspconfig').ccls.setup{}
+require('lspconfig').pyls.setup{}
+require('lspconfig').texlab.setup{}
+require('lspconfig').omnisharp.setup{}
 EOF
-
-lua << EOF
-require('nvim_lsp').texlab.setup{
-    latex = {
-        build = {
-            args = { "-pdf", "-interaction=nonstopmode", "-synctex=1" },
-            executable = "latexmk",
-            onSave = true
-        },
-        lint = {
-            onChange = false
-        }
-    }
-}
-EOF
-lua require('nvim_lsp').gopls.setup{}
-" lua require('nvim_lsp').jdtls.setup{}
-
-augroup lspVIM
-    autocmd FileType python,tex,go nnoremap <silent> <buffer> <leader>h <cmd>lua vim.lsp.buf.hover()<CR>
-    autocmd FileType python,tex,go nnoremap <silent> <buffer> gK <cmd>lua vim.lsp.buf.signature_help()<CR>
-    autocmd FileType python,tex,go setlocal omnifunc=v:lua.vim.lsp.omnifunc
-augroup end
 " }}}
 
 " ===== LANGUAGE FORMATTING ================ {{{
@@ -537,8 +513,7 @@ endfunction
 " }}}
 
 " ===== COLORS ============================= {{{
-packadd onedark-custom
-let g:lightline = {'colorscheme': 'onedark'}
-colorscheme onedark
 set background=dark
 " }}}
+
+
