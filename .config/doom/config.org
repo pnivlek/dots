@@ -74,9 +74,9 @@ Sometimes I show off.
 Switch the functionality of =SPC ;= and =SPC := . The one used less should be the one not on the shift key. Note that if exwm is enabled further on that ~SPC~ becomes ~C-SPC~.
 #+BEGIN_SRC emacs-lisp
 (map! :leader
- :desc "M-x" ";" #'execute-extended-command
- :desc "Eval expression" ":" #'pp-eval-expression
- )
+      :desc "M-x" ";" #'execute-extended-command
+      :desc "Eval expression" ":" #'pp-eval-expression
+      )
 #+END_SRC
 *** Dired
 Hide dotfiles from the directory listing in dired-omit-mode.
@@ -1536,7 +1536,7 @@ packages.el and a config.el.
 Most of the ideas were taken from evertedsphere's config for using exwm with doom emacs.
 *** Configuration
 :PROPERTIES:
-:header-args:emacs-lisp: :tangle "modules/tools/exwm/config.el" :comments link
+:header-args:emacs-lisp: :tangle no :comments link
 :END:
 First we start the server.
 #+begin_src emacs-lisp

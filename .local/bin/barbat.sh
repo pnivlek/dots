@@ -21,7 +21,7 @@ BATTERY_STATE=$(echo "${BATTERY_INFO}" | grep -wo "Full\|Charging\|Discharging")
 if [[ "${BATTERY_STATE}" = "Charging" ]]; then
   bat1="B1: ${BATTERY_POWER}%+"
 elif [[ "${BATTERY_STATE}" = "Discharging" ]]; then
-  bat1="B1: ${BATTERY_POWER}%-"
+  bat1="B1: ${BATTERY_POWER}%"
 else
   bat1="B1: ${BATTERY_POWER}%"
 fi

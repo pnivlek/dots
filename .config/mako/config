@@ -47,3 +47,7 @@ width=100
 [app-name=disp_vol_mute]
 default-timeout=500
 width=150
+
+[app-name=disp_mic_mute]
+default-timeout=500
+width=200

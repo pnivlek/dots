@@ -8,12 +8,13 @@ super + Return
 
 # program launcher
 super + d
-	rofi -show run -theme "/home/yack/.config/rofi/onedark.rasi"
+	rofi -show run
 
-# make sxhkd reload its configuration files:
+# Make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd
 
+# Function keys
 super + XF86AudioMute
     mpc seek -00:00:10 && notify-send -u low "Seek -10 sec."
 super + XF86AudioLowerVolume
@@ -32,10 +33,26 @@ XF86MonBrightnessDown
 	light -U 10 && polybar-msg hook backlight 1
 XF86MonBrightnessUp
 	light -A 10 && polybar-msg hook backlight 1
+
+# Screenshotting stuff
+XF886LaunchA
+    ~/.local/bin/screenshot.sh select
+Shift + XF886LaunchA
+    ~/.local/bin/screenshot.sh selectsave
+Control + Shift + XF886LaunchA
+    ~/.local/bin/screenshot.sh selectsavename
+XF86Explorer
+    ~/.local/bin/screenshot.sh window
+Shift + XF86Explorer
+    ~/.local/bin/screenshot.sh windowsave
+Control + Shift + XF86Explorer
+    ~/.local/bin/screenshot.sh windowsavename
+
+# Snapshot stuff
 XF86Display
-	/home/yack/.local/bin/resize.sh
-XF86LaunchA
-    /home/yack/.local/bin/kb.sh
+    ~/.local/bin/snapshot.sh select
+Shift+XF86Display
+    ~/.local/bin/snapshot.sh window
 
 # lockscreen
 super + shift + x

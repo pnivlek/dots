@@ -33,6 +33,15 @@ input "type:tablet_tool" {
   map_to_output $mon1
 }
 
+input * {
+    xkb_layout "us"
+    xkb_variant "cmk_ed_us"
+    xkb_options "misc:extend,lv5:caps_switch_lock,grp:shifts_toggle,compose:menu,misc:cmk_curl_dh"
+}
+input "1:1:AT_Translated_Set_2_keyboard"  xkb_model "pc104angle-z"
+
+
+
 ### Key bindings
 #
 # Basics:
@@ -189,13 +198,19 @@ bindsym $mod+r mode "resize"
 #
 # Fn keybinds.
 #
-bindsym --release Print exec "~/.config/scripts/screenshot.sh select"
-bindsym --release Shift+Print exec "~/.config/scripts/screenshot.sh window"
+bindsym --release XF86LaunchA exec "~/.local/bin/screenshot.sh select"
+bindsym --release Shift+XF86LaunchA exec "~/.local/bin/screenshot.sh selectsave"
+bindsym --release Control+Shift+XF86LaunchA exec "~/.local/bin/screenshot.sh selectsavename"
+bindsym --release XF86Explorer exec "~/.local/bin/screenshot.sh window"
+bindsym --release Shift+XF86Explorer exec "~/.local/bin/screenshot.sh windowsave"
+bindsym --release Control+Shift+XF86Explorer exec "~/.local/bin/screenshot.sh windowsavename"
+bindsym --release XF86Display exec "~/.local/bin/snapshot.sh select"
+bindsym --release Shift+XF86Display exec "~/.local/bin/snapshot.sh window"
 
-bindsym XF86AudioMute exec "pactl set-sink-mute 0 toggle && ~/.local/bin/disp_muted.sh"
+bindsym XF86AudioMute exec "pactl set-sink-mute @DEFAULT_SINK@ toggle && ~/.local/bin/disp_muted.sh"
 bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume @DEFAULT_SINK@ +5% && ~/.local/bin/disp_vol.sh"
 bindsym XF86AudioLowerVolume exec "pactl set-sink-volume @DEFAULT_SINK@ -5% && ~/.local/bin/disp_vol.sh"
-bindsym XF86AudioMicMute exec "pactl set-source-mute 1 toggle"
+bindsym XF86AudioMicMute exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle && ~/.local/bin/disp_micmuted.sh"
 bindsym XF86MonBrightnessDown exec "light -U 10 && ~/.local/bin/disp_bright.sh"
 bindsym XF86MonBrightnessUp exec "light -A 10 && ~/.local/bin/disp_bright.sh"
 

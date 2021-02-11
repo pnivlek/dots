@@ -1,4 +1,4 @@
-export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/"
+export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools"
 export EDITOR="emacs -nw"
 export TERMINAL="xst"
 export READER="zathura"
@@ -15,7 +15,7 @@ export DOTNET_ROOT="/opt/dotnet/"
 
 ! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
 
-[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x sway > /dev/null && sway
+[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x bspwm > /dev/null && startx
 
 # Created by `userpath` on 2020-08-18 07:46:50
 export PATH="$PATH:/home/yack/.local/bin"

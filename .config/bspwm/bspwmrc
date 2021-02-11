@@ -4,20 +4,11 @@
 bspc rule -r "*"
 
 xrdb -merge ~/.Xresources
-hsetroot -cover "/home/yack/usr/pic/theme/stars/bg.jpg" &
-mpdscribble
+hsetroot -cover "/home/yack/usr/pic/wal/forest.jpg" &
 dunst -conf ~/.config/dunst/dunstrc &
 
-# if on PC
-if [ ! -z "$(echo $(xrandr) | grep -o HDMI-2)" ]; then
-	polybar desktop &
-	sxhkd -c ~/.config/sxhkd/sxhkdrc.desk &
-else
-	polybar laptop &
-	sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
-fi
-
-setxkbmap -model 'pc104curl-z' -layout 'us(cmk_ed_us)' -option 'misc:extend,lv5:ralt_switch_lock,grp:shifts_toggle,compose:menu,misc:cmk_curl_dh,ctrl:nocaps'
+polybar laptop &
+sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
 
 bspc monitor -d I II III IV V VI
 

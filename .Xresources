@@ -1,5 +1,5 @@
 st.scrollBar: 	false
-st.font: Iosevka Nerd Font Mono:medium:size=11
+st.font: Recursive Mono Linear Static:medium:size=11
 
 ! special
 *.foreground:   #c5c8c6
