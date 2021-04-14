@@ -1,39 +1,49 @@
-st.scrollBar: 	false
-st.font: Recursive Mono Linear Static:medium:size=11
+URxvt.font: xft:Recursive Mono Linear Static:medium:size=11
+URxvt.scrollBar: false
+URxvt*scrollTtyOutput: false
+URxvt*scrollWithBuffer: true
+URxvt*scrollTtyKeypress: true
 
-! special
-*.foreground:   #c5c8c6
-*.background:   #1d1f21
-*.cursorColor:  #c5c8c6
+! -- Title:     blok
+! -- Author:    dkeg
+! -- Created:   2015
 
-! black
-*.color0:       #1d1f21
-*.color8:       #969896
+#define bg    #2c2a2b
+#define fg    #bab9ba
+#define blk   #2d2b2c
+#define bblk  #545253
+#define red   #a67979
+#define grn   #809f7b
+#define ylw   #baad8a
+#define blu   #6d7575
+#define mag   #7d6969
+#define cyn   #7b9899
+#define wht   #bab9ba
+#define bred  #a67979
+#define bgrn  #809f7b
+#define bylw  #baad8a
+#define bblu  #6d7575
+#define bmag  #7d6969
+#define bcyn  #7b9899
+#define bwht  #bab9ba
 
-! red
-*.color1:       #cc6666
-*.color9:       #cc6666
+! Colors
+*background:   bg
+*foreground:   fg
 
-! green
-*.color2:       #b5bd68
-*.color10:      #b5bd68
-
-! yellow
-*.color3:       #f0c674
-*.color11:      #f0c674
-
-! blue
-*.color4:       #81a2be
-*.color12:      #81a2be
-
-! magenta
-*.color5:       #b294bb
-*.color13:      #b294bb
-
-! cyan
-*.color6:       #8abeb7
-*.color14:      #8abeb7
-
-! white
-*.color7:       #c5c8c6
-*.color15:      #ffffff
+*color0:      blk
+*color8:      bblk
+*color1:      red
+*color9:      bred
+*color2:      grn
+*color10:     bgrn
+*color3:      ylw
+*color11:     bylw
+*color4:      blu
+*color12:     bblu
+*color5:      mag
+*color13:     bmag
+*color6:      cyn
+*color14:     bcyn
+*color7:      wht
+*color15:     bwht

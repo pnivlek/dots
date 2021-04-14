@@ -28,7 +28,7 @@
 #
 ## Needed for tag editor and file operations to work.
 ##
-mpd_music_dir = /home/yack/usr/mus
+mpd_music_dir = /hdd/mus
 #
 #mpd_crossfade_time = 5
 #

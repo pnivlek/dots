@@ -57,6 +57,36 @@ enable-ipc = true
 
 wm-restack = bspwm
 
+[bar/desktop]
+monitor = ${env:MONITOR:HDMI-2}
+width = 100%
+height = 28
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = ${colors.color9}
+
+padding = 2
+
+module-margin = 0
+
+font-0 = Dina:medium:pixelsize=11;1
+font-1 = FontAwesome:fontformat=truetype:size=8:antialias=false;0
+font-2 = siji:pixelsize=10;1
+
+modules-left = mpd pad pulseaudio
+modules-center = bspwm
+modules-right = pad date
+bottom = true
+
+tray-position = none
+
+enable-ipc = true
+
+wm-restack = bspwm
 [module/backlight]
 type = custom/ipc
 hook-0 = echo "$(light -G | sed -e "s/\.\w*//")%"

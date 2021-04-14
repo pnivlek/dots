@@ -264,42 +264,41 @@ nnoremap <Leader>d :lcd %:h<CR>
 " }}}
 
 " ===== PLUGINS ============================ {{{
-packadd minpac
 
-if !exists('g:loaded_minpac')
-    echo 'Downloading minpac to manage plugins...'
-    exe '!mkdir -p ~/.config/nvim/pack/minpac/opt/minpac'
-    exe '!git clone https://github.com/k-takata/minpac.git ~/.config/nvim/pack/minpac/opt/minpac'
-    autocmd VimEnter * call minpac#update()
-endif
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync
+end
 
-call minpac#init()
-call minpac#add('neovim/nvim-lspconfig')
-call minpac#add('ervandew/supertab')
-call minpac#add('SirVer/ultisnips')
-call minpac#add('honza/vim-snippets')
-call minpac#add('tpope/vim-dispatch')
-call minpac#add('tpope/vim-fugitive')
-call minpac#add('junegunn/gv.vim')
-call minpac#add('tpope/vim-surround')
-call minpac#add('justinmk/vim-sneak')
-call minpac#add('tommcdo/vim-lion')
-call minpac#add('tpope/vim-repeat')
-call minpac#add('junegunn/fzf', { 'do': './install --all' })
-call minpac#add('junegunn/fzf.vim')
-call minpac#add('michal-h21/vim-zettel')
-call minpac#add('junegunn/goyo.vim')
-call minpac#add('jaxbot/semantic-highlight.vim')
-call minpac#add('artur-shaik/vim-javacomplete2', {'type': 'opt'})
-call minpac#add('Harenome/vim-mipssyntax', {'type':'opt'})
-call minpac#add('OmniSharp/omnisharp-vim',{'type': 'opt'})
-call minpac#add('romainl/vim-devdocs')
-call minpac#add('moll/vim-bbye')
-call minpac#add('christoomey/vim-tmux-navigator')
-call minpac#add('drzel/vim-scrolloff-fraction')
-call minpac#add('psliwka/vim-smoothie')
-call minpac#add('itchyny/lightline.vim')
-call minpac#add('romainl/Apprentice')
+call plug#begin('~/.config/nvim/plugged')
+Plug 'neovim/nvim-lspconfig'
+Plug 'ervandew/supertab'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
+Plug 'tpope/vim-surround'
+Plug 'justinmk/vim-sneak'
+Plug 'tommcdo/vim-lion'
+Plug 'tpope/vim-repeat'
+Plug 'junegunn/fzf', { 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'michal-h21/vim-zettel'
+Plug 'junegunn/goyo.vim'
+Plug 'jaxbot/semantic-highlight.vim'
+Plug 'artur-shaik/vim-javacomplete2', {'type': 'opt'}
+Plug 'Harenome/vim-mipssyntax', {'type':'opt'}
+Plug 'OmniSharp/omnisharp-vim',{'type': 'opt'}
+Plug 'romainl/vim-devdocs'
+Plug 'moll/vim-bbye'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'drzel/vim-scrolloff-fraction'
+Plug 'psliwka/vim-smoothie'
+Plug 'itchyny/lightline.vim'
+Plug 'romainl/Apprentice'
+call plug#end()
 " }}}
 
 " ===== PLUGIN CONFIG ====================== {{{
@@ -514,6 +513,7 @@ endfunction
 
 " ===== COLORS ============================= {{{
 set background=dark
+colorscheme apprentice
 " }}}
 
 

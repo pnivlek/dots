@@ -104,7 +104,7 @@ Hide dotfiles from the directory listing in dired-omit-mode.
 * User Interface
 ** Theme
 #+BEGIN_SRC emacs-lisp
-(setq doom-theme 'doom-tomorrow-night)
+(setq doom-theme 'doom-plain-dark)
 #+END_SRC
 HACK apparently having the last line of the text under a heading be a source
 block makes the whole heading receive that face when it's collapsed... so now we
@@ -124,9 +124,9 @@ are the three important ones:
 They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 font string. You generally only need these two:
 #+BEGIN_SRC emacs-lisp
-(setq doom-font (font-spec :family "Recursive Mono Linear Static" :size 14)
+(setq doom-font (font-spec :family "Dina" :size 14)
       doom-big-font (font-spec :family "Recursive Mono Linear Static" :size 24)
-      doom-variable-pitch-font (font-spec :family "Recursive Sans Casual Static" :size 16))
+      doom-variable-pitch-font (font-spec :family "Recursive Sans Casual Static" :size 16 :style "Light"))
 #+END_SRC
 * Editor
 ** Basic Settings
@@ -147,8 +147,7 @@ font string. You generally only need these two:
 ** Format
 #+begin_src emacs-lisp
 (setq +format-on-save-enabled-modes
-      '(not c-mode           ; I work on hw assignments in C where I can't change parts of the code.
-            emacs-lisp-mode  ; elisp's mechanisms are good enough
+      '(not emacs-lisp-mode  ; elisp's mechanisms are good enough
             sql-mode         ; sqlformat is currently broken
             tex-mode         ; latexindent is broken
             latex-mode))
@@ -165,7 +164,7 @@ Downloaded from [[http://app.aspell.net/create][here]], with options en_US, 80, 
 *** Behavior
 **** Basics
 #+BEGIN_SRC emacs-lisp
-(setq org-directory "~/.local/share/org/"
+(setq org-directory "~/.local/share/Dropbox/org/"
       org-use-property-inheritance t
       org-log-done 'time
       org-catch-invisible-edits 'smart
@@ -255,26 +254,31 @@ same directory as the org-buffer and insert a link to this file."
   :after org
   :custom
   (org-ref-completion-library 'org-ref-ivy-cite)
-  (org-ref-bibliography-notes "~/.local/share/org/bib/notes.org")
-  (org-ref-default-bibliography '("~/.local/share/org/bib/references.bib"))
-  (reftex-default-bibliography '("~/.local/share/org/bib/references.bib"))
-  (org-ref-pdf-directory "~/.local/share/org/bib/pdfs/"))
+  (org-ref-bibliography-notes "~/.local/share/Dropbox/org/bib/notes.org")
+  (org-ref-default-bibliography '("~/.local/share/Dropbox/org/bib/references.bib"))
+  (reftex-default-bibliography '("~/.local/share/Dropbox/org/bib/references.bib"))
+  (org-ref-pdf-directory "~/.local/share/Dropbox/org/bib/pdfs/"))
 #+END_SRC
 **** Agenda
 Some general org agenda settings.
 #+BEGIN_SRC emacs-lisp
-(setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-compact-blocks t
-      org-agenda-use-time-grid nil
-      ;; don't see scheduled tasks until the scheduled data
-      org-agenda-todo-ignore-scheduled 'future
-      org-agenda-tags-todo-honor-ignore-options t
-      org-agenda-tags-column 100
-      org-deadline-warning-days 7
-      org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+(after! org
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-include-deadlines t
+        org-agenda-block-separator nil
+        org-agenda-compact-blocks t
+        org-agenda-use-time-grid t
+        org-agenda-time-grid
+        '((require-timed remove-match) () " " "----------")
+        org-agenda-time-leading-zero t
+        org-agenda-start-day "0d"
+        ;; don't see scheduled tasks until the scheduled data
+        org-agenda-todo-ignore-scheduled 'future
+        org-agenda-tags-todo-honor-ignore-options t
+        org-agenda-tags-column 100
+        org-deadline-warning-days 7
+        org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM"))
 #+END_SRC
 Org Super Agenda redefines the agenda to be a lot better. I have custom groups
 or where things go and the order they show up in, mostly based on deadlines and
@@ -290,13 +294,17 @@ whether or not they are related to my education.
       '(("o" "Overview"
          ((agenda "" (
                       (org-agenda-span 'day)
+                      (org-agenda-scheduled-leaders '("" ""))
+                      (org-agenda-deadline-leaders '("D:" "D:" "D:"))
                       (org-super-agenda-groups
                        '((:name "Today"
                           :time-grid t
                           :date today
                           :todo "TODAY"
                           :scheduled today
-                          :order 1)))))
+                          :order 1)
+                         (:name "Hidden Stuff Not Today"
+                          :discard (:anything t))))))
           (alltodo "" ((org-agenda-overriding-header "")
                        (org-agenda-sorting-strategy '(priority-down timestamp-up))
                        (org-super-agenda-groups
@@ -349,7 +357,7 @@ Let's setup some org-capture templates
   :commands (doct))
 
 (after! org-capture
-  (setq +org-capture-uni-units (split-string (f-read-text "~/.local/share/org/.uni-units")))
+  (setq +org-capture-uni-units (split-string (f-read-text "~/.local/share/Dropbox/org/.uni-units")))
   (add-transient-hook! 'org-capture-select-template
     (setq org-capture-templates
           (doct `((,(format "%s\tPersonal todo" (all-the-icons-octicon "checklist" :face 'all-the-icons-green :v-adjust 0.01))
@@ -635,7 +643,7 @@ probably an email address.
 **** Roam
 ***** Basics
 #+begin_src emacs-lisp
-(setq org-roam-directory "~/.local/share/roam/")
+(setq org-roam-directory "~/.local/share/Dropbox/roam/")
 #+end_src
 *** UI
 **** In Editor
