@@ -35,23 +35,17 @@ XF86MonBrightnessUp
 	light -A 10 && polybar-msg hook backlight 1
 
 # Screenshotting stuff
-XF886LaunchA
+XF86LaunchA
     ~/.local/bin/screenshot.sh select
-Shift + XF886LaunchA
+shift + XF86LaunchA
     ~/.local/bin/screenshot.sh selectsave
-Control + Shift + XF886LaunchA
+control + shift + XF86LaunchA
     ~/.local/bin/screenshot.sh selectsavename
-XF86Explorer
-    ~/.local/bin/screenshot.sh window
-Shift + XF86Explorer
-    ~/.local/bin/screenshot.sh windowsave
-Control + Shift + XF86Explorer
-    ~/.local/bin/screenshot.sh windowsavename
 
 # Snapshot stuff
 XF86Display
     ~/.local/bin/snapshot.sh select
-Shift+XF86Display
+shift+XF86Display
     ~/.local/bin/snapshot.sh window
 
 # lockscreen
