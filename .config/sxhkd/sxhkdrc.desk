@@ -10,6 +10,10 @@ super + Return
 super + d
 	rofi -show run
 
+# toggle bar
+super + shift + w
+    ~/.local/bin/toggle_bar.sh
+
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config'
@@ -75,6 +79,7 @@ super + shift + c
 #Script for scratchpads anywhere
 #Credit to /u/ParityLentil on reddit - https://www.reddit.com/comments/3xnwdf
 
+# make a scratchpad
 super + r ; c
     id=$(bspc query -N -n "focused");\
     if [ -n "$id" ];then \
@@ -83,6 +88,7 @@ super + r ; c
         xdotool windowunmap $id;\
     fi
 
+# swap scratchpads
 super + r ; t
     i=$(bspc query -N -n "focused.floating");\
     if [ -n "$i" ];then \

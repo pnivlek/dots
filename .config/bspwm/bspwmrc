@@ -5,12 +5,13 @@ bspc rule -r "*"
 
 wmname LG3D
 xrdb -merge ~/.Xresources
-hsetroot -cover "/hdd/pic/walls/leaf.jpg" &
+hsetroot -cover "/hdd/pic/walls/dark/tmrw_mnt.png" &
 dunst -conf ~/.config/dunst/dunstrc &
 
 sxhkd -c ~/.config/sxhkd/sxhkdrc.desk &
 polybar desktop &
 urxvtd -q -f -o
+mpd_discord_richpresence &
 
 bspc monitor -d I II III IV V VI VII VIII IX X
 
