@@ -499,7 +499,7 @@ doom-quit                    ; DOOM quit-message prompts when you quit Emacs
 hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;hydra                      ; quick documentation for related commands
 ;;indent-guides              ; highlighted indent columns, notoriously slow
-(ligatures +extra)           ; ligatures and symbols to make your code pretty again
+;;(ligatures +extra)           ; ligatures and symbols to make your code pretty again
 ;;minimap                    ; show a map of the code on the side
 modeline                     ; snazzy, Atom-inspired modeline, plus API
 nav-flash                    ; blink the current line after jumping
@@ -638,7 +638,7 @@ markdown                     ; writing docs for people to ignore
 ;;nix                        ; I hereby declare "nix geht mehr!"
 ;;ocaml                      ; an objective camel
 (org                         ; organize your plain life in plain text
- +pretty                     ; yessss my pretties! (nice unicode symbols)
+ ;;+pretty                     ; yessss my pretties! (nice unicode symbols)
  +dragndrop                  ; drag & drop files/images into org buffers
  ;;+hugo                     ; use Emacs for hugo blogging
  +noter                      ; enhanced PDF notetaking
@@ -646,7 +646,7 @@ markdown                     ; writing docs for people to ignore
  +pandoc                     ; export-with-pandoc support
  +gnuplot                    ; who doesn't like pretty pictures
  ;;+pomodoro                 ; be fruitful with the tomato technique
- +present                    ; using org-mode for presentations
+ ;;+present                    ; using org-mode for presentations
  +roam)                      ; wander around notes
 ;;perl                       ; write code no one else can comprehend
 ;;php                        ; perl's insecure younger brother
@@ -1551,11 +1551,6 @@ have =org-appear=.
   :pin "0b3b029d5851c77ee792727b280f062eaf2c22c7")
 #+end_src
 
-~org-superstar-mode~ is great. While we're at it we may as well make tags prettier as well 🙂
-#+begin_src emacs-lisp
-(package! org-pretty-tags :pin "5c7521651b35ae9a7d3add4a66ae8cc176ae1c76")
-#+end_src
-
 There's this nice package that can provide nice syntax highlighting with LaTeX
 exports.
 #+begin_src emacs-lisp
@@ -2119,6 +2114,9 @@ let's change that, and do a few other similar tweaks while we're at it.
 #+attr_html: :class invertible :alt Whichkey triggered on an evil motion
 [[https://tecosaur.com/lfs/emacs-config/screenshots/whichkey-evil.png]]
 ** Writeroom
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no :comments link
+:END:
 For starters, I think Doom is a bit over-zealous when zooming in
 #+begin_src emacs-lisp
 (setq +zen-text-scale 0.8)
@@ -2156,9 +2154,9 @@ tweaks. Namely:
   (pushnew! writeroom--local-variables
             'display-line-numbers
             'visual-fill-column-width
-            'org-adapt-indentation
             'org-superstar-headline-bullets-list
-            'org-superstar-remove-leading-stars)
+            'org-superstar-remove-leading-stars
+            'org-adapt-indentation)
   (add-hook 'writeroom-mode-enable-hook
             (defun +zen-prose-org-h ()
               "Reformat the current Org buffer appearance for prose."
@@ -2166,11 +2164,6 @@ tweaks. Namely:
                 (setq display-line-numbers nil
                       visual-fill-column-width 60
                       org-adapt-indentation nil)
-                (when (featurep 'org-superstar)
-                  (setq-local org-superstar-headline-bullets-list '("🙘" "🙙" "🙚" "🙛")
-                              ;; org-superstar-headline-bullets-list '("🙐" "🙑" "🙒" "🙓" "🙔" "🙕" "🙖" "🙗")
-                              org-superstar-remove-leading-stars t)
-                  (org-superstar-restart))
                 (setq
                  +zen--original-org-indent-mode-p org-indent-mode
                  +zen--original-org-pretty-table-mode-p (bound-and-true-p org-pretty-table-mode))
@@ -2180,8 +2173,6 @@ tweaks. Namely:
             (defun +zen-nonprose-org-h ()
               "Reverse the effect of `+zen-prose-org'."
               (when (eq major-mode 'org-mode)
-                (when (featurep 'org-superstar)
-                  (org-superstar-restart))
                 (when +zen--original-org-indent-mode-p (org-indent-mode 1))
                 ;; (unless +zen--original-org-pretty-table-mode-p (org-pretty-table-mode -1))
                 ))))
@@ -2806,7 +2797,7 @@ functionality as in LaTeX. Let's try viewing possible output files with this.
           (alltodo "" ((org-agenda-overriding-header "")
                        (org-agenda-sorting-strategy '(priority-down timestamp-up))
                        (org-super-agenda-groups
-                        '((:name "Next to do"
+                        '((:discard :category "Interesting"(:name "Next to do"
                            :todo "NEXT"
                            :order 1)
                           (:name "Important"
@@ -2839,7 +2830,7 @@ functionality as in LaTeX. Let's try viewing possible output files with this.
                            :tag "Research"
                            :order 15)
                           (:name "To read"
-                           :tag "Read"
+                           :tag "read"
                            :order 30)
                           (:name "Waiting"
                            :todo "WAITING"
@@ -2852,7 +2843,7 @@ functionality as in LaTeX. Let's try viewing possible output files with this.
                            :tag ("Trivial" "Unimportant")
                            :todo ("SOMEDAY" )
                            :order 90)
-                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+                          (:discard (:tag ("Chore" "Routine" "Daily"))))))))))))
 #+end_src
 **** Capture
 Let's setup some org-capture templates, and make them visually nice to access.
@@ -2888,7 +2879,6 @@ Let's setup some org-capture templates, and make them visually nice to access.
                                    templates))))
 
   (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
-
   (defun set-org-capture-templates ()
     (setq org-capture-templates
           (doct `(("Personal todo" :keys "t"
@@ -2900,14 +2890,6 @@ Let's setup some org-capture templates, and make them visually nice to access.
                    :template ("* TODO %?"
                               "%i %a")
                    )
-                  ("Personal note" :keys "n"
-                   :icon ("sticky-note-o" :set "faicon" :color "green")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Inbox"
-                   :type entry
-                   :template ("* %?"
-                              "%i %a"))
                   ("Email" :keys "e"
                    :icon ("envelope" :set "faicon" :color "blue")
                    :file +org-capture-todo-file
@@ -2946,27 +2928,6 @@ Let's setup some org-capture templates, and make them visually nice to access.
                                :desc ""
                                :i-type "idea"
                                )))
-                  ("Tasks" :keys "k"
-                   :icon ("inbox" :set "octicon" :color "yellow")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Tasks"
-                   :type entry
-                   :template ("* TODO %? %^G%{extra}"
-                              "%i %a")
-                   :children (("General Task" :keys "k"
-                               :icon ("inbox" :set "octicon" :color "yellow")
-                               :extra ""
-                               )
-                              ("Task with deadline" :keys "d"
-                               :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
-                               :extra "\nDEADLINE: %^{Deadline:}t"
-                               )
-                              ("Scheduled Task" :keys "s"
-                               :icon ("calendar" :set "octicon" :color "orange")
-                               :extra "\nSCHEDULED: %^{Start time:}t"
-                               )
-                              ))
                   ("Project" :keys "p"
                    :icon ("repo" :set "octicon" :color "silver")
                    :prepend t
@@ -4031,7 +3992,7 @@ When one of the src_elisp{org-mode-hook} functions errors, it halts the hook
 execution. This is problematic, and there are two hooks in particular which
 cause issues. Let's make their failure less eventful.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
   :around #'org-fancy-priorities-mode
   :around #'org-superstar-mode
@@ -4215,121 +4176,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
 
 (add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
-#+end_src
-
-**** Symbols
-It's also nice to change the character used for collapsed items (by default ~…~),
-I think ~▾~ is better for indicating 'collapsed section'.
-and add an extra ~org-bullet~ to the default list of four.
-I've also added some fun alternatives, just commented out.
-#+begin_src emacs-lisp
-;; (use-package org-pretty-tags
-;; :config
-;;  (setq org-pretty-tags-surrogate-strings
-;;        `(("uni"        . ,(all-the-icons-faicon   "graduation-cap" :face 'all-the-icons-purple  :v-adjust 0.01))
-;;          ("ucc"        . ,(all-the-icons-material "computer"       :face 'all-the-icons-silver  :v-adjust 0.01))
-;;          ("assignment" . ,(all-the-icons-material "library_books"  :face 'all-the-icons-orange  :v-adjust 0.01))
-;;          ("test"       . ,(all-the-icons-material "timer"          :face 'all-the-icons-red     :v-adjust 0.01))
-;;          ("lecture"    . ,(all-the-icons-fileicon "keynote"        :face 'all-the-icons-orange  :v-adjust 0.01))
-;;          ("email"      . ,(all-the-icons-faicon   "envelope"       :face 'all-the-icons-blue    :v-adjust 0.01))
-;;          ("read"       . ,(all-the-icons-octicon  "book"           :face 'all-the-icons-lblue   :v-adjust 0.01))
-;;          ("article"    . ,(all-the-icons-octicon  "file-text"      :face 'all-the-icons-yellow  :v-adjust 0.01))
-;;          ("web"        . ,(all-the-icons-faicon   "globe"          :face 'all-the-icons-green   :v-adjust 0.01))
-;;          ("info"       . ,(all-the-icons-faicon   "info-circle"    :face 'all-the-icons-blue    :v-adjust 0.01))
-;;          ("issue"      . ,(all-the-icons-faicon   "bug"            :face 'all-the-icons-red     :v-adjust 0.01))
-;;          ("someday"    . ,(all-the-icons-faicon   "calendar-o"     :face 'all-the-icons-cyan    :v-adjust 0.01))
-;;          ("idea"       . ,(all-the-icons-octicon  "light-bulb"     :face 'all-the-icons-yellow  :v-adjust 0.01))
-;;          ("emacs"      . ,(all-the-icons-fileicon "emacs"          :face 'all-the-icons-lpurple :v-adjust 0.01))))
-;;  (org-pretty-tags-global-mode))
-
-(after! org-superstar
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
-        ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ" "Ⅷ" "Ⅸ" "Ⅹ")
-        org-superstar-prettify-item-bullets t ))
-
-(setq org-ellipsis " ▾ "
-      org-hide-leading-stars t
-      org-priority-highest ?A
-      org-priority-lowest ?E
-      org-priority-faces
-      '((?A . 'all-the-icons-red)
-        (?B . 'all-the-icons-orange)
-        (?C . 'all-the-icons-yellow)
-        (?D . 'all-the-icons-green)
-        (?E . 'all-the-icons-blue)))
-#+end_src
-It's also nice to make use of the Unicode characters for check boxes, and other commands.
-#+begin_src emacs-lisp
-(appendq! +ligatures-extra-symbols
-          `(:checkbox      "☐"
-            :pending       "◼"
-            :checkedbox    "☑"
-            :list_property "∷"
-            :em_dash       "—"
-            :ellipses      "…"
-            :arrow_right   "→"
-            :arrow_left    "←"
-            :title         "𝙏"
-            :subtitle      "𝙩"
-            :author        "𝘼"
-            :date          "𝘿"
-            :property      "☸"
-            :options       "⌥"
-            :latex_class   "🄲"
-            :latex_header  "⇥"
-            :beamer_header "↠"
-            :attr_latex    "🄛"
-            :attr_html     "🄗"
-            :begin_quote   "❝"
-            :end_quote     "❞"
-            :caption       "☰"
-            :header        "›"
-            :results       "🠶"
-            :begin_export  "⏩"
-            :end_export    "⏪"
-            :properties    "⚙"
-            :end           "∎"
-            :priority_a   ,(propertize "⚑" 'face 'all-the-icons-red)
-            :priority_b   ,(propertize "⬆" 'face 'all-the-icons-orange)
-            :priority_c   ,(propertize "■" 'face 'all-the-icons-yellow)
-            :priority_d   ,(propertize "⬇" 'face 'all-the-icons-green)
-            :priority_e   ,(propertize "❓" 'face 'all-the-icons-blue)))
-(set-ligatures! 'org-mode
-  :merge t
-  :checkbox      "[ ]"
-  :pending       "[-]"
-  :checkedbox    "[X]"
-  :list_property "::"
-  :em_dash       "---"
-  :ellipsis      "..."
-  :arrow_right   "->"
-  :arrow_left    "<-"
-  :title         "#+title:"
-  :subtitle      "#+subtitle:"
-  :author        "#+author:"
-  :date          "#+date:"
-  :property      "#+property:"
-  :options       "#+options:"
-  :latex_class   "#+latex_class:"
-  :latex_header  "#+latex_header:"
-  :beamer_header "#+beamer_header:"
-  :attr_latex    "#+attr_latex:"
-  :attr_html     "#+attr_latex:"
-  :begin_quote   "#+begin_quote"
-  :end_quote     "#+end_quote"
-  :caption       "#+caption:"
-  :header        "#+header:"
-  :begin_export  "#+begin_export"
-  :end_export    "#+end_export"
-  :results       "#+RESULTS:"
-  :property      ":PROPERTIES:"
-  :end           ":END:"
-  :priority_a    "[#A]"
-  :priority_b    "[#B]"
-  :priority_c    "[#C]"
-  :priority_d    "[#D]"
-  :priority_e    "[#E]")
-(plist-put +ligatures-extra-symbols :name "⁍")
 #+end_src
 
 **** LaTeX Fragments
@@ -6553,51 +6399,51 @@ Now, there are some symbols that aren't included in =inputenc=, but we should be
 able to handle anyway. For them we define a table of LaTeX translations
 
 #+name: latex-non-ascii-char-substitutions
-| Character | LaTeX |
-|-----------+-------|
-| ɑ         | \(\alpha\) |
-| β         | \(\beta\) |
-| γ         | \(\gamma\) |
-| δ         | \(\delta\) |
-| ε         | \(\epsilon\) |
-| ϵ         | \(\varepsilon\) |
-| ζ         | \(\zeta\) |
-| η         | \(\eta\) |
-| θ         | \(\theta\) |
-| ϑ         | \(\vartheta\) |
-| ι         | \(\iota\) |
-| κ         | \(\kappa\) |
-| λ         | \(\lambda\) |
-| μ         | \(\mu\) |
-| ν         | \(\nu\) |
-| ξ         | \(\xi\) |
-| π         | \(\pi\) |
-| ϖ         | \(\varpi\) |
-| ρ         | \(\rho\) |
+| Character | LaTeX       |
+|-----------+-------------|
+| ɑ         | \(\alpha\)       |
+| β         | \(\beta\)       |
+| γ         | \(\gamma\)       |
+| δ         | \(\delta\)       |
+| ε         | \(\epsilon\)       |
+| ϵ         | \(\varepsilon\)       |
+| ζ         | \(\zeta\)       |
+| η         | \(\eta\)       |
+| θ         | \(\theta\)       |
+| ϑ         | \(\vartheta\)       |
+| ι         | \(\iota\)       |
+| κ         | \(\kappa\)       |
+| λ         | \(\lambda\)       |
+| μ         | \(\mu\)       |
+| ν         | \(\nu\)       |
+| ξ         | \(\xi\)       |
+| π         | \(\pi\)       |
+| ϖ         | \(\varpi\)       |
+| ρ         | \(\rho\)       |
 | ϱ         | \(\varrho\) |
-| σ         | \(\sigma\) |
-| ς         | \(\varsigma\) |
-| τ         | \(\tau\) |
-| υ         | \(\upsilon\) |
-| ϕ         | \(\phi\) |
-| φ         | \(\varphi\) |
-| ψ         | \(\psi\) |
-| ω         | \(\omega\) |
-| Γ         | \(\Gamma\) |
-| Δ         | \(\Delta\) |
-| Θ         | \(\Theta\) |
-| Λ         | \(\Lambda\) |
-| Ξ         | \(\Xi\) |
-| Π         | \(\Pi\) |
-| Σ         | \(\Sigma\) |
-| Υ         | \(\Upsilon\) |
-| Φ         | \(\Phi\) |
-| Ψ         | \(\Psi\) |
-| Ω         | \(\Omega\) |
-| א         | \(\aleph\) |
-| ב         | \(\beth\) |
+| σ         | \(\sigma\)       |
+| ς         | \(\varsigma\)       |
+| τ         | \(\tau\)       |
+| υ         | \(\upsilon\)       |
+| ϕ         | \(\phi\)       |
+| φ         | \(\varphi\)       |
+| ψ         | \(\psi\)       |
+| ω         | \(\omega\)       |
+| Γ         | \(\Gamma\)       |
+| Δ         | \(\Delta\)       |
+| Θ         | \(\Theta\)       |
+| Λ         | \(\Lambda\)       |
+| Ξ         | \(\Xi\)       |
+| Π         | \(\Pi\)       |
+| Σ         | \(\Sigma\)       |
+| Υ         | \(\Upsilon\)       |
+| Φ         | \(\Phi\)       |
+| Ψ         | \(\Psi\)       |
+| Ω         | \(\Omega\)       |
+| א         | \(\aleph\)       |
+| ב         | \(\beth\)       |
 | ד         | \(\daleth\) |
-| ג         | \(\gimel\) |
+| ג         | \(\gimel\)       |
 
 #+name: gen-latex-non-ascii-char-substitutions
 #+begin_src emacs-lisp :noweb-ref none :var latex-non-ascii-char-substitutions=latex-non-ascii-char-substitutions

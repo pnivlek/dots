@@ -82,11 +82,12 @@ modules-center = bspwm
 modules-right = pad date
 bottom = true
 
-tray-position = none
+tray-position = right
 
 enable-ipc = true
 
 wm-restack = bspwm
+
 [module/backlight]
 type = custom/ipc
 hook-0 = echo "$(light -G | sed -e "s/\.\w*//")%"
