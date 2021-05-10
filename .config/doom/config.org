@@ -2936,7 +2936,7 @@ Let's setup some org-capture templates, and make them visually nice to access.
                    :prepend t
                    :headline "Interesting"
                    :type entry
-                   :template ("* [ ] %{desc}%? :%{i-type}:"
+                   :template ("* TODO %{desc}%? :%{i-type}:"
                               "%i %a")
                    :children (("Webpage" :keys "w"
                                :icon ("globe" :set "faicon" :color "green")
