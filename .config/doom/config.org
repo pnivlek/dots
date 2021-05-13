@@ -1510,6 +1510,9 @@ I think the latest AucTeX may be a bit dodgy, so
 Use ~HEAD~ for development.
 #+begin_src emacs-lisp
 (unpin! org-mode)
+(package! org-contrib
+  :recipe (:host nil :repo "https://git.sr.ht/~bzg/org-contrib"
+           :files ("lisp/*.el")))
 #+end_src
 
 **** Improve agenda/capture
@@ -2881,11 +2884,10 @@ Let's setup some org-capture templates, and make them visually nice to access.
 
 ;; Workaround for wrong type argument: stringp, nil on org-capture
 ;; https://github.com/hlissner/doom-emacs/issues/4832
-(after! org
-  (advice-add #'org-capture :around
+(advice-add #'org-capture :around
                  (lambda (fun &rest args)
                    (letf! ((#'+org--restart-mode-h #'ignore))
-                     (apply fun args)))))
+                     (apply fun args))))
 
 (after! org-capture
   <<prettify-capture>>

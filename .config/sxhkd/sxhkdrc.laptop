@@ -51,6 +51,13 @@ shift+XF86Display
 # lockscreen
 super + shift + x
 	betterlockscreen -l
+
+# passmenu
+super + v
+    passmenu -l 16
+super + shift + v
+    passmenu --type -l 16
+
 #
 # bspwm hotkeys
 #

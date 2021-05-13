@@ -50,6 +50,12 @@ XF86AudioRaiseVolume
 # XF86AudioMicMute
 	# pactl set-source-mute 1 toggle && notify-send -u low "Mic $(pactl list sources | grep -A 10 $(pactl info | grep "Default Source" | cut -f3 -d" ") | grep "Mute: " | cut -c 2-)"
 
+# passmenu
+super + v
+    passmenu -l 16
+super + shift + v
+    passmenu --type -l 16
+
 #
 # bspwm hotkeys
 #
