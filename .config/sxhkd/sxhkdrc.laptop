@@ -4,15 +4,19 @@
 
 # terminal emulator
 super + Return
-	xst
+	urxvtc
 
 # program launcher
 super + d
 	rofi -show run
 
+# toggle bar
+super + shift + w
+    ~/.local/bin/toggle_bar.sh
+
 # Make sxhkd reload its configuration files:
 super + Escape
-	pkill -USR1 -x sxhkd
+	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config'
 
 # Function keys
 super + XF86AudioMute
@@ -35,12 +39,8 @@ XF86MonBrightnessUp
 	light -A 10 && polybar-msg hook backlight 1
 
 # Screenshotting stuff
-XF86LaunchA
-    ~/.local/bin/screenshot.sh select
-shift + XF86LaunchA
-    ~/.local/bin/screenshot.sh selectsave
-control + shift + XF86LaunchA
-    ~/.local/bin/screenshot.sh selectsavename
+super + shift + s
+    maim -s -u | xclip -selection clipboard -t image/png -i
 
 # Snapshot stuff
 XF86Display
@@ -54,9 +54,9 @@ super + shift + x
 
 # passmenu
 super + v
-    passmenu -l 16
+    passmenu-rs -l 16
 super + shift + v
-    passmenu --type -l 16
+    passmenu-rs --type -l 16
 
 #
 # bspwm hotkeys
