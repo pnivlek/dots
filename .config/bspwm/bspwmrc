@@ -11,16 +11,24 @@ if xrandr | grep -q "eDP-1"; then
     sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
     polybar laptop &
     hsetroot -cover "~/usr/pic/wal/beach.jpg" &
+    bspc monitor -d 1 2 3 4 5 6 7 8 9 10
 else
     sxhkd -c ~/.config/sxhkd/sxhkdrc.desk &
     polybar desktop &
+    if xrandr | grep -q "HDMI-1"; then
+        bspc monitor ^1 -d 1 2 3 4 5
+        bspc monitor ^2 -d 6 7 8 9 10
+        xrandr --output HDMI-1 --primary --auto --output HDMI-2 --auto --right-of HDMI-1
+        polybar desktop2 &
+    else
+        bspc monitor -d 1 2 3 4 5 6 7 8 9 10
+    fi
     hsetroot -cover "/hdd/pic/walls/dark/tmrw_mnt.png" &
 fi
 
 urxvtd -q -f -o
 mpd_discord_richpresence &
 
-bspc monitor -d I II III IV V VI VII VIII IX X
 
 bspc config border_width 2
 

@@ -58,7 +58,7 @@ enable-ipc = true
 wm-restack = bspwm
 
 [bar/desktop]
-monitor = ${env:MONITOR:HDMI-2}
+monitor = ${env:MONITOR:HDMI-1}
 width = 100%
 height = 28
 fixed-center = true
@@ -82,11 +82,18 @@ modules-center = bspwm
 modules-right = pad date
 bottom = true
 
-tray-position = right
+tray-position = none
 
 enable-ipc = true
 
 wm-restack = bspwm
+
+[bar/desktop2]
+inherit=bar/desktop
+monitor=HDMI-2
+
+modules-left = cpu pad memory pad fspad filesystem
+modules-right = date
 
 [module/backlight]
 type = custom/ipc
@@ -219,12 +226,50 @@ blacklist-0 = num lock
 blacklist-1 = scroll lock
 format =  <label-layout>
 
-[settings]
-screenchange-reload = true
-throttle-input-for = 50
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-underline = #f90000
+label = %percentage:2%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-underline = #4bffdc
+label = %percentage_used%%
 
 [module/pad]
 type = custom/text
 content = "  "
 content-foreground = ${colors.color0}
+
+[module/fspad]
+type = custom/text
+content = "  "
+format-underline = #4bffdc
+
+[module/filesystem]
+type = internal/fs
+
+; Mountpoints to display
+mount-0 = /
+mount-1 = /hdd
+
+; Seconds to sleep between updates
+; Default: 30
+interval = 30
+
+; Display fixed precision values
+; Default: false
+fixed-values = true
+
+; Spacing between entries
+; Default: 2
+spacing = 4
+format-underline = #4bffdc
+
+[settings]
+screenchange-reload = true
 ; vim:ft=dosini
