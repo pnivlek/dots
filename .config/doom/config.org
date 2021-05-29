@@ -355,48 +355,6 @@ setting, and load it if it exists.
 (when (file-exists-p custom-file)
   (load custom-file))
 #+end_src
-*** Windows
-I find it rather handy to be asked which buffer I want to see after splitting
-the window. Let's make that happen.
-
-First, we'll enter the new window
-#+begin_src emacs-lisp
-(setq evil-vsplit-window-right t
-      evil-split-window-below t)
-#+end_src
-
-Then, we'll pull up ~ivy~
-#+begin_src emacs-lisp
-(defadvice! prompt-for-buffer (&rest _)
-  :after '(evil-window-split evil-window-vsplit)
-  (+ivy/switch-buffer))
-#+end_src
-
-Oh, and previews are nice
-#+begin_src emacs-lisp
-(setq +ivy-buffer-preview t)
-#+end_src
-
-Window rotation is nice, and can be found under =SPC w r= and =SPC w R=.
-/Layout/ rotation is also nice though. Let's stash this under =SPC w SPC=, inspired
-by Tmux's use of =C-b SPC= to rotate windows.
-
-We could also do with adding the missing arrow-key variants of the window
-navigation/swapping commands.
-#+begin_src emacs-lisp
-(map! :map evil-window-map
-      "SPC" #'rotate-layout
-      ;; Navigation
-      "<left>"     #'evil-window-left
-      "<down>"     #'evil-window-down
-      "<up>"       #'evil-window-up
-      "<right>"    #'evil-window-right
-      ;; Swapping windows
-      "C-<left>"       #'+evil/window-move-left
-      "C-<down>"       #'+evil/window-move-down
-      "C-<up>"         #'+evil/window-move-up
-      "C-<right>"      #'+evil/window-move-right)
-#+end_src
 *** Buffer defaults
 I'd much rather have my new buffers in ~org-mode~ than ~fundamental-mode~, hence
 #+begin_src emacs-lisp
@@ -539,7 +497,7 @@ snippets                     ; my elves. They type so I don't have to
 #+begin_src emacs-lisp
 (dired +icons)               ; making dired pretty [functional]
 electric                     ; smarter, keyword-based electric-indent
-(ibuffer +icons)             ; interactive buffer management
+;;(ibuffer icons)             ; interactive buffer management
 (undo +tree)                 ; persistent, smarter undo for your inevitable mistakes
 vc                           ; version-control and Emacs, sitting in a tree
 #+end_src
@@ -753,8 +711,8 @@ This way whenever fonts are missing, after Doom's UI has initialised, a warning
 listing the missing fonts should appear for at least half a second.
 
 **** Theme and modeline
-~doom-one~ is nice and all, but I find the ~vibrant~ variant nicer. Oh, and with the
-nice selection doom provides there's no reason for me to want the defaults.
+I've been in a plain mood. Keeping the rest unless I'm not in a plain mood
+sometime soon.
 #+begin_src emacs-lisp
 (setq doom-theme 'doom-tomorrow-night)
 (delq! t custom-theme-load-path)
@@ -1355,6 +1313,11 @@ roll our [[file:lisp/wttrin.el][own version]].
 (package! wttrin :recipe (:local-repo "lisp/wttrin"))
 #+end_src
 
+Adding Tao theme as a good light theme
+#+begin_src emacs-lisp
+(package! tao-theme)
+#+end_src
+
 With all our fancy Emacs themes, my terminal is missing out!
 #+begin_src emacs-lisp
 (package! theme-magic :pin "844c4311bd26ebafd4b6a1d72ddcc65d87f074e3")
@@ -1479,6 +1442,13 @@ these as horizontal rules.
   :init
   (autoload 'turn-on-page-break-lines-mode "page-break-lines"))
 #+end_src
+**** Activity Watcher
+I track my window usage with ActivityWatch, and use the mode for emacs that
+tells it what windows I'm spending my time on.
+#+begin_src emacs-lisp
+(package! activity-watch-mode)
+#+end_src
+
 ** Language packages
 *** LaTeX
 For mathematical convenience, WIP
@@ -1681,6 +1651,14 @@ have the following.
   (setq abbrev-file-name (expand-file-name "abbrev.el" doom-private-dir))
   (setq save-abbrevs 'silently))
 #+end_src
+** ActivityWatcher Mode
+
+#+begin_src emacs-lisp
+(use-package! activity-watch-mode
+  :init
+  (global-activity-watch-mode))
+#+end_src
+
 ** Avy
 What a wonderful way to jump to buffer positions, and it uses the QWERTY
 home-row for jumping. Very convenient ... except I'm using Colemak.
