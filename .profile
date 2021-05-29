@@ -10,7 +10,6 @@ export ZDOTDIR="$HOME/.config/zsh"
 export SDKMAN_DIR="/home/yack/.sdkman"
 export GPODDER_HOME="/home/yack/usr/pod"
 export GOPATH="/home/yack/code/go"
-export DOTNET_ROOT="/opt/dotnet/"
 
 ! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
 ! pgrep -x mpdscribble >/dev/null && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf >/dev/null 2>&1 &
