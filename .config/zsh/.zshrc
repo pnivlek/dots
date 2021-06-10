@@ -21,5 +21,3 @@ j () {
 
 # Used for java stuff
 # [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

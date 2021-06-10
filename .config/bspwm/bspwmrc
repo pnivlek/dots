@@ -6,6 +6,9 @@ bspc rule -r "*"
 wmname LG3D
 xrdb -merge ~/.Xresources
 dunst -conf ~/.config/dunst/dunstrc &
+urxvtd -q -f -o
+mpd_discord_richpresence &
+aw-server &
 
 if xrandr | grep -q "eDP-1"; then
     sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
@@ -25,9 +28,6 @@ else
     fi
     hsetroot -cover "/hdd/pic/walls/dark/tmrw_mnt.png" &
 fi
-
-urxvtd -q -f -o
-mpd_discord_richpresence &
 
 
 bspc config border_width 2

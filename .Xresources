@@ -1,4 +1,4 @@
-URxvt.font: xft:Recursive Mono Linear Static:medium:size=11
+URxvt.font: xft:TerminessTTF Nerd Font Mono:Medium:size=14
 URxvt.scrollBar: false
 URxvt*scrollTtyOutput: false
 URxvt*scrollWithBuffer: true

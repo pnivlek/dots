@@ -461,7 +461,7 @@ hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;minimap                    ; show a map of the code on the side
 modeline                     ; snazzy, Atom-inspired modeline, plus API
 nav-flash                    ; blink the current line after jumping
-;;neotree                    ; a project drawer, like NERDTree for vim
+neotree                      ; a project drawer, like NERDTree for vim
 ophints                      ; highlight the region an operation acts on
 (popup                       ; tame sudden yet inevitable temporary windows
  +all                        ; catch all popups that start with an asterix
@@ -563,7 +563,7 @@ cc                         ; C/C++/Obj-C madness
 ;;common-lisp                ; if you've seen one lisp, you've seen them all
 ;;coq                        ; proofs-as-programs
 ;;crystal                    ; ruby at the speed of c
-csharp                     ; unity, .NET, and mono shenanigans
+(csharp +lsp +dotnet)        ; unity, .NET, and mono shenanigans
 data                         ; config/data formats
 ;;(dart +flutter)            ; paint ui and not much else
 ;;elixir                     ; erlang done right
@@ -1059,81 +1059,6 @@ something simple.
 #+end_src
 
 
-*** Systemd daemon
-For running a systemd service for a Emacs server I have the following
-#+name: emacsclient service
-#+begin_src systemd :tangle ~/.config/systemd/user/emacs.service :mkdirp yes
-[Unit]
-Description=Emacs server daemon
-Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-
-[Service]
-Type=forking
-ExecStart=sh -c 'emacs --daemon && emacsclient -c --eval "(delete-frame)"'
-ExecStop=/usr/bin/emacsclient --no-wait --eval "(progn (setq kill-emacs-hook nil) (kill emacs))"
-Restart=on-failure
-
-[Install]
-WantedBy=default.target
-#+end_src
-
-which is then enabled by
-#+begin_src shell :tangle (if (string= "enabled\n" (shell-command-to-string "systemctl --user is-enabled emacs.service")) "no" "setup.sh")
-systemctl --user enable emacs.service
-#+end_src
-
-For some reason if a frame isn't opened early in the initialisation process, the
-daemon doesn't seem to like opening frames later --- hence the ~&& emacsclient~
-part of the =ExecStart= value.
-
-It can now be nice to use this as a 'default app' for opening files. If we add
-an appropriate desktop entry, and enable it in the desktop environment.
-
-#+begin_src conf :tangle ~/.local/share/applications/emacs-client.desktop :mkdirp yes
-[Desktop Entry]
-Name=Emacs client
-GenericName=Text Editor
-Comment=A flexible platform for end-user applications
-MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-Exec=emacsclient -create-frame --alternate-editor="" --no-wait %F
-Icon=emacs
-Type=Application
-Terminal=false
-Categories=TextEditor;Utility;
-StartupWMClass=Emacs
-Keywords=Text;Editor;
-X-KDE-StartupNotify=false
-#+end_src
-
-When the daemon is running, I almost always want to do a few particular things
-with it, so I may as well eat the load time at startup. We also want to keep
-=mu4e= running.
-
-It would be good to start the IRC client (=circe=) too, but that seems to have
-issues when started in a non-graphical session.
-
-Lastly, while I'm not sure quite why it happens, but after a bit it seems that
-new Emacsclient frames start on the =*scratch*= buffer instead of the dashboard.
-I prefer the dashboard, so let's ensure that's always switched to in new frames.
-
-#+name: daemon initialisation
-#+begin_src emacs-lisp
-(defun greedily-do-daemon-setup ()
-  (require 'org)
-  (when (require 'mu4e nil t)
-    (setq mu4e-confirm-quit t)
-    (setq +mu4e-lock-greedy t)
-    (setq +mu4e-lock-relaxed t)
-    (+mu4e-lock-add-watcher)
-    (when (+mu4e-lock-available t)
-      (mu4e~start)))
-  (when (require 'elfeed nil t)
-    (run-at-time nil (* 8 60 60) #'elfeed-update)))
-
-(when (daemonp)
-  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
-  (add-hook! 'server-after-make-frame-hook (switch-to-buffer +doom-dashboard-name)))
-#+end_src
 *** Emacs client wrapper
 I frequently want to make use of Emacs while in a terminal emulator. To make
 this easier, I can construct a few handy aliases.
@@ -1625,11 +1550,6 @@ Now we just need to load it appropriately.
 (use-package! authinfo-color-mode
   :mode ("authinfo.gpg\\'" . authinfo-color-mode)
   :init (advice-add 'authinfo-mode :override #'authinfo-color-mode))
-#+end_src
-*** Beancount (accounting)
-#+begin_src emacs-lisp
-(package! beancount :recipe (:host github :repo "beancount/beancount-mode")
-  :pin "3c04745fa539c25dc007683ad257239067c24cfe")
 #+end_src
 * Package configuration
 ** Abbrev mode
