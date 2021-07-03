@@ -19,5 +19,8 @@ j () {
   dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
 }
 
+# Fix pinentry. Needs to be run in X itself, so not ran in .profile.
+export GPG_TTY=$(tty)
+
 # Used for java stuff
 # [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"

@@ -1,56 +1,127 @@
-URxvt.font: xft:TerminessTTF Nerd Font Mono:Medium:size=14
-URxvt.scrollBar: false
-URxvt*scrollTtyOutput: false
-URxvt*scrollWithBuffer: true
-URxvt*scrollTtyKeypress: true
+! These are all possible options, presented with default values.
+! xst will fallback to *.option if st.option is not present.
+! see src/config.h for more information about option meanings.
 
-!TomorrowNight
-#define t_background        #1d1f21
-#define t_current_line      #282a2e
-#define t_selection      	#373b41
-#define t_foreground      	#c5c8c6
-#define t_comment	     	#969896
-#define t_red		     	#cc6666
-#define t_orange	     	#de935f
-#define t_yellow        	#f0c674
-#define t_green	        	#b5bd68
-#define t_aqua	        	#8abeb7
-#define t_blue	        	#81a2be
-#define t_purple        	#b294bb
+! --- These options only take effect on startup. ---
+st.termname:     xst-256color
 
+! Set to a non-zero value to disable window decorations (titlebar, etc) and go borderless.
+st.borderless:        0
 
-*.foreground:   t_foreground
-*.background:   t_background
-*.cursorColor:  #aeafad
+! --- The following options options can be reloaded via USR1 signal. ---
+st.font:              Dina:Regular:pixelsize=12:antialias=true:autohint=true;
 
-! Black / Grey
-*.color0:       #000000
-*.color8:       #666666
+! window padding
+st.borderpx:          10
 
-! Red / Bright Red
-*.color1:       t_red
-*.color9:       #FF3334
+! Available cursor values: 2 4 6 7 = █ _ | ☃ ( 1 3 5 are blinking versions)
+st.cursorshape:       2
 
-! Green + Bright Green
-*.color2:       t_green
-*.color10:      #9ec400
+! thickness of underline and bar cursors
+st.cursorthickness:   2
 
-! Yellow (Orange) + Bright Yellow (Yellow)
-*.color3:       t_orange
-*.color11:      t_yellow
+! 0: normal blinking, 1: leave cursor border and blink with cursors background
+st.cursorblinkstyle:  0
 
-! Blue + Bright Blue
-*.color4:       t_blue
-*.color12:      t_blue
+! 0: cursor blinks with a constant interval; 1: blinking cycle resets on key input
+st.cursorblinkontype: 1
 
-! Magenta (Purple) + Bright Magenta
-*.color5:       t_purple
-*.color13:      #b777e0
+st.disablebold:         0
+st.disableitalics:         0
+st.disableroman:         0
 
-! Cyan (Aqua) + Bright Cyan
-*.color6:       t_aqua
-*.color14:      #54ced6
+! Amount of lines scrolled
+st.scrollrate:  1
 
-! Light Grey (Selection) + White (Current Line)
-*.color7:       t_selection
-*.color15:      t_current_line
+! Kerning / character bounding-box height multiplier
+st.chscale:           1.0
+
+! Kerning / character bounding-box width multiplier
+st.cwscale:           1.0
+
+! blinking timeout for terminal and cursor blinking (0 disables)
+st.blinktimeout:      800
+
+! bell volume. Value between -100 and 100. (0 disables)
+st.bellvolume:        100
+
+! 1: render most of the lines/blocks characters without using the font for
+! perfect alignment between cells (U2500 - U259F except dashes/diagonals).
+! Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
+! 0: disable (render all U25XX glyphs normally from the font).
+st.boxdraw: 0
+
+! (0|1) boxdraw(bold) enable toggle
+st.boxdraw_bold: 0
+
+! braille (U28XX):  1: render as adjacent "pixels",  0: use font
+st.boxdraw_braille: 0
+
+! set this to a non-zero value to force window depth
+st.depth: 0
+
+! opacity==255 means what terminal will be not transparent, 0 - fully transparent
+! (float values in range 0 to 1.0 may also be used)
+st.opacity:      255
+
+! (0|1) dont pre-multiply color values of the pixels when using transparency
+! (useful for the systems where composite manager not running all the time,
+! as color pre-multiplication will make the "opaque" colors look darker/lighter
+! without the composition)
+st.disable_alpha_correction: 0
+
+! Base16 Monokai Pro (Spectrum)
+! Scheme: Wimer Hazenberg (https://www.monokai.nl)
+
+#define base00 #222222
+#define base01 #363537
+#define base02 #525053
+#define base03 #69676c
+#define base04 #8b888f
+#define base05 #f7f1ff
+#define base06 #fbf8ff
+#define base07 #ffffff
+#define base08 #fc618d
+#define base09 #191919
+#define base0A #fce566
+#define base0B #7bd88f
+#define base0C #5ad4e6
+#define base0D #948ae3
+#define base0E #fd9353
+#define base0F #1e1e1e
+#define baseCC #363537
+
+*foreground:   base05
+#ifdef background_opacity
+*background:   [background_opacity]base00
+#else
+*background:   base00
+#endif
+*cursorColor:  base05
+
+*color0:       base00
+*color1:       base08
+*color2:       base0B
+*color3:       base0A
+*color4:       base0D
+*color5:       base0E
+*color6:       base0C
+*color7:       base05
+
+*color8:       base03
+*color9:       base08
+*color10:      base0B
+*color11:      base0A
+*color12:      base0D
+*color13:      base0E
+*color14:      base0C
+*color15:      base07
+
+! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
+! use 'shell' template to set these if necessary
+*color16:      base09
+*color17:      base0F
+*color18:      base01
+*color19:      base02
+*color20:      base04
+*color21:      base06

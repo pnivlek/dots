@@ -1,0 +1,1 @@
+rofi_args = "-show run -theme monokai-spectrum -location 3 -xoffset -7 -yoffset 7"

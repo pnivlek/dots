@@ -531,7 +531,6 @@ grammar                      ; tasing grammar mistake every you make
  +dictionary                 ; dictionary/thesaurus is nice
  +docsets)                   ; ...or in Dash docsets locally
 lsp                          ; Language Server Protocol
-;;macos                      ; MacOS-specific commands
 (magit                       ; a git porcelain for Emacs
  +forge)                     ; interface with git forges
 make                         ; run make tasks from Emacs
@@ -558,7 +557,8 @@ associated file.
 #+name: doom-lang
 #+begin_src emacs-lisp
 ;;agda                       ; types of types of types of types...
-cc                         ; C/C++/Obj-C madness
+;;beancount                  ; mind the GAAP
+(cc +lsp)                         ; C/C++/Obj-C madness
 ;;clojure                    ; java with a lisp
 ;;common-lisp                ; if you've seen one lisp, you've seen them all
 ;;coq                        ; proofs-as-programs
@@ -570,14 +570,15 @@ data                         ; config/data formats
 ;;elm                        ; care for a cup of TEA?
 emacs-lisp                   ; drown in parentheses
 ;;erlang                     ; an elegant language for a more civilized age
-ess                          ; emacs speaks statistics
+;;ess                          ; emacs speaks statistics
+;;factor                     ; for when scripts are stacked against you
 ;;faust                      ; dsp, but you get to keep your soul
 ;;fsharp                     ; ML stands for Microsoft's Language
 ;;fstar                      ; (dependent) types and (monadic) effects and Z3
 ;;(go +lsp)                  ; the hipster dialect
 ;; (haskell +lsp)            ; a language that's lazier than I am
 ;;hy                         ; readability of scheme w/ speed of python
-;;idris                      ;
+;;idris                      ; a language you can depend on
 json                         ; At least it ain't XML
 ;;(java +meghanada)          ; the poster child for carpal tunnel syndrome
 (javascript +lsp)            ; all(hope(abandon(ye(who(enter(here))))))
@@ -588,7 +589,6 @@ json                         ; At least it ain't XML
  +cdlatex                    ; quick maths symbols
  +fold)                      ; fold the clutter away nicities
 ;;lean                       ; proof that mathematicians need help
-;;factor                     ; for when scripts are stacked against you
 ;;ledger                     ; an accounting system in Emacs
 ;;lua                          ; one-based indices? one-based indices
 markdown                     ; writing docs for people to ignore
@@ -602,17 +602,17 @@ markdown                     ; writing docs for people to ignore
  +noter                      ; enhanced PDF notetaking
  +jupyter                    ; ipython/jupyter support for babel
  +pandoc                     ; export-with-pandoc support
- +gnuplot                    ; who doesn't like pretty pictures
+ ;;+gnuplot                    ; who doesn't like pretty pictures
  ;;+pomodoro                 ; be fruitful with the tomato technique
  ;;+present                    ; using org-mode for presentations
  +roam)                      ; wander around notes
-;;perl                       ; write code no one else can comprehend
 ;;php                        ; perl's insecure younger brother
 ;;plantuml                   ; diagrams for confusing people more
 ;;purescript                 ; javascript, but functional
 (python +lsp +pyright +conda)       ; beautiful is better than ugly
 ;;qt                         ; the 'cutest' gui framework ever
 ;;racket                     ; a DSL for DSLs
+;;raku                       ; the artist formerly known as perl6
 ;;rest                       ; Emacs as a REST client
 ;;rst                        ; ReST in peace
 ;;(ruby +rails)              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
@@ -626,6 +626,7 @@ sh                           ; she sells {ba,z,fi}sh shells on the C xor
 ;;terra                      ; Earth and Moon in alignment for performance.
 web                          ; the tubes
 yaml                         ; JSON, but readable
+;;zig                        ; C, but simpler
 #+end_src
 
 **** Everything in Emacs
@@ -652,7 +653,7 @@ everywhere                   ; *leave* Emacs!? You must be joking.
 Overpass and Inconsolata_dz is a great pairing. Second place here is Anything
 and Dina, and third would be Recursive Sans and JetBrains Mono.
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "Inconsolata_dz" :size 14)
+(setq doom-font (font-spec :family "Dina" :style "Regular" :size 14)
       doom-big-font (font-spec :family "Overpass" :size 36)
       doom-variable-pitch-font (font-spec :family "Overpass" :size 14)
       doom-unicode-font (font-spec :family "JuliaMono")
@@ -671,7 +672,7 @@ if the system doesn't have any of those fonts.
 
 #+name: detect-missing-fonts
 #+begin_src emacs-lisp :tangle no
-(defvar required-fonts '("Inconsolata_dz" "Overpass" "JuliaMono" "IBM Plex Mono" "Alegreya"))
+(defvar required-fonts '("Dina" "Overpass" "JuliaMono" "IBM Plex Mono"))
 
 (defvar available-fonts
   (delete-dups (or (font-family-list)
@@ -714,7 +715,7 @@ listing the missing fonts should appear for at least half a second.
 I've been in a plain mood. Keeping the rest unless I'm not in a plain mood
 sometime soon.
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-tomorrow-night)
+(setq doom-theme 'doom-monokai-spectrum)
 (delq! t custom-theme-load-path)
 #+end_src
 However, by default ~red~ text is used in the ~modeline~, so let's make that orange
@@ -1231,18 +1232,6 @@ amuse oneself. Introducing: typewriter sounds!
 (package! selectric-mode :pin "1840de71f7414b7cd6ce425747c8e26a413233aa")
 #+end_src
 
-Hey, let's get the weather in here while we're at it.
-Unfortunately this seems slightly unmaintained ([[https://github.com/bcbcarl/emacs-wttrin/pulls][few open bugfix PRs]]) so let's
-roll our [[file:lisp/wttrin.el][own version]].
-#+begin_src emacs-lisp
-(package! wttrin :recipe (:local-repo "lisp/wttrin"))
-#+end_src
-
-Adding Tao theme as a good light theme
-#+begin_src emacs-lisp
-(package! tao-theme)
-#+end_src
-
 With all our fancy Emacs themes, my terminal is missing out!
 #+begin_src emacs-lisp
 (package! theme-magic :pin "844c4311bd26ebafd4b6a1d72ddcc65d87f074e3")
@@ -1258,15 +1247,6 @@ This is a nice extension to ~calc~
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex"
                            :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor"))
   :pin "7fa2673c64e259e04aef684ccf09ef85570c388b")
-#+end_src
-**** Emacs everywhere
-#+begin_src emacs-lisp
-(package! emacs-everywhere :recipe (:local-repo "lisp/emacs-everywhere") :pin nil)
-#+end_src
-**** ESS
-View data frames better with
-#+begin_src emacs-lisp
-(package! ess-view :pin "925cafd876e2cc37bc756bb7fcf3f34534b457e2")
 #+end_src
 **** Magit Delta
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
@@ -1310,7 +1290,7 @@ To interface with this, we'll use a my =lexic= package.
 [[https://tecosaur.com/lfs/emacs-config/screenshots/lexic.png]]
 
 #+begin_src emacs-lisp
-(package! lexic :recipe (:local-repo "lisp/lexic"))
+(package! lexic :recipe (:host github :repo "tecosaur/lexic"))
 #+end_src
 
 Given that a request for a CLI is the most upvoted issue on GitHub for
@@ -1331,16 +1311,10 @@ Then for reading them, the only currently viable options seems to be [[https://d
 (package! nov :pin "b3c7cc28e95fe25ce7b443e5f49e2e45360944a3")
 #+end_src
 
-**** My mixed-pitch fork
-I'd rather like to be able to use multiple faces with mixed-pitch, so I'll have
-to use my own branch for now.
-#+begin_src emacs-lisp
-(package! mixed-pitch :recipe (:local-repo "lisp/mixed-pitch") :pin nil)
-#+end_src
 **** Screenshots
 This makes it a breeze to take lovely screenshots.
 #+begin_src emacs-lisp
-(package! screenshot :recipe (:local-repo "lisp/screenshot"))
+(package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
 #+end_src
 
 #+attr_html: :class invertible :alt Example screenshot.el screenshot
@@ -1380,7 +1354,7 @@ For mathematical convenience, WIP
 #+begin_src emacs-lisp
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets")
   :pin "e2b3edafd7aafa8c47833a70984d7404c607626c")
-(package! laas :recipe (:local-repo "lisp/LaTeX-auto-activating-snippets"))
+(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 #+end_src
 And some basic config
 #+begin_src emacs-lisp :tangle yes
@@ -1452,7 +1426,7 @@ have =org-appear=.
 There's this nice package that can provide nice syntax highlighting with LaTeX
 exports.
 #+begin_src emacs-lisp
-(package! engrave-faces :recipe (:local-repo "lisp/engrave-faces"))
+(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
 #+end_src
 #+begin_src emacs-lisp :tangle yes
 (use-package! engrave-faces-latex
@@ -1485,7 +1459,7 @@ Came across this and ... it's cool
 to make that right again, and this package makes that even easier to do.
 #+begin_src emacs-lisp
 (package! org-pandoc-import :recipe
-  (:local-repo "lisp/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
+  (:host github :repo "tecosaur/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
 #+end_src
 #+begin_src emacs-lisp :tangle yes
 (use-package! org-pandoc-import
@@ -1543,7 +1517,7 @@ Graphviz is a nice method of visualising simple graphs, based on plaintext
 *** Authinfo
 #+begin_src emacs-lisp
 (package! authinfo-color-mode
-  :recipe (:local-repo "lisp/authinfo-color-mode"))
+  :recipe (:host github :repo "tecosaur/authinfo-color-mode"))
 #+end_src
 Now we just need to load it appropriately.
 #+begin_src emacs-lisp :tangle yes
@@ -1755,11 +1729,6 @@ let's improve that memory.
     company-yasnippet))
 #+end_src
 We then configure the dictionary we're using in [[*Ispell][Ispell]].
-*** ESS
-~company-dabbrev-code~ is nice. Let's have it.
-#+begin_src emacs-lisp
-(set-company-backend! 'ess-r-mode '(company-R-args company-R-objects company-dabbrev-code :separate))
-#+end_src
 ** Doom modeline
 Very nice and pretty, however I think the PDF modeline could do with tweaking.
 I raised [[https://github.com/seagle0128/doom-modeline/pull/425][an issue]] on this, however the response was basically "put your
@@ -2472,7 +2441,7 @@ Entries of the form (subject . id)."
 *** Behaviour
 **** Tweaking defaults
 #+begin_src emacs-lisp
-(setq org-directory "~/.local/share/Dropbox/org"                      ; let's put files here
+(setq org-directory "~/doc/org/"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
       org-log-done 'time                          ; having the time a item is done sounds convenient
       org-list-allow-alphabetical t               ; have a. A. a) A) list bullets
@@ -2679,7 +2648,7 @@ functionality as in LaTeX. Let's try viewing possible output files with this.
       org-deadline-warning-days 7
       org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
 
-(setq org-agenda-files '("~/.local/share/Dropbox/org"))
+(setq org-agenda-files '("~/doc/org"))
 
 (setq org-agenda-custom-commands
       '(("o" "Overview"
@@ -3064,7 +3033,7 @@ no modeline.
 Set in a separate subfolder within my dropbox directory. This and my org
 directory are the only two things I track using dropbox.
 #+begin_src emacs-lisp :noweb-ref none :tangle yes
-(setq org-roam-directory "~/.local/share/Dropbox/roam/")
+(setq org-roam-directory "~/doc/org/roam/")
 #+end_src
 
 That said, if the directory doesn't exist we likely don't want to be using roam.
@@ -6693,34 +6662,6 @@ Not added when either:
                (not (assoc :sync (caddr result))))
       (push '(:async) (caddr result)))
     result))
-#+end_src
-*** ESS
-We don't want ~R~ evaluation to hang the editor, hence
-#+begin_src emacs-lisp
-(setq ess-eval-visibly 'nowait)
-#+end_src
-
-Syntax highlighting is nice, so let's turn all of that on
-#+begin_src emacs-lisp
-(setq ess-R-font-lock-keywords
-      '((ess-R-fl-keyword:keywords . t)
-        (ess-R-fl-keyword:constants . t)
-        (ess-R-fl-keyword:modifiers . t)
-        (ess-R-fl-keyword:fun-defs . t)
-        (ess-R-fl-keyword:assign-ops . t)
-        (ess-R-fl-keyword:%op% . t)
-        (ess-fl-keyword:fun-calls . t)
-        (ess-fl-keyword:numbers . t)
-        (ess-fl-keyword:operators . t)
-        (ess-fl-keyword:delimiters . t)
-        (ess-fl-keyword:= . t)
-        (ess-R-fl-keyword:F&T . t)))
-#+end_src
-
-Lastly, in the event that I use =JAGS=, it would be nice to be able to use =jags= as
-the language identifier, not =ess-jags=.
-#+begin_src emacs-lisp
-(add-to-list '+org-babel-mode-alist '(jags . ess-jags))
 #+end_src
 ** LaTeX
 *** To-be-implemented ideas

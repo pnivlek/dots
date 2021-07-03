@@ -1,7 +1,8 @@
 export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools:/home/yack/code/go/bin:/opt/devkitpro/devkitPPC/bin"
-export EDITOR="emacs -nw"
-export TERMINAL="urxvtc"
+export EDITOR="nvim"
+export TERMINAL="st"
 export READER="zathura"
+export MANPATH="$(manpath):/home/yack/.local/share/man"
 
 # ~/ Clean-up:
 export ZDOTDIR="$HOME/.config/zsh"
@@ -14,4 +15,4 @@ export GOPATH="/home/yack/code/go"
 ! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
 ! pgrep -x mpdscribble >/dev/null && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf >/dev/null 2>&1 &
 
-[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x bspwm > /dev/null && startx
+[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x dwm > /dev/null && startx
