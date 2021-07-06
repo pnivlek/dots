@@ -27,7 +27,7 @@ color15 = ${xrdb:color15:#E5E5E5}
 pseudo-transparency = true
 
 [bar/laptop]
-monitor = ${env:MONITOR:eDP1}
+monitor = ${env:MONITOR:eDP-1}
 width = 100%
 height = 28
 fixed-center = true
@@ -42,13 +42,13 @@ padding = 2
 
 module-margin = 0
 
-font-0 = Overpass Regular:medium:pixelsize=11;1
-font-1 = FontAwesome:fontformat=truetype:size=8:antialias=false;0
-font-2 = siji:pixelsize=10;1
+font-0 = Overpass:Regular:pixelsize=11
+font-1 = FontAwesome:size=8:antialias=false
+font-2 = siji:pixelsize=10
 
 modules-left = mpd pad alsa
 modules-center = bspwm
-modules-right = backlight pad wlan pad battery battery2 pad date
+modules-right = backlight pad wlan pad battery pad battery2 pad date
 bottom = true
 
 tray-position = none

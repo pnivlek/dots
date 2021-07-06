@@ -6,28 +6,11 @@ bspc rule -r "*"
 wmname LG3D
 xrdb -merge ~/.Xresources
 dunst -conf ~/.config/dunst/dunstrc &
-urxvtd -q -f -o
-mpd_discord_richpresence &
-aw-server &
 
-if xrandr | grep -q "eDP1"; then
-	sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
-	polybar laptop &
-	hsetroot -cover "/home/yack/usr/pic/wall/dark/beach2.jpg" &
-	bspc monitor -d 1 2 3 4 5 6 7 8 9 10
-else
-	sxhkd -c ~/.config/sxhkd/sxhkdrc.desk &
-	polybar desktop &
-	if xrandr | grep -q "HDMI-1"; then
-	bspc monitor ^1 -d 1 2 3 4 5
-	bspc monitor ^2 -d 6 7 8 9 10
-	xrandr --output HDMI-1 --primary --auto --output HDMI-2 --auto --right-of HDMI-1
-	polybar desktop2 &
-	else
-	bspc monitor -d 1 2 3 4 5 6 7 8 9 10
-	fi
-	hsetroot -cover "/hdd/pic/walls/dark/tmrw_mnt.png" &
-fi
+sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
+polybar laptop &
+hsetroot -cover "/home/yack/usr/pic/wall/dark/beach2.jpg" &
+bspc monitor -d 1 2 3 4 5 6 7 8 9 10
 
 
 bspc config border_width 2
