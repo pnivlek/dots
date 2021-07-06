@@ -1,0 +1,3 @@
+[submodule ".config/powercord/themes/Diskai"]
+	path = .config/powercord/themes/Diskai
+	url = git@github.com:pnivlek/diskai.git
