@@ -48,7 +48,7 @@ font-2 = siji:pixelsize=10
 
 modules-left = mpd pad alsa
 modules-center = bspwm
-modules-right = backlight pad wlan pad battery pad battery2 pad date
+modules-right = backlight pad wlan pad battery battery2 pad date
 bottom = true
 
 tray-position = none
