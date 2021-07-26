@@ -9,7 +9,12 @@ dunst -conf ~/.config/dunst/dunstrc &
 
 sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
 polybar laptop &
-hsetroot -cover "/home/yack/usr/pic/wall/dark/beach2.jpg" &
+
+# Random background from directory.
+ls "/home/yack/usr/pic/wall/monokai" |sort -R | tail -n 1 | while read file; do
+    hsetroot -cover "$file" &
+done
+
 bspc monitor -d 1 2 3 4 5 6 7 8 9 10
 
 
