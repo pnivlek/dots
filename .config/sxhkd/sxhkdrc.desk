@@ -28,6 +28,8 @@ super + shift + s
     maim -s -u | xclip -selection clipboard -t image/png -i
 super + shift + a
     ~/.local/bin/scr.sh
+super + shift + d
+    ~/.local/bin/snap.sh ~/doc/snap
 
 super + F3
 	mpc toggle
@@ -66,7 +68,7 @@ super + shift + v
 
 # Sticky a window into the corner - mostly used with videos.
 # beware: xdotool hack
-# bspc rule -a \* state=floating sticky=on rectangle=480x270+1428+799 --one-shot;\
+# bspc rule -a \* state=floating sticky=on rectangle=640x454+1247+544 --one-shot;\
 super + shift + c
     i=$(bspc query -N -n  ".floating.sticky");\
     fi=$(bspc query -N -n "focused");\
@@ -76,7 +78,7 @@ super + shift + c
         xdotool windowmap $i;\
     else;\
         xdotool windowunmap $fi;\
-        bspc rule -a \* state=floating sticky=on rectangle=640x454+1247+544 --one-shot;\
+        bspc rule -a \* state=floating sticky=on rectangle=480x270+1428+799 --one-shot;\
         xdotool windowmap $fi;\
         bspc node -f last;\
     fi
