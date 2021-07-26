@@ -441,9 +441,10 @@ I reckon enabling half the modules Doom provides should do it.
  +childframe)                ; ... when your children are better than you
 ;;helm                       ; the *other* search engine for love and life
 ;;ido                        ; the other *other* search engine...
-(ivy                         ; a search engine for love and life
- +icons                      ; ... icons are nice
- +prescient)                 ; ... I know what I want(ed)
+;;(ivy                         ; a search engine for love and life
+;; +icons                      ; ... icons are nice
+;; +prescient)                 ; ... I know what I want(ed)
+vertico			     ; the search engine of the future
 #+end_src
 
 #+name: doom-ui
@@ -457,7 +458,7 @@ doom-quit                    ; DOOM quit-message prompts when you quit Emacs
 hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;hydra                      ; quick documentation for related commands
 ;;indent-guides              ; highlighted indent columns, notoriously slow
-;;(ligatures +extra)           ; ligatures and symbols to make your code pretty again
+(ligatures +extra)           ; ligatures and symbols to make your code pretty again
 ;;minimap                    ; show a map of the code on the side
 modeline                     ; snazzy, Atom-inspired modeline, plus API
 nav-flash                    ; blink the current line after jumping
@@ -531,7 +532,6 @@ grammar                      ; tasing grammar mistake every you make
  +dictionary                 ; dictionary/thesaurus is nice
  +docsets)                   ; ...or in Dash docsets locally
 lsp                          ; Language Server Protocol
-;;macos                      ; MacOS-specific commands
 (magit                       ; a git porcelain for Emacs
  +forge)                     ; interface with git forges
 make                         ; run make tasks from Emacs
@@ -547,6 +547,7 @@ rgb                          ; creating color strings
 
 #+name: doom-os
 #+begin_src emacs-lisp
+(:if IS-MAC macos)	     ; improve compatibility with macOS
 tty                          ; improve the terminal Emacs experience
 #+end_src
 
@@ -558,6 +559,7 @@ associated file.
 #+name: doom-lang
 #+begin_src emacs-lisp
 ;;agda                       ; types of types of types of types...
+;; beancount                 ; mind the GAAP
 cc                         ; C/C++/Obj-C madness
 ;;clojure                    ; java with a lisp
 ;;common-lisp                ; if you've seen one lisp, you've seen them all
@@ -571,9 +573,11 @@ data                         ; config/data formats
 emacs-lisp                   ; drown in parentheses
 ;;erlang                     ; an elegant language for a more civilized age
 ess                          ; emacs speaks statistics
+;;factor
 ;;faust                      ; dsp, but you get to keep your soul
 ;;fsharp                     ; ML stands for Microsoft's Language
 ;;fstar                      ; (dependent) types and (monadic) effects and Z3
+;;gdscript                   ; the language you've waited for
 ;;(go +lsp)                  ; the hipster dialect
 ;; (haskell +lsp)            ; a language that's lazier than I am
 ;;hy                         ; readability of scheme w/ speed of python
@@ -588,10 +592,9 @@ json                         ; At least it ain't XML
  +cdlatex                    ; quick maths symbols
  +fold)                      ; fold the clutter away nicities
 ;;lean                       ; proof that mathematicians need help
-;;factor                     ; for when scripts are stacked against you
-;;ledger                     ; an accounting system in Emacs
-;;lua                          ; one-based indices? one-based indices
-markdown                     ; writing docs for people to ignore
+;;ledger                     ; be audit you can be
+;;lua                        ; one-based indices? one-based indices
+markdown                       ; writing docs for people to ignore
 ;;nim                        ; python + lisp at the speed of c
 ;;nix                        ; I hereby declare "nix geht mehr!"
 ;;ocaml                      ; an objective camel
@@ -606,13 +609,13 @@ markdown                     ; writing docs for people to ignore
  ;;+pomodoro                 ; be fruitful with the tomato technique
  ;;+present                    ; using org-mode for presentations
  +roam)                      ; wander around notes
-;;perl                       ; write code no one else can comprehend
 ;;php                        ; perl's insecure younger brother
 ;;plantuml                   ; diagrams for confusing people more
 ;;purescript                 ; javascript, but functional
 (python +lsp +pyright +conda)       ; beautiful is better than ugly
 ;;qt                         ; the 'cutest' gui framework ever
 ;;racket                     ; a DSL for DSLs
+;;raku			     ; the artist formerly known as perl6
 ;;rest                       ; Emacs as a REST client
 ;;rst                        ; ReST in peace
 ;;(ruby +rails)              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
@@ -626,6 +629,7 @@ sh                           ; she sells {ba,z,fi}sh shells on the C xor
 ;;terra                      ; Earth and Moon in alignment for performance.
 web                          ; the tubes
 yaml                         ; JSON, but readable
+;;zig			     ; C, but simpler
 #+end_src
 
 **** Everything in Emacs
@@ -792,31 +796,6 @@ straightforward, I'll just redefine it to a simpler, async, function.
              +literate-config-file))))
 #+end_src
 ** Other things
-*** Editor interaction
-**** Mouse buttons
-#+begin_src emacs-lisp
-(map! :n [mouse-8] #'better-jumper-jump-backward
-      :n [mouse-9] #'better-jumper-jump-forward)
-#+end_src
-*** Window title
-I'd like to have just the buffer name, then if applicable the project folder
-#+begin_src emacs-lisp
-(setq frame-title-format
-      '(""
-        (:eval
-         (if (s-contains-p org-roam-directory (or buffer-file-name ""))
-             (replace-regexp-in-string
-              ".*/[0-9]*-?" "☰ "
-              (subst-char-in-string ?_ ?  buffer-file-name))
-           "%b"))
-        (:eval
-         (let ((project-name (projectile-project-name)))
-           (unless (string= "-" project-name)
-             (format (if (buffer-modified-p)  " ◉ %s" "  ●  %s") project-name))))))
-#+end_src
-
-For example when I open my config file it the window will be titled =config.org ●
-doom= then as soon as I make a change it will become =config.org ◉ doom=.
 *** Splash screen
 Emacs can render an image as the splash screen, and [[https://github.com/MarioRicalde][@MarioRicalde]] came up with a
 cracker! He's also provided me with a nice Emacs-style /E/. I was using the
@@ -1367,13 +1346,6 @@ these as horizontal rules.
   :init
   (autoload 'turn-on-page-break-lines-mode "page-break-lines"))
 #+end_src
-**** Activity Watcher
-I track my window usage with ActivityWatch, and use the mode for emacs that
-tells it what windows I'm spending my time on.
-#+begin_src emacs-lisp
-(package! activity-watch-mode)
-#+end_src
-
 ** Language packages
 *** LaTeX
 For mathematical convenience, WIP
@@ -1394,11 +1366,6 @@ And some basic config
     (unless (equal "/" aas-transient-snippet-key)
       (+latex-fold-last-macro-a)))
   (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
-#+end_src
-
-I think the latest AucTeX may be a bit dodgy, so
-#+begin_src emacs-lisp
-(package! auctex :pin "384c4b989192087144512a528bcc1949c2ab3e5b")
 #+end_src
 
 *** Org Mode
@@ -1571,14 +1538,6 @@ have the following.
   (setq abbrev-file-name (expand-file-name "abbrev.el" doom-private-dir))
   (setq save-abbrevs 'silently))
 #+end_src
-** ActivityWatcher Mode
-
-#+begin_src emacs-lisp
-(use-package! activity-watch-mode
-  :init
-  (global-activity-watch-mode))
-#+end_src
-
 ** Avy
 What a wonderful way to jump to buffer positions, and it uses the QWERTY
 home-row for jumping. Very convenient ... except I'm using Colemak.
@@ -1890,20 +1849,6 @@ nearby (also means that if I change the 'main' dictionary I keep my addition).
 #+begin_src emacs-lisp
 (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
 #+end_src
-** Ivy
-While in an ivy mini-buffer =C-o= shows a list of all possible actions one may take.
-By default this is src_elisp{#'ivy-read-action-by-key} however a better
-interface to this is using Hydra.
-#+begin_src emacs-lisp
-(setq ivy-read-action-function #'ivy-hydra-read-action)
-#+end_src
-
-I currently have ~40k functions. This seems like sufficient motivation to
-increase the maximum number of items ivy will sort to 40k + a bit, this way
-=SPC h f= et al. will continue to function as expected.
-#+begin_src emacs-lisp
-(setq ivy-sort-max-size 50000)
-#+end_src
 ** Magit
 Magit is pretty nice by default. The diffs don't get any
 syntax-highlighting-love though which is a bit sad. Thankfully
@@ -1914,40 +1859,6 @@ syntax-highlighting-love though which is a bit sad. Thankfully
 #+end_src
 Unfortunately this seems to mess things up, which is something I'll want to look
 into later.
-** Mixed pitch
-#+begin_src emacs-lisp
-(autoload #'mixed-pitch-serif-mode "mixed-pitch"
-  "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
-
-(after! mixed-pitch
-  (defface variable-pitch-serif
-    '((t (:family "serif")))
-    "A variable-pitch face with serifs."
-    :group 'basic-faces)
-  (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
-  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
-  (defun mixed-pitch-serif-mode (&optional arg)
-    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
-    (interactive)
-    (let ((mixed-pitch-face 'variable-pitch-serif))
-      (mixed-pitch-mode (or arg 'toggle)))))
-#+end_src
-
-Now, as Harfbuzz is currently used in Emacs, we'll be missing out on the
-following Alegreya ligatures:
-#+begin_center
-ff /ff/ ffi /ffi/ ffj /ffj/ ffl /ffl/
-fft /fft/ fi /fi/ fj /fj/ ft /ft/
-Th /Th/
-#+end_center
-
-Thankfully, it isn't to hard to add these to the ~composition-function-table~.
-#+begin_src emacs-lisp
-(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
-(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
-#+end_src
-
 ** Projectile
 Looking at documentation via =SPC h f= and =SPC h v= and looking at the source can
 add package src directories to projectile. This isn't desirable in my opinion.
@@ -2444,7 +2355,7 @@ Entries of the form (subject . id)."
                            org-ml--cache-timestamp (float-time)))
                    org-ml--cache))
         msg-id)
-    (ivy-read "Thread: "
+    (consult--read "Thread: "
               patches
               :action (lambda (m) (setq msg-id (cdr m))))
     (+workspace-switch +mu4e-workspace-name)
@@ -2472,7 +2383,7 @@ Entries of the form (subject . id)."
 *** Behaviour
 **** Tweaking defaults
 #+begin_src emacs-lisp
-(setq org-directory "~/.local/share/Dropbox/org"                      ; let's put files here
+(setq org-directory "~/doc/org/"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
       org-log-done 'time                          ; having the time a item is done sounds convenient
       org-list-allow-alphabetical t               ; have a. A. a) A) list bullets
@@ -2543,7 +2454,6 @@ Occasionally I want to cite something.
 (use-package! org-ref
   :after org
   :config
-  (setq org-ref-completion-library 'org-ref-ivy-cite)
   (defadvice! org-ref-open-bibtex-pdf-a ()
     :override #'org-ref-open-bibtex-pdf
     (save-excursion
@@ -2679,7 +2589,7 @@ functionality as in LaTeX. Let's try viewing possible output files with this.
       org-deadline-warning-days 7
       org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
 
-(setq org-agenda-files '("~/.local/share/Dropbox/org"))
+(setq org-agenda-files '("~/doc/org"))
 
 (setq org-agenda-custom-commands
       '(("o" "Overview"
@@ -3064,7 +2974,7 @@ no modeline.
 Set in a separate subfolder within my dropbox directory. This and my org
 directory are the only two things I track using dropbox.
 #+begin_src emacs-lisp :noweb-ref none :tangle yes
-(setq org-roam-directory "~/.local/share/Dropbox/roam/")
+(setq org-roam-directory "~/doc/org/roam/")
 #+end_src
 
 That said, if the directory doesn't exist we likely don't want to be using roam.
@@ -3567,7 +3477,7 @@ or no selection is made: nil is returned."
                                       (propertize "(default)" 'face 'font-lock-doc-face)))
                       value))
                   values))
-    (let ((selection (ivy-read question values :preselect default-value)))
+    (let ((selection (consult--read question values :preselect default-value)))
       (unless (or (string-match-p "(default)$" selection)
                   (string= "" selection))
         selection))))
@@ -6076,51 +5986,51 @@ Now, there are some symbols that aren't included in =inputenc=, but we should be
 able to handle anyway. For them we define a table of LaTeX translations
 
 #+name: latex-non-ascii-char-substitutions
-| Character | LaTeX       |
-|-----------+-------------|
-| ɑ         | \(\alpha\)       |
-| β         | \(\beta\)       |
-| γ         | \(\gamma\)       |
-| δ         | \(\delta\)       |
-| ε         | \(\epsilon\)       |
-| ϵ         | \(\varepsilon\)       |
-| ζ         | \(\zeta\)       |
-| η         | \(\eta\)       |
-| θ         | \(\theta\)       |
-| ϑ         | \(\vartheta\)       |
-| ι         | \(\iota\)       |
-| κ         | \(\kappa\)       |
-| λ         | \(\lambda\)       |
-| μ         | \(\mu\)       |
-| ν         | \(\nu\)       |
-| ξ         | \(\xi\)       |
-| π         | \(\pi\)       |
-| ϖ         | \(\varpi\)       |
-| ρ         | \(\rho\)       |
+| Character | LaTeX |
+|-----------+-------|
+| ɑ         | \(\alpha\) |
+| β         | \(\beta\) |
+| γ         | \(\gamma\) |
+| δ         | \(\delta\) |
+| ε         | \(\epsilon\) |
+| ϵ         | \(\varepsilon\) |
+| ζ         | \(\zeta\) |
+| η         | \(\eta\) |
+| θ         | \(\theta\) |
+| ϑ         | \(\vartheta\) |
+| ι         | \(\iota\) |
+| κ         | \(\kappa\) |
+| λ         | \(\lambda\) |
+| μ         | \(\mu\) |
+| ν         | \(\nu\) |
+| ξ         | \(\xi\) |
+| π         | \(\pi\) |
+| ϖ         | \(\varpi\) |
+| ρ         | \(\rho\) |
 | ϱ         | \(\varrho\) |
-| σ         | \(\sigma\)       |
-| ς         | \(\varsigma\)       |
-| τ         | \(\tau\)       |
-| υ         | \(\upsilon\)       |
-| ϕ         | \(\phi\)       |
-| φ         | \(\varphi\)       |
-| ψ         | \(\psi\)       |
-| ω         | \(\omega\)       |
-| Γ         | \(\Gamma\)       |
-| Δ         | \(\Delta\)       |
-| Θ         | \(\Theta\)       |
-| Λ         | \(\Lambda\)       |
-| Ξ         | \(\Xi\)       |
-| Π         | \(\Pi\)       |
-| Σ         | \(\Sigma\)       |
-| Υ         | \(\Upsilon\)       |
-| Φ         | \(\Phi\)       |
-| Ψ         | \(\Psi\)       |
-| Ω         | \(\Omega\)       |
-| א         | \(\aleph\)       |
-| ב         | \(\beth\)       |
+| σ         | \(\sigma\) |
+| ς         | \(\varsigma\) |
+| τ         | \(\tau\) |
+| υ         | \(\upsilon\) |
+| ϕ         | \(\phi\) |
+| φ         | \(\varphi\) |
+| ψ         | \(\psi\) |
+| ω         | \(\omega\) |
+| Γ         | \(\Gamma\) |
+| Δ         | \(\Delta\) |
+| Θ         | \(\Theta\) |
+| Λ         | \(\Lambda\) |
+| Ξ         | \(\Xi\) |
+| Π         | \(\Pi\) |
+| Σ         | \(\Sigma\) |
+| Υ         | \(\Upsilon\) |
+| Φ         | \(\Phi\) |
+| Ψ         | \(\Psi\) |
+| Ω         | \(\Omega\) |
+| א         | \(\aleph\) |
+| ב         | \(\beth\) |
 | ד         | \(\daleth\) |
-| ג         | \(\gimel\)       |
+| ג         | \(\gimel\) |
 
 #+name: gen-latex-non-ascii-char-substitutions
 #+begin_src emacs-lisp :noweb-ref none :var latex-non-ascii-char-substitutions=latex-non-ascii-char-substitutions
@@ -6793,7 +6703,7 @@ Then let's bind the content to a function, and define some nice helpers.
 
 (defun tec/yas-latex-get-class-choice ()
   "Prompt user for LaTeX class choice"
-  (setq tec/yas-latex-class-choice (ivy-read "Select document class: " '("article" "scrartcl" "bmc") :def "bmc")))
+  (setq tec/yas-latex-class-choice (consult--read "Select document class: " '("article" "scrartcl" "bmc") :def "bmc")))
 
 (defun tec/yas-latex-preamble-if ()
   "Based on class choice prompt for insertion of default preamble"
