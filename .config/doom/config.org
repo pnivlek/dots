@@ -205,7 +205,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar                   ; A dated approach to timetabling
+       calendar                   ; A dated approach to timetabling
        ;;emms                       ; Multimedia in Emacs is music to my ears
        ;;everywhere                   ; *leave* Emacs!? You must be joking.
        ;;irc                          ; how neckbeards socialize
@@ -237,6 +237,11 @@ Name and such.
 #+begin_src elisp
 (setq user-full-name "Kelvin Porter"
       user-mail-address "kporter@protonmail.com")
+#+end_src
+
+Load private file with api keys for org-gcal and stuff.
+#+begin_src elisp
+(load (concat doom-private-dir "yack-private.el"))
 #+end_src
 ** Shell
 More than sh.
@@ -578,7 +583,7 @@ Super Agenda and configs.
                            :face error
                            :order 7)
                           (:name "Assignments"
-                           :tag "Assignment"
+                           :tag "assignments"
                            :order 10)
                           (:name "Issues"
                            :tag "Issue"
@@ -603,34 +608,34 @@ Super Agenda and configs.
                            :tag ("Trivial" "Unimportant")
                            :todo ("SOMEDAY" )
                            :order 90)
-                            (:discard (:tag ("Chore" "Routine" "Daily")))))))))
-          ("i" "Interesting"
-           ((alltodo "" ((org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-super-agenda-groups
-                          '((:discard (:not (:tag ("read" "watch" "listen" "think"))))
-                            (:name "Webpages"
-                             :and (:tag ("read") :tag ("web"))
-                             :order 1)
-                            (:name "Info/Ideas"
-                             :and (:tag ("read") :tag ("info"))
-                             :tag "think"
-                             :order 2)
-                            (:name "Papers"
-                             :and (:tag ("read") :tag ("research"))
-                             :order 10)
-                            (:name "Films"
-                             :and (:tag ("watch") :tag ("film"))
-                             :order 3)
-                            (:name "Shows"
-                             :and (:tag ("watch") :tag ("tv"))
-                             :order 4)
-                            (:name "Books"
-                             :and (:tag ("read") :tag ("book"))
-                             :order 5)
-                            (:name "Audio"
-                             :tag ("listen")
-                             :order 6)))))))))
-#+end_src
+                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))
+        ("i" "Interesting"
+         ((alltodo "" ((org-agenda-sorting-strategy '(priority-down timestamp-up))
+                       (org-super-agenda-groups
+                        '((:discard (:not (:tag ("read" "watch" "listen" "think"))))
+                          (:name "Webpages"
+                           :and (:tag ("read") :tag ("web"))
+                           :order 1)
+                          (:name "Info/Ideas"
+                           :and (:tag ("read") :tag ("info"))
+                           :tag "think"
+                           :order 2)
+                          (:name "Papers"
+                           :and (:tag ("read") :tag ("research"))
+                           :order 10)
+                          (:name "Films"
+                           :and (:tag ("watch") :tag ("film"))
+                           :order 3)
+                          (:name "Shows"
+                           :and (:tag ("watch") :tag ("tv"))
+                           :order 4)
+                          (:name "Books"
+                           :and (:tag ("read") :tag ("book"))
+                           :order 5)
+                          (:name "Audio"
+                           :tag ("listen")
+                           :order 6)))))))))
+                           #+end_src
 *** Capture
 Capture can look better.
 #+name: prettify-capture
