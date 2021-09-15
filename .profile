@@ -12,7 +12,7 @@ export SDKMAN_DIR="/home/yack/.sdkman"
 export GPODDER_HOME="/home/yack/usr/pod"
 export GOPATH="/home/yack/code/go"
 
-! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
-! pgrep -x mpdscribble >/dev/null && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf >/dev/null 2>&1 &
+# ! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
+# ! pgrep -x mpdscribble >/dev/null && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf >/dev/null 2>&1 &
 
-[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x dwm > /dev/null && startx
+[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x spectrwm > /dev/null && startx

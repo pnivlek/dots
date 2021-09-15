@@ -24,3 +24,6 @@ export GPG_TTY=$(tty)
 
 # Used for java stuff
 # [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"
+
+# profiling
+# zmodload zsh/zprof

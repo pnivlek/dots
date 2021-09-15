@@ -1,127 +1,39 @@
-! These are all possible options, presented with default values.
-! xst will fallback to *.option if st.option is not present.
-! see src/config.h for more information about option meanings.
+URxvt.scrollBar: no
+URxvt.font: xft:Tamzen:style=Regular:pixelsize=14
 
-! --- These options only take effect on startup. ---
-st.termname:     xst-256color
+!! sayo colorscheme
 
-! Set to a non-zero value to disable window decorations (titlebar, etc) and go borderless.
-st.borderless:        0
+*.foreground: #bebebe
+*.background: #2a2a2a
 
-! --- The following options options can be reloaded via USR1 signal. ---
-st.font:              Dina:Regular:pixelsize=12:antialias=true:autohint=true;
+! black
+*.color0: #2a2a2a
+*.color8: #3a3a3a
 
-! window padding
-st.borderpx:          10
+! red
+*.color1: #627a8a
+*.color9: #627a8a
 
-! Available cursor values: 2 4 6 7 = █ _ | ☃ ( 1 3 5 are blinking versions)
-st.cursorshape:       2
+! green
+*.color2: #aa8f7c
+*.color10: #aa8f7c
 
-! thickness of underline and bar cursors
-st.cursorthickness:   2
+! yellow
+*.color3: #8b8f7e
+*.color11: #8b8f7e
 
-! 0: normal blinking, 1: leave cursor border and blink with cursors background
-st.cursorblinkstyle:  0
+! blue
+*.color4: #987a6b
+*.color12: #987a6b
 
-! 0: cursor blinks with a constant interval; 1: blinking cycle resets on key input
-st.cursorblinkontype: 1
+! magenta
+*.color5: #877979
+*.color13: #877979
 
-st.disablebold:         0
-st.disableitalics:         0
-st.disableroman:         0
+! cyan
+*.color6: #937f74
+*.color14: #937f74
 
-! Amount of lines scrolled
-st.scrollrate:  1
-
-! Kerning / character bounding-box height multiplier
-st.chscale:           1.0
-
-! Kerning / character bounding-box width multiplier
-st.cwscale:           1.0
-
-! blinking timeout for terminal and cursor blinking (0 disables)
-st.blinktimeout:      800
-
-! bell volume. Value between -100 and 100. (0 disables)
-st.bellvolume:        100
-
-! 1: render most of the lines/blocks characters without using the font for
-! perfect alignment between cells (U2500 - U259F except dashes/diagonals).
-! Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
-! 0: disable (render all U25XX glyphs normally from the font).
-st.boxdraw: 0
-
-! (0|1) boxdraw(bold) enable toggle
-st.boxdraw_bold: 0
-
-! braille (U28XX):  1: render as adjacent "pixels",  0: use font
-st.boxdraw_braille: 0
-
-! set this to a non-zero value to force window depth
-st.depth: 0
-
-! opacity==255 means what terminal will be not transparent, 0 - fully transparent
-! (float values in range 0 to 1.0 may also be used)
-st.opacity:      255
-
-! (0|1) dont pre-multiply color values of the pixels when using transparency
-! (useful for the systems where composite manager not running all the time,
-! as color pre-multiplication will make the "opaque" colors look darker/lighter
-! without the composition)
-st.disable_alpha_correction: 0
-
-! Base16 Monokai Pro (Spectrum)
-! Scheme: Wimer Hazenberg (https://www.monokai.nl)
-
-#define base00 #222222
-#define base01 #363537
-#define base02 #525053
-#define base03 #69676c
-#define base04 #8b888f
-#define base05 #f7f1ff
-#define base06 #fbf8ff
-#define base07 #ffffff
-#define base08 #fc618d
-#define base09 #191919
-#define base0A #fce566
-#define base0B #7bd88f
-#define base0C #5ad4e6
-#define base0D #948ae3
-#define base0E #fd9353
-#define base0F #1e1e1e
-#define baseCC #363537
-
-*foreground:   base05
-#ifdef background_opacity
-*background:   [background_opacity]base00
-#else
-*background:   base00
-#endif
-*cursorColor:  base05
-
-*color0:       base00
-*color1:       base08
-*color2:       base0B
-*color3:       base0A
-*color4:       base0D
-*color5:       base0E
-*color6:       base0C
-*color7:       base05
-
-*color8:       base03
-*color9:       base08
-*color10:      base0B
-*color11:      base0A
-*color12:      base0D
-*color13:      base0E
-*color14:      base0C
-*color15:      base07
-
-! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
-! use 'shell' template to set these if necessary
-*color16:      base09
-*color17:      base0F
-*color18:      base01
-*color19:      base02
-*color20:      base04
-*color21:      base06
+! white
+*.color7: #bebebe
+*.color15: #bebebe
