@@ -6,11 +6,11 @@ windows:
       -
       -
       -
-      - music:
-        panes:
-          - ncmpcpp
-          -
-      - social:
-        panes:
-          - 
-          - htop
+  - window_name: music
+    panes:
+      - ncmpcpp
+      -
+  - window_name: social
+    panes:
+      - 
+      - htop

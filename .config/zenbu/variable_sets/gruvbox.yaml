@@ -1,0 +1,29 @@
+colors:
+  background:   "#282828"
+  foreground:   "#ebdbb2"
+  black:
+    normal:     "#282828"
+    bold:       "#928374"
+  red:
+    normal:     "#cc241d"
+    bold:       "#fb4934"
+  green:
+    normal:     "#98971a"
+    bold:       "#b8bb26"
+  yellow:
+    normal:     "#d79921"
+    bold:       "#fabd2f"
+  blue:
+    normal:     "#458588"
+    bold:       "#83a598"
+  magenta:
+    normal:     "#b16286"
+    bold:       "#d3869b"
+  cyan:
+    normal:     "#689d6a"
+    bold:       "#8ec07c"
+  white:
+    normal:     "#a89984"
+    bold:       "#ebdbb2"
+
+wallpaper: "/home/yack/pic/wal/gruvbox.png"

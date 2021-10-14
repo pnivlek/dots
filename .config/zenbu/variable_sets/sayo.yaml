@@ -1,0 +1,29 @@
+colors:
+  background:   "#2a2a2a"
+  foreground:   "#bebebe"
+  black:
+    normal:     "#2a2a2a"
+    bold:       "#3a3a3a"
+  red:
+    normal:     "#627a8a"
+    bold:       "#627a8a"
+  green:
+    normal:     "#aa8f7c"
+    bold:       "#aa8f7c"
+  yellow:
+    normal:     "#8b8f7e"
+    bold:       "#8b8f7e"
+  blue:
+    normal:     "#987a6b"
+    bold:       "#987a6b"
+  magenta:
+    normal:     "#877979"
+    bold:       "#877979"
+  cyan:
+    normal:     "#937f74"
+    bold:       "#937f74"
+  white:
+    normal:     "#bebebe"
+    bold:       "#bebebe"
+
+wallpaper: "/home/yack/pic/wal/moon.jpg"

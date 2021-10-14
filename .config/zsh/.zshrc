@@ -16,7 +16,7 @@ autoload -Uz compinit && compinit
 # Redefine fasd to use fzf
 j () {
   local dir
-  dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+  dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" ||#  return 1
 }
 
 # Fix pinentry. Needs to be run in X itself, so not ran in .profile.

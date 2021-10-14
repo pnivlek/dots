@@ -1,5 +1,5 @@
 #+title: Doom Emacs Configuration
-#+author: kelvin Porter with some snippets from Shaurya Singh, Tecosau, and Henrik Lissner
+#+author: kelvin Porter with some snippets from Shaurya Singh, Tecosaur, and Henrik Lissner
 #+date: @@html:<!--@@{{{git-rev}}}@@html:-->@@@@latex:\\\Large\bfseries@@ {{{modification-time(%Y-%m-%d, t)}}} @@latex:\\\normalsize\mdseries@@{{{modification-time(%H:%M, t)}}} @@latex:\acr{\lowercase{@@{{{timezone}}}@@latex:}}\iffalse@@, {{{git-rev}}}@@latex:\fi@@
 #+macro: timezone (eval (substring (shell-command-to-string "date +%Z") 0 -1))
 #+macro: git-rev (eval (format "@@html:<a href=\"https://github.com/pnivlek/dots/commit/%1$s\" style=\"text-decoration: none\"><code style=\"padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7\">%1$s</code></a>@@@@latex:\\href{https://github.com/pnivlek/dots/commit/%1$s}{\\normalsize\\texttt{%1$s}}@@" (substring (shell-command-to-string "git rev-parse --short HEAD") 0 -1)))
@@ -147,7 +147,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
        ;;fstar                      ; (dependent) types and (monadic) effects and Z3
        ;;gdscript                   ; the language you've waited for
        ;;(go +lsp)                  ; the hipster dialect
-       ;; (haskell +lsp)            ; a language that's lazier than I am
+       (haskell +lsp)            ; a language that's lazier than I am
        ;;hy                         ; readability of scheme w/ speed of python
        ;;idris                      ; a language you can depend on
        json                         ; At least it ain't XML
@@ -240,7 +240,7 @@ Name and such.
 #+end_src
 
 Load private file with api keys for org-gcal and stuff.
-#+begin_src elisp
+#+begin_src elisp :tangle no
 (load (concat doom-private-dir "yack-private.el"))
 #+end_src
 ** Shell
@@ -250,13 +250,13 @@ More than sh.
 #+end_src
 
 ** Fonts
-Dina bitmap for coding, Overpass for everything else.
+Tamzen bitmap for coding, Overpass for everything else.
 #+begin_src elisp
-(setq doom-font (font-spec :family "Dina" :style "Regular" :size 14)
+(setq doom-font (font-spec :family "Tamzen" :style "Regular" :size 14)
       doom-big-font (font-spec :family "Overpass" :size 36)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 14)
+      doom-variable-pitch-font (font-spec :family "Tamzen" :size 14)
       doom-unicode-font (font-spec :family "JuliaMono")
-      doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
+      doom-serif-font (font-spec :family "Tamzen" :weight 'light))
 #+end_src
 A nicer font like Alegreya for mixed pitch.
 #+begin_src elisp
@@ -390,6 +390,7 @@ Initialize all of this in an after! block
     Default changes.
 #+begin_src elisp
 (setq org-directory "~/doc/org/"                      ; let's put files here
+      org-archive-location (concat org-directory ".archive/%s::")
       org-use-property-inheritance t              ; it's convenient to have properties inherited
       org-id-method 'ts
       org-log-done 'time                          ; having the time a item is done sounds convenient
@@ -456,53 +457,10 @@ LSP for babel blocks
 Turn on cdlatex
 #+begin_src elisp
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
-#+end_src
-Add some more latex snippets. And credits to shaunsingh and Henrik for the
-additional code to get it to work in org mode.
-#+begin_src elisp
-(use-package! aas
-  :commands aas-mode)
 
-(use-package! laas
-  :hook (LaTeX-mode . laas-mode)
-  :config
-  (defun laas-tex-fold-maybe ()
-    (unless (equal "/" aas-transient-snippet-key)
-      (+latex-fold-last-macro-a)))
-  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
-
-(defadvice! fixed-org-yas-expand-maybe-h ()
-  "Expand a yasnippet snippet, if trigger exists at point or region is active.
-Made for `org-tab-first-hook'."
-  :override #'+org-yas-expand-maybe-h
-  (when (and (featurep! :editor snippets)
-             (require 'yasnippet nil t)
-             (bound-and-true-p yas-minor-mode))
-    (and (let ((major-mode (cond ((org-in-src-block-p t)
-                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
-                                 ((org-inside-LaTeX-fragment-p)
-                                  'latex-mode)
-                                 (major-mode)))
-               (org-src-tab-acts-natively nil) ; causes breakages
-               ;; Smart indentation doesn't work with yasnippet, and painfully slow
-               ;; in the few cases where it does.
-               (yas-indent-line 'fixed))
-           (cond ((and (or (not (bound-and-true-p evil-local-mode))
-                           (evil-insert-state-p)
-                           (evil-emacs-state-p))
-                       (or (and (bound-and-true-p yas--tables)
-                                (gethash major-mode yas--tables))
-                           (progn (yas-reload-all) t))
-                       (yas--templates-for-key-at-point))
-                  (yas-expand)
-                  t)
-                 ((use-region-p)
-                  (yas-insert-snippet)
-                  t)))
-         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
-         ;;      overzealous about cleaning up overlays.
-         (when (bound-and-true-p org-superstar-mode)
-           (org-superstar-restart)))))
+(defadvice! org-edit-latex-emv-after-insert ()
+  :after #'org-cdlatex-environment-indent
+  (org-edit-latex-environment))
 #+end_src
 *** Roam
 Set the org roam directory
@@ -919,4 +877,54 @@ And org-capture bin can look better too.
         (interactive)
         (set-window-parameter nil 'mode-line-format 'none)
         (org-capture)))
+#+end_src
+** Haskell
+#+begin_src elisp
+(after!
+  (setq lsp-haskell-formatting-provider "brittany"))
+#+end_src
+** Latex
+*** Math input
+#+begin_src elisp
+(after! cdlatex
+  (setq cdlatex-env-alist
+        '(("bmatrix" "\\begin{bmatrix}\n?\n\\end{bmatrix}" nil)
+          ("equation*" "\\begin{equation*}\n?\n\\end{equation*}" nil)))
+  (setq ;; cdlatex-math-symbol-prefix ?\; ;; doesn't work at the moment :(
+   cdlatex-math-symbol-alist
+   '( ;; adding missing functions to 3rd level symbols
+     (?_    ("\\downarrow"  ""           "\\inf"))
+     (?2    ("^2"           "\\sqrt{?}"     ""     ))
+     (?3    ("^3"           "\\sqrt[3]{?}"  ""     ))
+     (?^    ("\\uparrow"    ""           "\\sup"))
+     (?k    ("\\kappa"      ""           "\\ker"))
+     (?m    ("\\mu"         ""           "\\lim"))
+     (?c    (""             "\\circ"     "\\cos"))
+     (?d    ("\\delta"      "\\partial"  "\\dim"))
+     (?D    ("\\Delta"      "\\nabla"    "\\deg"))
+     ;; no idea why \Phi isnt on 'F' in first place, \phi is on 'f'.
+     (?F    ("\\Phi"))
+     ;; now just convenience
+     (?.    ("\\cdot" "\\dots"))
+     (?:    ("\\vdots" "\\ddots"))
+     (?*    ("\\times" "\\star" "\\ast")))
+   cdlatex-math-modify-alist
+   '( ;; my own stuff
+     (?B    "\\mathbb"        nil          t    nil  nil)
+     (?a    "\\abs"           nil          t    nil  nil))))
+#+end_src
+Add some more latex snippets. And credits to shaunsingh and Henrik for the
+additional code to get it to work in org mode.
+#+begin_src elisp
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
+  :hook (org-mode   . laas-mode)
+  :config
+  (defun laas-tex-fold-maybe ()
+    (unless (equal "/" aas-transient-snippet-key)
+      (+latex-fold-last-macro-a)))
+  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe)
+  (aas-set-snippets 'laas-mode
+                    :cond #'texmathp
+                    "===" "\\equiv"))
 #+end_src

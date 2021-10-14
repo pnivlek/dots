@@ -1,0 +1,62 @@
+Config { overrideRedirect = False
+       , font     = "xft:{{term_fonts[0]}}:pixelsize={{pixelsize}}:antialias=true:hinting=true"
+       , additionalFonts = [ {% for f in term_fonts[1:-1] -%}
+         "xft:{{ f }}:pixelsize={{pixelsize - 2}}:antialias=true:hinting=true",
+         {%- endfor %} "xft:{{ term_fonts[-1] }}:pixelsize={{pixelsize - 2}}:antialias=true:hinting=true"]
+       , bgColor  = "{{colors.background}}"
+       , fgColor  = "{{colors.foreground}}"
+       , position = Bottom 
+       , commands = [ Run Brightness
+                        [ "-t", "B:<percent>%"
+                        , "--", "-D", "intel_backlight"] 60
+                    , Run WeatherX "KISP"
+                        [ ("clear", "")
+                        , ("sunny", "")
+                        , ("mostly clear", "")
+                        , ("mostly sunny", "")
+                        , ("partly sunny", "")
+                        , ("fair", "")
+                        , ("cloudy","")
+                        , ("overcast","")
+                        , ("partly cloudy", "")
+                        , ("mostly cloudy", "")
+                        , ("considerable cloudiness", "")]
+                        [ "--template", "<fn=1><skyConditionS></fn> <tempF>° <rh>% <fn=1></fn> <windMph> (<hour>)"
+                        , "-L", "32"
+                        , "-H", "77"
+                        , "--low"   , "{{colors.blue.bold}}"
+                        , "--high"  , "{{colors.red.bold}}"
+                        ] 36000
+                    , Run Cpu
+                        [ "-t", "<fn=1></fn> <total>%"
+                        , "-L", "3"
+                        , "-H", "50"
+                        , "--high"  , "{{colors.red.bold}}"
+                        , "--normal", "{{colors.green.normal}}"
+                        ] 10
+                    , Run Memory ["-t", "<fn=1></fn> <usedratio>%"] 10
+                    , Run BatteryN
+                        [ "BAT0" ]
+                        ["-t", "I:<acstatus><left>%"
+                        , "-L", "10", "-H", "80", "-p", "3"
+                        , "--", "-O", "C", "-i", "", "-o", "D"
+                        , "-l", "{{colors.red.normal}}", "-m", "{{colors.yellow.normal}}", "-h", "{{colors.green.normal}}"
+                        , "-a", "notify-send -u critical 'Battery running out!!'"
+                        , "-A", "3"]
+                        600 "int"
+                    , Run BatteryN
+                        [ "BAT1" ]
+                        ["-t", "E:<acstatus><left>%"
+                        , "-L", "10", "-H", "80", "-p", "3"
+                        , "--", "-O", "C", "-i", "", "-o", "D"
+                        , "-l", "{{ colors.red.normal }}", "-m", "{{colors.yellow.normal}}", "-h", "{{colors.green.normal}}"
+                        , "-a", "notify-send -u critical 'Battery running out!!'"
+                        , "-A", "3"]
+                        600 "ext"
+                    , Run Date "%a %m/%d <fc={{colors.white.bold}}>%H:%M</fc>" "date" 10
+                    , Run UnsafeStdinReader
+                    ]
+       , sepChar  = "%"
+       , alignSep = "}{"
+       , template = "%UnsafeStdinReader% }{ %cpu% | %memory% | %bright% | %KISP% | %int% %ext% | %date% "
+       }
