@@ -3,6 +3,7 @@ term_fonts:
   - "Font Awesome 5 Free, Font Awesome 5 Free Solid"
   - "Siji"
 pixelsize: 14
+zathura_pixelsize: 11
 xmobarTextOffsets:
   - 0
   - 0
@@ -64,3 +65,6 @@ n_primary:  "{{ colors[colors.primary].normal }}"
 b_primary:  "{{ colors[colors.primary].bold }}"
 n_secondary:  "{{ colors[colors.secondary].normal }}"
 b_secondary:  "{{ colors[colors.secondary].bold }}"
+
+# Wallpaper
+brightness: 0

@@ -16,24 +16,23 @@ import           XMonad.Util.SpawnOnce
 import           XMonad.Util.Ungrab
 
 import           XMonad.Layout.NoBorders
-import           XMonad.Layout.Renamed
-import           XMonad.Layout.ThreeColumns
+import           XMonad.Layout.BinarySpacePartition
+import           XMonad.Layout.Spacing
 
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.SetWMName
 
 
 myWorkspaces :: [String]
-myWorkspaces = [ "main", "dev1", "dev2", "edu1", "edu2", "chat", "msc1", "msc2" ]
+myWorkspaces = [ "main", "dev1", "dev2", "edu1", "edu2", "msc1", "msc2", "chat" ]
 
 myManageHook :: ManageHook
 myManageHook =
   composeAll [className =? "Gimp" --> doFloat, isDialog --> doFloat]
 
 -- lessBorders OnlyFloat because sometimes I plug into tv.
-myLayout = avoidStruts $ lessBorders OnlyFloat $ tiled ||| Mirror tiled ||| Full ||| threeCol
+myLayout = spacing 4 $ avoidStruts $ lessBorders OnlyFloat $ tiled ||| Mirror tiled ||| Full ||| emptyBSP
  where
-  threeCol = ThreeColMid nmaster delta ratio
   tiled    = Tall nmaster delta ratio
   nmaster  = 1      -- Default number of windows in the master pane
   ratio    = 1 / 2    -- Default proportion of screen occupied by master pane
@@ -43,15 +42,18 @@ myStartupHook :: X ()
 myStartupHook = do
   setWMName "LG3D"
   spawnOnce "urxvtd -q -f -o"
-  spawn "hsetroot -cover {{wallpaper}}"
+  spawnOnce "dunst -c ~/.config/dunst/dunstrc"
+  spawnOnce "picom -I 0.085 -O 0.085"
+  spawn "hsetroot -cover {{wallpaper}} -brightness {{brightness}}"
   spawn "setxkbmap -option ctrl:nocaps"
-  spawn "kmonad ~/.config/kmonad"
+ --  spawn "kmonad ~/.config/kmonad"
 
 myKeysP :: [(String, X ())]
 myKeysP =
   -- Basic commands
   [ ("M-S-<Return>", spawn "urxvtc")
   , ("M-S-x", spawn "slock")
+  , ("M-p", spawn "dmenu_run -fn {{ term_fonts[0] }} -nb '{{colors.background}}' -nf '{{colors.foreground}}' -sb '{{colors.red.normal}}' -sf '{{colors.background}}'")
   , ("M-b", spawn "pkill xmobar")
   , ("M-S-q", kill)
   , ("M-S-<Escape>", io (exitWith ExitSuccess))
@@ -86,16 +88,12 @@ main = do
                         , workspaces      = myWorkspaces
                         , normalBorderColor = "{{ colors.blue.normal }}"
                         , focusedBorderColor = "{{ colors.red.normal }}"
-                        , handleEventHook = docksEventHook
                         , layoutHook      = myLayout      -- Use custom layouts
                         , manageHook      = manageDocks <+> myManageHook -- Match on certain windows
                         , startupHook     = myStartupHook -- Startup programs
                         , logHook         = dynamicLogWithPP xmobarPP
                                               { ppOutput = hPutStrLn xmproc
-                                              , ppCurrent = xmobarColor "{{colors.white.normal}}" "" . wrap "[" "]"  -- Current workspace in xmobar
-                                              , ppVisible = xmobarColor "{{colors.green.normal}}" ""                 -- Visible but not current workspace
-                                              , ppHidden = xmobarColor "{{colors.yellow.normal}}" "" . wrap "*" ""   -- Hidden workspaces in xmobar
-                                              , ppHiddenNoWindows = xmobarColor "{{colors.blue.normal}}" ""                 -- Hidden workspaces (no windows)
+                                              , ppCurrent = xmobarColor "{{colors.red.bold}}" "" . wrap "[" "]"  -- Current workspace in xmobar
                                               , ppTitle = xmobarColor "{{colors.white.normal}}" "" . shorten 40 -- Title of active window in xmobar
                                               , ppSep = "<fc={{colors.blue.normal}}> | </fc>"                  -- Separators in xmobar
                                               , ppUrgent = xmobarColor "{{colors.red.normal}}" "" . wrap "!" "!"  -- Urgent workspace

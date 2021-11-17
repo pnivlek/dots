@@ -29,7 +29,7 @@
     # the top and down respectively.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "300x5-6+6"
+    geometry = "0x0-6+6"
 
     # Turn on the progess bar
     progress_bar = true
@@ -84,7 +84,7 @@
     frame_width = 3
 
     # Defines color of the frame around the notification window.
-    frame_color = "#aaaaaa"
+    frame_color = "{{colors.white.normal}}"
 
     # Define a color for the separator.
     # possible values are:
@@ -445,17 +445,17 @@ separator_color = "{{ fgc }}"
 
 [base16_low]
     msg_urgency = low
-    background = "{{ colors.black.bold }}"
-    foreground = "{{ colors.foreground }}"
+    background = "{{ colors.background }}"
+    foreground = "{{ colors.white.normal }}"
 
 [base16_normal]
     msg_urgency = normal
-    background = "{{ colors.black.bold }}"
-    foreground = "{{ colors.foreground }}"
+    background = "{{ colors.background }}"
+    foreground = "{{ colors.white.bold }}"
 
 [base16_critical]
     msg_urgency = critical
-    background = "{{ colors.black.bold }}"
+    background = "{{ colors.background }}"
     foreground = "{{ colors.red.normal }}"
 
 # vim: ft=cfg

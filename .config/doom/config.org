@@ -151,7 +151,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
        ;;hy                         ; readability of scheme w/ speed of python
        ;;idris                      ; a language you can depend on
        json                         ; At least it ain't XML
-       ;;(java +meghanada)          ; the poster child for carpal tunnel syndrome
+       (java +lsp)          ; the poster child for carpal tunnel syndrome
        (javascript +lsp)            ; all(hope(abandon(ye(who(enter(here))))))
        ;;(julia +lsp)                 ; a better, faster MATLAB
        ;;kotlin                     ; a better, slicker Java(Script)
@@ -231,6 +231,8 @@ Install some of the packages to loaded later.
 (package! doct
   :recipe (:host github :repo "progfolio/doct")
   :pin "8ac08633ae413a6605b6506d2739eece7475272e")
+
+(package! exec-path-from-shell)
 #+end_src
 ** Personal Information
 Name and such.
@@ -248,7 +250,12 @@ More than sh.
 #+begin_src elisp
 (setq explicit-shell-file-name (executable-find "zsh"))
 #+end_src
-
+Expose ssh agent variables to magit.
+#+begin_src elisp
+(require 'exec-path-from-shell)
+(exec-path-from-shell-copy-env "SSH_AGENT_PID")
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
+#+end_src
 ** Fonts
 Tamzen bitmap for coding, Overpass for everything else.
 #+begin_src elisp

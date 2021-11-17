@@ -1,2 +1,2 @@
 config.load_autoconfig()
-config.source('themes/sayo.py')
+config.source('themes/zenbu.py')

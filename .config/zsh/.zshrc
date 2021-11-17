@@ -8,6 +8,7 @@ eval "$(fasd --init auto)"
 HISTFILE=~/.local/share/zsh/zsh_history
 HISTSIZE=10000
 SAVEHIST=1000
+HISTCONTROL=ignorespace
 setopt INC_APPEND_HISTORY_TIME
 
 # Completion
@@ -21,6 +22,8 @@ j () {
 
 # Fix pinentry. Needs to be run in X itself, so not ran in .profile.
 export GPG_TTY=$(tty)
+# Keychain
+eval $(keychain --eval --confhost --quiet id_rsa --noask)
 
 # Used for java stuff
 # [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"

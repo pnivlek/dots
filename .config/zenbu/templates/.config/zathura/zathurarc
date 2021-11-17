@@ -35,4 +35,4 @@ set notification-warning-fg "{{colors.red.normal}}"
 set notification-bg "{{colors.black.bold}}"
 set notification-fg "{{colors.yellow.normal}}"
 
-set font "{{term_fonts[0]}} Regular {{pixelsize}}"
+set font "{{term_fonts[0]}} Regular {{zathura_pixelsize}}"
