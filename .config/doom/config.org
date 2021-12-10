@@ -1,25 +1,25 @@
 #+title: Doom Emacs Configuration
-#+author: kelvin Porter with some snippets from Shaurya Singh, Tecosaur, and Henrik Lissner
+#+author: Kelvin Porter with some snippets from Shaun Singh, Tecosaur, and Henrik Lissner
 #+date: @@html:<!--@@{{{git-rev}}}@@html:-->@@@@latex:\\\Large\bfseries@@ {{{modification-time(%Y-%m-%d, t)}}} @@latex:\\\normalsize\mdseries@@{{{modification-time(%H:%M, t)}}} @@latex:\acr{\lowercase{@@{{{timezone}}}@@latex:}}\iffalse@@, {{{git-rev}}}@@latex:\fi@@
 #+macro: timezone (eval (substring (shell-command-to-string "date +%Z") 0 -1))
 #+macro: git-rev (eval (format "@@html:<a href=\"https://github.com/pnivlek/dots/commit/%1$s\" style=\"text-decoration: none\"><code style=\"padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7\">%1$s</code></a>@@@@latex:\\href{https://github.com/pnivlek/dots/commit/%1$s}{\\normalsize\\texttt{%1$s}}@@" (substring (shell-command-to-string "git rev-parse --short HEAD") 0 -1)))
-#+property: header-args:elisp :tangle yes :comments link
+#+property: header-args:emacs-lisp :tangle yes :comments link
 #+startup: fold
 
 * Basic Configuration
 Lexical binding makes it a bit faster.
-#+begin_src elisp
+#+begin_src emacs-lisp
 ;;; config.el -*- lexical-binding: t; -*-
 #+end_src
 
 Don't compile org config every time.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 #+end_src
 
 ** Init.el
 This tangles into init.el. Pretty straightforward, defines doom's features.
-#+begin_src elisp :tangle "init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;;; init.el -*- lexical-binding: t; -*-
 
 ;; This file controls what Doom modules are enabled and what order they load in.
@@ -219,7 +219,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
 #+end_src
 ** Packages.el
 Install some of the packages to loaded later.
-#+begin_src elisp :tangle "packages.el"
+#+begin_src emacs-lisp :tangle "packages.el"
 ;; -*- no-byte-compile: t; -*-
 
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets")
@@ -236,37 +236,37 @@ Install some of the packages to loaded later.
 #+end_src
 ** Personal Information
 Name and such.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq user-full-name "Kelvin Porter"
       user-mail-address "kporter@protonmail.com")
 #+end_src
 
 Load private file with api keys for org-gcal and stuff.
-#+begin_src elisp :tangle no
+#+begin_src emacs-lisp :tangle no
 (load (concat doom-private-dir "yack-private.el"))
 #+end_src
 ** Shell
 More than sh.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq explicit-shell-file-name (executable-find "zsh"))
 #+end_src
 Expose ssh agent variables to magit.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (require 'exec-path-from-shell)
 (exec-path-from-shell-copy-env "SSH_AGENT_PID")
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 #+end_src
 ** Fonts
 Tamzen bitmap for coding, Overpass for everything else.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq doom-font (font-spec :family "Tamzen" :style "Regular" :size 14)
-      doom-big-font (font-spec :family "Overpass" :size 36)
+      doom-big-font (font-spec :family "Overpass" :style "Regular" :size 36)
       doom-variable-pitch-font (font-spec :family "Tamzen" :size 14)
       doom-unicode-font (font-spec :family "JuliaMono")
       doom-serif-font (font-spec :family "Tamzen" :weight 'light))
 #+end_src
 A nicer font like Alegreya for mixed pitch.
-#+begin_src elisp
+#+begin_src emacs-lisp
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
@@ -281,7 +281,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (add-hook! 'org-mode-hook #'+org-pretty-mode) ;enter mixed pitch mode in org mode
 
 ;;set mixed pitch font
- (after! mixed-pitch
+(after! mixed-pitch
   (defface variable-pitch-serif
     '((t (:family "serif")))
     "A variable-pitch face with serifs."
@@ -298,14 +298,14 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ** Theme
 I use monokai spectrum colors for my rice, and this is no exception. We steal
 tecosaur's change for orange modeline buffer on modification, swapping from red.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq doom-theme 'doom-monokai-spectrum)
 (delq! t custom-theme-load-path)
 (custom-set-faces!
   '(doom-modeline-buffer-modified :foreground "orange"))
 #+end_src
 ** Better defaults
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq undo-limit 80000000
       evil-want-fine-undo t
       scroll-margin 2
@@ -314,7 +314,7 @@ tecosaur's change for orange modeline buffer on modification, swapping from red.
 (global-subword-mode 1)
 #+end_src
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
 
@@ -325,13 +325,13 @@ tecosaur's change for orange modeline buffer on modification, swapping from red.
   (window-divider-mode -1))
 #+end_src
 Remove cursorline.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 #+end_src
 * Visual Configuration
 ** Modeline
 Stealing Tecosaur's PDF improvements as well.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (after! doom-modeline
   (doom-modeline-def-segment buffer-name
     "Display the current buffer's name, without any other information."
@@ -371,7 +371,7 @@ Stealing Tecosaur's PDF improvements as well.
     '(misc-info matches major-mode process vcs)))
 #+end_src
 Remove encoding from modeline if its just UTF-8.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
   (setq-local doom-modeline-buffer-encoding
@@ -385,27 +385,413 @@ Remove encoding from modeline if its just UTF-8.
 ** Org Mode
 :PROPERTIES:
 :CUSTOM_ID: org
-:header-args:elisp: :tangle no :noweb-ref org-conf
+:header-args:emacs-lisp: :tangle no :noweb-ref org-conf
 :END:
 Initialize all of this in an after! block
-#+begin_src elisp :noweb no-export :tangle yes :noweb-ref nil
+#+begin_src emacs-lisp :noweb no-export :tangle yes :noweb-ref nil
 (after! org
   <<org-conf>>
-)
+  )
 #+end_src
-#+begin_src elisp
-;;; :lang org
+*** Basics
+#+begin_src emacs-lisp
 (setq org-directory "~/doc/org/"
       org-archive-location (concat org-directory ".archive/%s::")
       org-roam-directory (concat org-directory "roam/")
       org-roam-db-location (concat org-roam-directory ".org-roam.db")
       org-journal-encrypt-journal t
       org-journal-file-format "%Y%m%d.org"
-      org-ellipsis " [...] "
-      ;; I use g{h,j,k} to traverse headings and TAB to toggle their visibility,
+      org-ellipsis " [...]  "
+      ;; Use g{h,j,k} to traverse headings and TAB to toggle their visibility,
       ;; and leave C-left/C-right to .  I'll do a lot of movement because my
       ;; presentations tend not to be very linear.
-      org-tree-slide-skip-outline-level 2)
+      org-tree-slide-skip-outline-level 2
+      org-hide-leading-stars t
+      org-priority-highest ?A
+      org-priority-lowest ?E
+      org-priority-faces
+      '((?A . 'all-the-icons-red)
+        (?B . 'all-the-icons-orange)
+        (?C . 'all-the-icons-yellow)
+        (?D . 'all-the-icons-green)
+        (?E . 'all-the-icons-blue)))
+
 
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
+#+end_src
+Archive todos when marked done
+#+begin_src emacs-lisp
+(defun pnivlek/archive-when-done ()
+    (when (org-entry-is-done-p)
+      (org-archive-subtree-default)))
+(add-hook 'org-after-todo-state-change-hook
+    'pnivlek/archive-when-done)
+#+end_src
+*** Capture
+#+begin_src emacs-lisp
+(use-package! doct
+  :commands doct)
+#+end_src
+
+#+begin_src emacs-lisp :noweb no-export
+(after! org-capture
+  <<prettify-capture>>
+
+  (defun +doct-icon-declaration-to-icon (declaration)
+    "Convert :icon declaration to icon"
+    (let ((name (pop declaration))
+          (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
+          (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
+          (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
+      (apply set `(,name :face ,face :v-adjust ,v-adjust))))
+
+  (defun +doct-iconify-capture-templates (groups)
+    "Add declaration's :icon to each template group in GROUPS."
+    (let ((templates (doct-flatten-lists-in groups)))
+      (setq doct-templates (mapcar (lambda (template)
+                                     (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
+                                                 (spec (plist-get (plist-get props :doct) :icon)))
+                                       (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
+                                                                      "\t"
+                                                                      (nth 1 template))))
+                                     template)
+                                   templates))))
+
+  (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
+
+  (defun set-org-capture-templates ()
+    (setq org-capture-templates
+          (doct `(("Personal todo" :keys "t"
+                   :icon ("checklist" :set "octicon" :color "green")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Inbox"
+                   :type entry
+                   :template ("* TODO %?"
+                              "%i %a"))
+                  ("Tasks" :keys "k"
+                   :icon ("inbox" :set "octicon" :color "yellow")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Tasks"
+                   :type entry
+                   :template ("* TODO %? %^G%{extra}"
+                              "%i %a")
+                   :children (("General Task" :keys "k"
+                               :icon ("inbox" :set "octicon" :color "yellow")
+                               :extra "")
+                              ("Task with deadline" :keys "d"
+                               :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
+                               :extra "\nDEADLINE: %^{Deadline:}t")
+                              ("Scheduled Task" :keys "s"
+                               :icon ("calendar" :set "octicon" :color "orange")
+                               :extra "\nSCHEDULED: %^{Start time:}t")))
+                  ("Email" :keys "e"
+                   :icon ("envelope" :set "faicon" :color "blue")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Inbox"
+                   :type entry
+                   :template ("* TODO %^{type|reply to|contact} %\\3 %? :email:"
+                              "Send an email %^{urgency|soon|ASAP|anon|at some point|eventually} to %^{recipient}"
+                              "about %^{topic}"
+                              "%U %i %a"))
+                  ("Interesting" :keys "i"
+                   :icon ("eye" :set "faicon" :color "lcyan")
+                   :file +org-capture-todo-file
+                   :prepend t
+                   :headline "Interesting"
+                   :type entry
+                   :template ("* [ ] %{desc}%? :%{i-type}:"
+                              "%i %a")
+                   :children (("Webpage" :keys "w"
+                               :icon ("globe" :set "faicon" :color "green")
+                               :desc "%(org-cliplink-capture) "
+                               :i-type "read:web")
+                              ("Article" :keys "a"
+                               :icon ("file-text" :set "octicon" :color "yellow")
+                               :desc ""
+                               :i-type "read:reaserch")
+                              ("Information" :keys "i"
+                               :icon ("info-circle" :set "faicon" :color "blue")
+                               :desc ""
+                               :i-type "read:info")
+                              ("Idea" :keys "I"
+                               :icon ("bubble_chart" :set "material" :color "silver")
+                               :desc ""
+                               :i-type "idea")))
+                  ("Project" :keys "p"
+                   :icon ("repo" :set "octicon" :color "silver")
+                   :prepend t
+                   :type entry
+                   :headline "Inbox"
+                   :template ("* %{time-or-todo} %?"
+                              "%i"
+                              "%a")
+                   :file ""
+                   :custom (:time-or-todo "")
+                   :children (("Project-local todo" :keys "t"
+                               :icon ("checklist" :set "octicon" :color "green")
+                               :time-or-todo "TODO"
+                               :file +org-capture-project-todo-file)
+                              ("Project-local note" :keys "n"
+                               :icon ("sticky-note" :set "faicon" :color "yellow")
+                               :time-or-todo "%U"
+                               :file +org-capture-project-notes-file)
+                              ("Project-local changelog" :keys "c"
+                               :icon ("list" :set "faicon" :color "blue")
+                               :time-or-todo "%U"
+                               :heading "Unreleased"
+                               :file +org-capture-project-changelog-file)))
+                  ("\tCentralised project templates"
+                   :keys "o"
+                   :type entry
+                   :prepend t
+                   :template ("* %{time-or-todo} %?"
+                              "%i"
+                              "%a")
+                   :children (("Project todo"
+                               :keys "t"
+                               :prepend nil
+                               :time-or-todo "TODO"
+                               :heading "Tasks"
+                               :file +org-capture-central-project-todo-file)
+                              ("Project note"
+                               :keys "n"
+                               :time-or-todo "%U"
+                               :heading "Notes"
+                               :file +org-capture-central-project-notes-file)
+                              ("Project changelog"
+                               :keys "c"
+                               :time-or-todo "%U"
+                               :heading "Unreleased"
+                               :file +org-capture-central-project-changelog-file)))))))
+
+  (set-org-capture-templates)
+  (unless (display-graphic-p)
+    (add-hook 'server-after-make-frame-hook
+              (defun org-capture-reinitialise-hook ()
+                (when (display-graphic-p)
+                  (set-org-capture-templates)
+                  (remove-hook 'server-after-make-frame-hook
+                               #'org-capture-reinitialise-hook))))))
+#+end_src
+
+#+name: prettify-capture
+#+begin_src emacs-lisp :noweb-ref none
+(defun org-capture-select-template-prettier (&optional keys)
+  "Select a capture template, in a prettier way than default
+Lisp programs can force the template by setting KEYS to a string."
+  (let ((org-capture-templates
+         (or (org-contextualize-keys
+              (org-capture-upgrade-templates org-capture-templates)
+              org-capture-templates-contexts)
+             '(("t" "Task" entry (file+headline "" "Tasks")
+                "* TODO %?\n  %u\n  %a")))))
+    (if keys
+        (or (assoc keys org-capture-templates)
+            (error "No capture template referred to by \"%s\" keys" keys))
+      (org-mks org-capture-templates
+               "Select a capture template\n━━━━━━━━━━━━━━━━━━━━━━━━━"
+               "Template key: "
+               `(("q" ,(concat (all-the-icons-octicon "stop" :face 'all-the-icons-red :v-adjust 0.01) "\tAbort")))))))
+(advice-add 'org-capture-select-template :override #'org-capture-select-template-prettier)
+
+(defun org-mks-pretty (table title &optional prompt specials)
+  "Select a member of an alist with multiple keys. Prettified.
+
+TABLE is the alist which should contain entries where the car is a string.
+There should be two types of entries.
+
+1. prefix descriptions like (\"a\" \"Description\")
+   This indicates that `a' is a prefix key for multi-letter selection, and
+   that there are entries following with keys like \"ab\", \"ax\"…
+
+2. Select-able members must have more than two elements, with the first
+   being the string of keys that lead to selecting it, and the second a
+   short description string of the item.
+
+The command will then make a temporary buffer listing all entries
+that can be selected with a single key, and all the single key
+prefixes.  When you press the key for a single-letter entry, it is selected.
+When you press a prefix key, the commands (and maybe further prefixes)
+under this key will be shown and offered for selection.
+
+TITLE will be placed over the selection in the temporary buffer,
+PROMPT will be used when prompting for a key.  SPECIALS is an
+alist with (\"key\" \"description\") entries.  When one of these
+is selected, only the bare key is returned."
+  (save-window-excursion
+    (let ((inhibit-quit t)
+          (buffer (org-switch-to-buffer-other-window "*Org Select*"))
+          (prompt (or prompt "Select: "))
+          case-fold-search
+          current)
+      (unwind-protect
+          (catch 'exit
+            (while t
+              (setq-local evil-normal-state-cursor (list nil))
+              (erase-buffer)
+              (insert title "\n\n")
+              (let ((des-keys nil)
+                    (allowed-keys '("\C-g"))
+                    (tab-alternatives '("\s" "\t" "\r"))
+                    (cursor-type nil))
+                ;; Populate allowed keys and descriptions keys
+                ;; available with CURRENT selector.
+                (let ((re (format "\\`%s\\(.\\)\\'"
+                                  (if current (regexp-quote current) "")))
+                      (prefix (if current (concat current " ") "")))
+                  (dolist (entry table)
+                    (pcase entry
+                      ;; Description.
+                      (`(,(and key (pred (string-match re))) ,desc)
+                       (let ((k (match-string 1 key)))
+                         (push k des-keys)
+                         ;; Keys ending in tab, space or RET are equivalent.
+                         (if (member k tab-alternatives)
+                             (push "\t" allowed-keys)
+                           (push k allowed-keys))
+                         (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) (propertize "›" 'face 'font-lock-comment-face) "  " desc "…" "\n")))
+                      ;; Usable entry.
+                      (`(,(and key (pred (string-match re))) ,desc . ,_)
+                       (let ((k (match-string 1 key)))
+                         (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) "   " desc "\n")
+                         (push k allowed-keys)))
+                      (_ nil))))
+                ;; Insert special entries, if any.
+                (when specials
+                  (insert "─────────────────────────\n")
+                  (pcase-dolist (`(,key ,description) specials)
+                    (insert (format "%s   %s\n" (propertize key 'face '(bold all-the-icons-red)) description))
+                    (push key allowed-keys)))
+                ;; Display UI and let user select an entry or
+                ;; a sub-level prefix.
+                (goto-char (point-min))
+                (unless (pos-visible-in-window-p (point-max))
+                  (org-fit-window-to-buffer))
+                (let ((pressed (org--mks-read-key allowed-keys
+                                                  prompt
+                                                  (not (pos-visible-in-window-p (1- (point-max)))))))
+                  (setq current (concat current pressed))
+                  (cond
+                   ((equal pressed "\C-g") (user-error "Abort"))
+                   ;; Selection is a prefix: open a new menu.
+                   ((member pressed des-keys))
+                   ;; Selection matches an association: return it.
+                   ((let ((entry (assoc current table)))
+                      (and entry (throw 'exit entry))))
+                   ;; Selection matches a special entry: return the
+                   ;; selection prefix.
+                   ((assoc current specials) (throw 'exit current))
+                   (t (error "No entry available")))))))
+        (when buffer (kill-buffer buffer))))))
+(advice-add 'org-mks :override #'org-mks-pretty)
+#+end_src
+*** Agenda
+#+begin_src emacs-lisp
+(use-package! org-super-agenda
+  :commands (org-super-agenda-mode))
+(after! org-agenda
+  (org-super-agenda-mode))
+
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      ;; Don't need to show it in the agenda and the due soon
+      org-agenda-skip-deadline-prewarning-if-scheduled t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-tags-column 100 ;; from testing this seems to be a good value
+      org-agenda-compact-blocks t
+      org-agenda-use-time-grid t
+      org-agenda-time-grid '((require-timed remove-match) () " " "----------")
+      org-agenda-time-leading-zero t
+      org-agenda-start-day "0d"
+      ;; don't see scheduled tasks until the scheduled data
+      org-agenda-todo-ignore-scheduled 'future
+      org-agenda-tags-todo-honor-ignore-options t
+      org-agenda-tags-column 100
+      org-deadline-warning-days 7
+      org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM"
+      org-agenda-files '("~/doc/org"))
+
+(setq org-agenda-custom-commands
+      '(("o" "Overview"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-agenda-scheduled-leaders '("" ""))
+                      (org-agenda-deadline-leaders '("D:" "D:" "D:"))
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                          :time-grid t
+                          :date today
+                          :todo "TODAY"
+                          :scheduled today
+                          :order 1)
+                         (:name "Hidden Stuff Not Today"
+                          :discard (:anything t))))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-agenda-sorting-strategy '(priority-down timestamp-up))
+                       (org-super-agenda-groups
+                        '((:discard (:tag ("read" "watch" "listen" "think")))
+                          (:name "Next to do"
+                           :todo "NEXT"
+                           :order 1)
+                          (:name "Important"
+                           :tag "Important"
+                           :priority "A"
+                           :order 6)
+                          (:name "Due Today"
+                           :deadline today
+                           :order 2)
+                          (:name "Due Soon"
+                           :deadline future
+                           :order 8)
+                          (:name "Overdue"
+                           :deadline past
+                           :face error
+                           :order 7)
+                          (:name "University"
+                           :tag "uni"
+                           :order 10)
+                          (:name "Emacs"
+                           :tag "emacs"
+                           :order 13)
+                          (:name "Projects"
+                           :tag "proj"
+                           :order 14)
+                          (:name "Holding"
+                           :todo "HOLD"
+                           :order 20)
+                          (:name "Trivial"
+                           :priority<= "E"
+                           :tag ("Trivial" "Unimportant")
+                           :todo ("SOMEDAY" )
+                           :order 90)
+                            (:discard (:tag ("Chore" "Routine" "Daily")))))))))
+          ("i" "Interesting"
+           ((alltodo "" ((org-agenda-sorting-strategy '(priority-down timestamp-up))
+                         (org-super-agenda-groups
+                          '((:discard (:not (:tag ("read" "watch" "listen" "think"))))
+                            (:name "Webpages"
+                             :and (:tag ("read") :tag ("web"))
+                             :order 1)
+                            (:name "Info/Ideas"
+                             :and (:tag ("read") :tag ("info"))
+                             :tag "think"
+                             :order 2)
+                            (:name "Papers"
+                             :and (:tag ("read") :tag ("research"))
+                             :order 10)
+                            (:name "Films"
+                             :and (:tag ("watch") :tag ("film"))
+                             :order 3)
+                            (:name "Shows"
+                             :and (:tag ("watch") :tag ("tv"))
+                             :order 4)
+                            (:name "Books"
+                             :and (:tag ("read") :tag ("book"))
+                             :order 5)
+                            (:name "Audio"
+                             :tag ("listen")
+                             :order 6)))))))))
 #+end_src

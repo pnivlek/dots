@@ -1,8 +1,0 @@
-name: python
-root: ~/doc/pyt
-
-windows:
-        - console:
-                panes:
-                        - clear && python
-        - editor: nvim -S ~/.config/nvim/sessions/anaconda.vim
