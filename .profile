@@ -1,4 +1,4 @@
-export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools:/home/yack/code/go/bin:/opt/devkitpro/devkitPPC/bin"
+export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools:/home/yack/usr/go/bin:/opt/devkitpro/devkitPPC/bin"
 export EDITOR="nvim"
 export TERMINAL="st"
 export READER="zathura"
@@ -10,9 +10,9 @@ export ZDOTDIR="$HOME/.config/zsh"
 # Program settings.
 export SDKMAN_DIR="/home/yack/.sdkman"
 export GPODDER_HOME="/home/yack/usr/pod"
-export GOPATH="/home/yack/code/go"
+export GOPATH="/home/yack/usr/go"
 
 # ! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
 # ! pgrep -x mpdscribble >/dev/null && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf >/dev/null 2>&1 &
 
-[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x spectrwm > /dev/null && startx
+[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x xmonad > /dev/null && startx

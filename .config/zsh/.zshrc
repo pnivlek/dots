@@ -30,3 +30,6 @@ eval $(keychain --eval --confhost --quiet id_rsa --noask)
 
 # profiling
 # zmodload zsh/zprof
+
+# opam configuration
+[[ ! -r /home/yack/.opam/opam-init/init.zsh ]] || source /home/yack/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

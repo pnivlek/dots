@@ -146,7 +146,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
        ;;fsharp                     ; ML stands for Microsoft's Language
        ;;fstar                      ; (dependent) types and (monadic) effects and Z3
        ;;gdscript                   ; the language you've waited for
-       ;;(go +lsp)                  ; the hipster dialect
+       (go +lsp)                  ; the hipster dialect
        (haskell +lsp)            ; a language that's lazier than I am
        ;;hy                         ; readability of scheme w/ speed of python
        ;;idris                      ; a language you can depend on
@@ -165,10 +165,10 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
        markdown                       ; writing docs for people to ignore
        ;;nim                        ; python + lisp at the speed of c
        ;;nix                        ; I hereby declare "nix geht mehr!"
-       ;;ocaml                      ; an objective camel
+       ocaml                      ; an objective camel
        (org                         ; organize your plain life in plain text
         ;;+pretty                     ; yessss my pretties! (nice unicode symbols)
-        -dragndrop                  ; drag & drop files/images into org buffers
+        +dragndrop                  ; drag & drop files/images into org buffers
         ;;+hugo                     ; use Emacs for hugo blogging
         +noter                      ; enhanced PDF notetaking
         +jupyter                    ; ipython/jupyter support for babel
@@ -209,7 +209,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
        ;;emms                       ; Multimedia in Emacs is music to my ears
        ;;everywhere                   ; *leave* Emacs!? You must be joking.
        ;;irc                          ; how neckbeards socialize
-       ;;(rss +org)                   ; emacs as an RSS reader
+       (rss +org)                   ; emacs as an RSS reader
        ;;twitter                    ; twitter client https://twitter.com/vnought
 
        :config
@@ -503,23 +503,36 @@ Archive todos when marked done
                    :headline "Interesting"
                    :type entry
                    :template ("* [ ] %{desc}%? :%{i-type}:"
-                              "%i %a")
+                              "%i")
                    :children (("Webpage" :keys "w"
                                :icon ("globe" :set "faicon" :color "green")
                                :desc "%(org-cliplink-capture) "
                                :i-type "read:web")
-                              ("Article" :keys "a"
-                               :icon ("file-text" :set "octicon" :color "yellow")
-                               :desc ""
-                               :i-type "read:reaserch")
                               ("Information" :keys "i"
                                :icon ("info-circle" :set "faicon" :color "blue")
                                :desc ""
                                :i-type "read:info")
-                              ("Idea" :keys "I"
-                               :icon ("bubble_chart" :set "material" :color "silver")
+                              ("Paper" :keys "p"
+                               :desc "%(org-cliplink-capture) "
+                               :icon ("paperclip" :set "faicon" :color "white")
+                               :i-type "read:research")
+                              ("Film" :keys "f"
                                :desc ""
-                               :i-type "idea")))
+                               :icon ("film" :set "faicon" :color "purple")
+                               :i-type "watch:film")
+                              ("Show" :keys "t"
+                               :desc ""
+                               :icon ("television" :set "faicon" :color "yellow")
+                               :i-type "watch:tv")
+                              ("Book" :keys "b"
+                               :desc ""
+                               :icon ("book" :set "faicon" :color "orange")
+                               :i-type "read:book")
+                              ("Audio" :keys "a"
+                               :desc ""
+                               :icon ("headphones" :set "faicon" :color "red")
+                               :i-type "listen")
+                              ))
                   ("Project" :keys "p"
                    :icon ("repo" :set "octicon" :color "silver")
                    :prepend t
