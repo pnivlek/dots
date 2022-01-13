@@ -1,0 +1,29 @@
+colors:
+  foreground:  "#D7D0C7"
+  background:  "#151515"
+  black:
+    normal:    "#101010"
+    bold:      "#404040"
+  red:
+    normal:    "#E84F4F"
+    bold:      "#D23D3D"
+  green:
+    normal:    "#B8D68C"
+    bold:      "#A0CF5D"
+  yellow:
+    normal:    "#E1AA5D"
+    bold:      "#F39D21"
+  blue:
+    normal:    "#7DC1CF"
+    bold:      "#4E9FB1"
+  magenta:
+    normal:    "#9B64FB"
+    bold:      "#8542FF"
+  cyan:
+    normal:    "#6D878D"
+    bold:      "#42717B"
+  white:
+    normal:    "#dddddd"
+    bold:      "#dddddd"
+
+wallpaper: "/home/yack/pic/wal/crshd.png"

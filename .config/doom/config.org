@@ -257,13 +257,13 @@ Expose ssh agent variables to magit.
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 #+end_src
 ** Fonts
-Tamzen bitmap for coding, Overpass for everything else.
+Dina bitmap for coding, Overpass for everything else.
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "Tamzen" :style "Regular" :size 14)
+(setq doom-font (font-spec :family "Dina" :style "Regular" :size 14)
       doom-big-font (font-spec :family "Overpass" :style "Regular" :size 36)
-      doom-variable-pitch-font (font-spec :family "Tamzen" :size 14)
+      doom-variable-pitch-font (font-spec :family "Dina" :size 14)
       doom-unicode-font (font-spec :family "JuliaMono")
-      doom-serif-font (font-spec :family "Tamzen" :weight 'light))
+      doom-serif-font (font-spec :family "Dina" :weight 'light))
 #+end_src
 A nicer font like Alegreya for mixed pitch.
 #+begin_src emacs-lisp

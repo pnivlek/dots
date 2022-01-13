@@ -4,11 +4,11 @@
 
 # terminal emulator
 super + Return
-	xst
+	st
 
 # program launcher
 super + d
-	rofi -show run -theme monokai-spectrum -location 3 -xoffset -7 -yoffset 7
+	dmenu_run -l 5 -i -p "run:" -fn "Dina:style=Regular"
 
 # toggle bar
 super + shift + w

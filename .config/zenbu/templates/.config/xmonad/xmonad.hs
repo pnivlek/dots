@@ -63,6 +63,9 @@ myKeysP =
     , spawn
       "maim -su > /tmp/maim.png && mv /tmp/maim.png ~/pic/scr/$(ls ~/pic/scr | dmenu).png"
     )
+  -- Password
+  , ("M-v", spawn "passmenu -l 5")
+  , ("M-S-v", spawn "passmenu --type -l 5")
   -- Function Keys
   , ("<XF86AudioMute>"        , spawn "pactl set-sink-mute 0 toggle")
   , ("<XF86AudioLowerVolume>" , spawn "pactl set-sink-volume 0 -5%")
