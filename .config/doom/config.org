@@ -170,7 +170,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
         ;;+pretty                     ; yessss my pretties! (nice unicode symbols)
         +dragndrop                  ; drag & drop files/images into org buffers
         ;;+hugo                     ; use Emacs for hugo blogging
-        +noter                      ; enhanced PDF notetaking
+        ;;+noter                      ; enhanced PDF notetaking
         +jupyter                    ; ipython/jupyter support for babel
         +pandoc                     ; export-with-pandoc support
         ;;+gnuplot                    ; who doesn't like pretty pictures
@@ -233,6 +233,9 @@ Install some of the packages to loaded later.
   :pin "8ac08633ae413a6605b6506d2739eece7475272e")
 
 (package! exec-path-from-shell)
+
+(package! dendroam
+  :recipe (:host github :repo "vicrdguez/dendroam" :branch "main"))
 #+end_src
 ** Personal Information
 Name and such.
@@ -241,7 +244,7 @@ Name and such.
       user-mail-address "kporter@protonmail.com")
 #+end_src
 
-Load private file with api keys for org-gcal and stuff.
+Load private file with api keys for Todoist and stuff.
 #+begin_src emacs-lisp :tangle no
 (load (concat doom-private-dir "yack-private.el"))
 #+end_src
@@ -257,15 +260,15 @@ Expose ssh agent variables to magit.
 (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 #+end_src
 ** Fonts
-Dina bitmap for coding, Overpass for everything else.
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "Dina" :style "Regular" :size 14)
-      doom-big-font (font-spec :family "Overpass" :style "Regular" :size 36)
-      doom-variable-pitch-font (font-spec :family "Dina" :size 14)
-      doom-unicode-font (font-spec :family "JuliaMono")
-      doom-serif-font (font-spec :family "Dina" :weight 'light))
+(setq doom-font (font-spec :family "PragmataPro for Powerline" :style "Regular" :size 13)
+      doom-big-font (font-spec :family "Overpass" :style "Regular" :size 24)
+      doom-variable-pitch-font (font-spec :family "Overpass" :style "Regular" :size 14)
+      doom-unicode-font (font-spec :family "JuliaMono" :style "Regular")
+      doom-serif-font (font-spec :family "PragmataPro for Powerline" :weight 'light))
 #+end_src
-A nicer font like Alegreya for mixed pitch.
+
+A nicer font like Et Bembo for mixed pitch.
 #+begin_src emacs-lisp
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
@@ -278,16 +281,17 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (dolist (hook mixed-pitch-modes)
     (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
 (add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
-(add-hook! 'org-mode-hook #'+org-pretty-mode) ;enter mixed pitch mode in org mode
-
 ;;set mixed pitch font
+(autoload #'mixed-pitch-serif-mode "mixed-pitch"
+  "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
+
 (after! mixed-pitch
   (defface variable-pitch-serif
     '((t (:family "serif")))
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 16 :weight 'Medium))
+  (setq variable-pitch-serif-font (font-spec :family "Et Bembo" :style "Roman LF" :size 24))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -295,6 +299,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 #+end_src
+
+#+RESULTS:
+
 ** Theme
 I use monokai spectrum colors for my rice, and this is no exception. We steal
 tecosaur's change for orange modeline buffer on modification, swapping from red.
@@ -329,6 +336,24 @@ Remove cursorline.
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 #+end_src
 * Visual Configuration
+** Org mode appearance
+#+begin_src emacs-lisp
+(defun pnivlek/org-mode-appearance ()
+  (setq header-line-format " "
+        org-pretty-entities t
+        org-hide-emphasis-markers t
+        ;; show actually italicized text instead of /italicized text/
+        org-agenda-block-separator ""
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-fontify-quote-and-verse-blocks t)
+  (lambda () (progn
+               (setq left-margin-width 2)
+               (setq right-margin-width 2)
+               (set-window-buffer nil (current-buffer))))
+  )
+(add-hook 'org-mode-hook #'pnivlek/org-mode-appearance)
+#+end_src
 ** Modeline
 Stealing Tecosaur's PDF improvements as well.
 #+begin_src emacs-lisp
@@ -397,8 +422,7 @@ Initialize all of this in an after! block
 #+begin_src emacs-lisp
 (setq org-directory "~/doc/org/"
       org-archive-location (concat org-directory ".archive/%s::")
-      org-roam-directory (concat org-directory "roam/")
-      org-roam-db-location (concat org-roam-directory ".org-roam.db")
+      org-id-method 'ts
       org-journal-encrypt-journal t
       org-journal-file-format "%Y%m%d.org"
       org-ellipsis " [...]  "
@@ -422,10 +446,10 @@ Initialize all of this in an after! block
 Archive todos when marked done
 #+begin_src emacs-lisp
 (defun pnivlek/archive-when-done ()
-    (when (org-entry-is-done-p)
-      (org-archive-subtree-default)))
+  (when (org-entry-is-done-p)
+    (org-archive-subtree-default)))
 (add-hook 'org-after-todo-state-change-hook
-    'pnivlek/archive-when-done)
+          'pnivlek/archive-when-done)
 #+end_src
 *** Capture
 #+begin_src emacs-lisp
@@ -780,31 +804,83 @@ is selected, only the bare key is returned."
                            :tag ("Trivial" "Unimportant")
                            :todo ("SOMEDAY" )
                            :order 90)
-                            (:discard (:tag ("Chore" "Routine" "Daily")))))))))
-          ("i" "Interesting"
-           ((alltodo "" ((org-agenda-sorting-strategy '(priority-down timestamp-up))
-                         (org-super-agenda-groups
-                          '((:discard (:not (:tag ("read" "watch" "listen" "think"))))
-                            (:name "Webpages"
-                             :and (:tag ("read") :tag ("web"))
-                             :order 1)
-                            (:name "Info/Ideas"
-                             :and (:tag ("read") :tag ("info"))
-                             :tag "think"
-                             :order 2)
-                            (:name "Papers"
-                             :and (:tag ("read") :tag ("research"))
-                             :order 10)
-                            (:name "Films"
-                             :and (:tag ("watch") :tag ("film"))
-                             :order 3)
-                            (:name "Shows"
-                             :and (:tag ("watch") :tag ("tv"))
-                             :order 4)
-                            (:name "Books"
-                             :and (:tag ("read") :tag ("book"))
-                             :order 5)
-                            (:name "Audio"
-                             :tag ("listen")
-                             :order 6)))))))))
+                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))
+        ("i" "Interesting"
+         ((alltodo "" ((org-agenda-sorting-strategy '(priority-down timestamp-up))
+                       (org-super-agenda-groups
+                        '((:discard (:not (:tag ("read" "watch" "listen" "think"))))
+                          (:name "Webpages"
+                           :and (:tag ("read") :tag ("web"))
+                           :order 1)
+                          (:name "Info/Ideas"
+                           :and (:tag ("read") :tag ("info"))
+                           :tag "think"
+                           :order 2)
+                          (:name "Papers"
+                           :and (:tag ("read") :tag ("research"))
+                           :order 10)
+                          (:name "Films"
+                           :and (:tag ("watch") :tag ("film"))
+                           :order 3)
+                          (:name "Shows"
+                           :and (:tag ("watch") :tag ("tv"))
+                           :order 4)
+                          (:name "Books"
+                           :and (:tag ("read") :tag ("book"))
+                           :order 5)
+                          (:name "Audio"
+                           :tag ("listen")
+                           :order 6)))))))))
+#+end_src
+*** Roam
+#+begin_src emacs-lisp
+(setq org-roam-directory "~/doc/notes/"
+      org-roam-db-location (concat org-roam-directory ".org-roam.db"))
+#+end_src
+Dendroam, because I like some hierarchy.
+#+begin_src emacs-lisp
+(use-package! dendroam
+  :after org-roam
+  :config
+  (setq org-roam-node-display-template
+        (format "${hierarchy}:${title:*} %s"
+                (propertize "${doom-tags:42}" 'face 'org-tag)))
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           "%?"
+           :if-new (file+head "${slug}.org"
+                              "#+title: ${hierarchy-title}\n")
+           :immediate-finish t
+           :unnarrowed t)))
+
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           "* %?"
+           :if-new (file+head "journal.daily.%<%Y.%m.%d>.org"
+                              "#+title: %<%Y-%m-%d>\n"))))
+
+  ;; we have to add this to work around org roam changing things - see https://github.com/vicrdguez/dendroam/issues/18
+  (setq org-roam-slug-trim-chars '(;; Combining Diacritical Marks https://www.unicode.org/charts/PDF/U0300.pdf
+                                   768 ; U+0300 COMBINING GRAVE ACCENT
+                                   769 ; U+0301 COMBINING ACUTE ACCENT
+                                   770 ; U+0302 COMBINING CIRCUMFLEX ACCENT
+                                   771 ; U+0303 COMBINING TILDE
+                                   772 ; U+0304 COMBINING MACRON
+                                   774 ; U+0306 COMBINING BREVE
+                                   775 ; U+0307 COMBINING DOT ABOVE
+                                   776 ; U+0308 COMBINING DIAERESIS
+                                   777 ; U+0309 COMBINING HOOK ABOVE
+                                   778 ; U+030A COMBINING RING ABOVE
+                                   780 ; U+030C COMBINING CARON
+                                   795 ; U+031B COMBINING HORN
+                                   803 ; U+0323 COMBINING DOT BELOW
+                                   804 ; U+0324 COMBINING DIAERESIS BELOW
+                                   805 ; U+0325 COMBINING RING BELOW
+                                   807 ; U+0327 COMBINING CEDILLA
+                                   813 ; U+032D COMBINING CIRCUMFLEX ACCENT BELOW
+                                   814 ; U+032E COMBINING BREVE BELOW
+                                   816 ; U+0330 COMBINING TILDE BELOW
+                                   817 ; U+0331 COMBINING MACRON BELOW
+                                   )))
 #+end_src

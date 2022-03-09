@@ -1,6 +1,7 @@
-export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools:/home/yack/usr/go/bin:/opt/devkitpro/devkitPPC/bin"
+# .cargo/bin for rustup on gentoo
+export PATH="/home/yack/.cargo/bin:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools:/home/yack/usr/go/bin:/opt/devkitpro/devkitPPC/bin:$PATH"
 export EDITOR="nvim"
-export TERMINAL="st"
+export TERMINAL="urxvtc"
 export READER="zathura"
 export MANPATH="$(manpath):/home/yack/.local/share/man"
 

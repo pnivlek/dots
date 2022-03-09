@@ -23,7 +23,7 @@ j () {
 # Fix pinentry. Needs to be run in X itself, so not ran in .profile.
 export GPG_TTY=$(tty)
 # Keychain
-eval $(keychain --eval --confhost --quiet id_rsa --noask)
+eval $(keychain --eval --confhost --quiet id_ed25519 --noask)
 
 # Used for java stuff
 # [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"
