@@ -1,0 +1,38 @@
+# zathurarc with sayo theme colours
+
+set default-bg "#151515"
+set default-fg "#D7D0C7"
+
+set highlight-color "#42717B"
+set highlight-active-color "#F39D21"
+
+set statusbar-bg "#101010"
+set statusbar-fg "#E1AA5D"
+
+set index-bg "#101010"
+set index-fg "#dddddd"
+set index-active-bg "#6D878D"
+set index-active-fg "#dddddd"
+
+set inputbar-bg "#101010"
+set inputbar-fg "#B8D68C"
+
+set recolor-lightcolor "#151515"
+set recolor-darkcolor "#D7D0C7"
+set recolor "true"
+
+set completion-bg "#151515"
+set completion-fg "#D7D0C7"
+set completion-group-bg "#151515"
+set completion-group-fg "#dddddd"
+set completion-highlight-bg "#4E9FB1"
+set completion-highlight-fg "#101010"
+
+set notification-error-bg "#151515"
+set notification-error-fg "#E84F4F"
+set notification-warning-bg "#404040"
+set notification-warning-fg "#E84F4F"
+set notification-bg "#404040"
+set notification-fg "#E1AA5D"
+
+set font "PragmataPro for Powerline Regular 11"

@@ -1,0 +1,56 @@
+Config { overrideRedirect = False
+       , font     = "xft:PragmataPro for Powerline:pixelsize=13"
+       , additionalFonts = [ "xft:Font Awesome 5 Free,Font Awesome 5 Free Solid:pixelsize=12:antialias=true:hinting=true", "xft:Siji:pixelsize=12:antialias=true:hinting=true"]
+       , bgColor  = "#151515"
+       , fgColor  = "#D7D0C7"
+       , position = Bottom 
+       , commands = [ Run Brightness
+                        [ "-t", "<fc=#dddddd>B:<percent>%</fc>"
+                        , "--", "-D", "intel_backlight"] 60
+                    , Run WeatherX "KISP"
+                        [ ("clear", "")
+                        , ("sunny", "")
+                        , ("mostly clear", "")
+                        , ("mostly sunny", "")
+                        , ("partly sunny", "")
+                        , ("fair", "")
+                        , ("cloudy","")
+                        , ("overcast","")
+                        , ("partly cloudy", "")
+                        , ("mostly cloudy", "")
+                        , ("considerable cloudiness", "")]
+                        [ "--template", "<fc=#9B64FB><fn=1><skyConditionS></fn> <tempF>° <rh>% <fn=1></fn> <windMph></fc>"
+                        , "-L", "32"
+                        , "-H", "77"
+                        , "--low"   , "#4E9FB1"
+                        , "--high"  , "#D23D3D"
+                        ] 36000
+                    , Run Cpu
+                        [ "-t", "<fc=#A0CF5D><fn=1></fn> <total>%</fc>"
+                        ] 10
+                    , Run Memory ["-t", "<fc=#4E9FB1> <fn=1></fn> <usedratio>%</fc>"] 10
+                    , Run BatteryN
+                        [ "BAT0" ]
+                        ["-t", "<fc=#E1AA5D>I:<acstatus><left>%</fc>"
+                        , "-L", "10", "-H", "80", "-p", "3"
+                        , "--", "-O", "C", "-i", "", "-o", "D "
+                        , "-l", "#E84F4F", "-m", "#E1AA5D", "-h", "#B8D68C"
+                        , "-a", "notify-send -u critical 'Battery running out!!'"
+                        , "-A", "3"]
+                        600 "int"
+                    , Run BatteryN
+                        [ "BAT1" ]
+                        ["-t", "<fc=#E1AA5D>E:<acstatus><left>%</fc>"
+                        , "-L", "10", "-H", "80", "-p", "3"
+                        , "--", "-O", "C", "-i", "", "-o", "D "
+                        , "-l", "#E84F4F", "-m", "#E1AA5D", "-h", "#B8D68C"
+                        , "-a", "notify-send -u critical 'Battery running out!!'"
+                        , "-A", "3"]
+                        600 "ext"
+                    , Run Date "<fc=#dddddd>%a %m/%d</fc> <fc=#E84F4F>%H:%M</fc>" "date" 10
+                    , Run UnsafeStdinReader
+                    ]
+       , sepChar  = "%"
+       , alignSep = "}{"
+       , template = " %UnsafeStdinReader% }{ %cpu% | %memory% | %bright% | %KISP% | %int% %ext% | %date% "
+       }
