@@ -1,6 +1,6 @@
 Config { overrideRedirect = False
        , font     = "xft:PragmataPro for Powerline:pixelsize=13"
-       , additionalFonts = [ "xft:Font Awesome 5 Free,Font Awesome 5 Free Solid:pixelsize=12:antialias=true:hinting=true", "xft:Siji:pixelsize=12:antialias=true:hinting=true"]
+       , additionalFonts = [ "xft:Font Awesome 6 Free,Font Awesome 6 Free Solid:pixelsize=12:antialias=true:hinting=true", "xft:Siji:pixelsize=12:antialias=true:hinting=true"]
        , bgColor  = "#151515"
        , fgColor  = "#D7D0C7"
        , position = Bottom 

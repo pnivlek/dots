@@ -1,2 +1,2 @@
 config.load_autoconfig()
-config.source('themes/zenbu.py')
+config.source('themes/crshd.py')
