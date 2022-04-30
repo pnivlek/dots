@@ -169,7 +169,7 @@ ramp-signal-foreground = ${colors.color7}
 
 [module/date]
 type = internal/date
-interval = 5
+interval = 1 
 
 date = %b %d
 date-alt = " %Y-%m-%d"

@@ -131,7 +131,7 @@ function mnml_uhp {
 
 function mnml_ssh {
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-        printf '%b' "$(hostname -s)"
+        printf '%b' "$(hostname -s 2>/dev/null)"
     fi
 }
 

@@ -7,8 +7,8 @@ wmname LG3D
 xrdb -merge ~/.Xresources
 dunst -conf ~/.config/dunst/dunstrc &
 urxvtd -q -f -o
-mpd_discord_richpresence &
-aw-server &
+setxkbmap -option ctrl:nocaps
+/usr/lib/geoclue-2.0/demos/agent && redshift &
 
 if xrandr | grep -q "eDP-1"; then
     sxhkd -c ~/.config/sxhkd/sxhkdrc.laptop &
@@ -18,7 +18,7 @@ if xrandr | grep -q "eDP-1"; then
 else
     sxhkd -c ~/.config/sxhkd/sxhkdrc.desk &
     polybar desktop &
-    if xrandr | grep -q "HDMI-1"; then
+    if xrandr | grep -q "HDMI-2 connnected"; then
         bspc monitor ^1 -d 1 2 3 4 5
         bspc monitor ^2 -d 6 7 8 9 10
         xrandr --output HDMI-1 --primary --auto --output HDMI-2 --auto --right-of HDMI-1
@@ -26,7 +26,7 @@ else
     else
         bspc monitor -d 1 2 3 4 5 6 7 8 9 10
     fi
-    hsetroot -cover "/hdd/pic/walls/dark/tmrw_mnt.png" &
+    feh --randomize --bg-scale /hdd/pic/walls
 fi
 
 

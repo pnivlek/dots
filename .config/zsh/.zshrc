@@ -3,6 +3,7 @@ eval "$(fasd --init auto)"
 
 [[ -f $HOME/.config/aliasesrc ]] && source $HOME/.config/aliasesrc
 [[ -f $HOME/.config/zsh/prompt_minimal.zsh ]] && source $HOME/.config/zsh/prompt_minimal.zsh
+[[ -f /usr/share/doc/git-extras/git-extras-completion.zsh ]] && source /usr/share/doc/git-extras/git-extras-completion.zsh
 
 # History
 HISTFILE=~/.local/share/zsh/zsh_history
@@ -21,3 +22,5 @@ j () {
 
 # Used for java stuff
 # [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

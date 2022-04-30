@@ -14,4 +14,6 @@ export GOPATH="/home/yack/code/go"
 ! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
 ! pgrep -x mpdscribble >/dev/null && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf >/dev/null 2>&1 &
 
+eval "$(ssh-agent -s)"
+
 [ "$(tty)" = "/dev/tty1" ] && ! pgrep -x bspwm > /dev/null && startx
