@@ -244,6 +244,11 @@ Name and such.
       user-mail-address "kporter@protonmail.com")
 #+end_src
 
+Set the documents directory.
+#+begin_src emacs-lisp
+(setq xdg-directory-documents "/home/yack/doc")
+#+end_src
+
 Load private file with api keys for Todoist and stuff.
 #+begin_src emacs-lisp :tangle no
 (load (concat doom-private-dir "yack-private.el"))
@@ -428,6 +433,7 @@ Remove encoding from modeline if its just UTF-8.
 ** Ispell
 #+begin_src emacs-lisp
 (setq ispell-dictionary "en-custom")
+(setq ispell-personal-dictionary (expand-file-name ".ispell_personal" xdg-directory-documents))
 #+end_src
 * Language Configuration
 ** Org Mode
@@ -510,9 +516,9 @@ Display latex inline with fragtog
                    :icon ("check" :set "material" :color "green")
                    :file +org-capture-todo-file
                    :prepend t
-                   :headline "Inbox"
+                   :headline "Soon"
                    :type entry
-                   :template ("* TODO %?"
+                   :template ("* [ ] %?"
                               "%i %a"))
                   ("Personal habit" :keys "h"
                    :icon ("loop" :set "material" :color "blue")
@@ -520,7 +526,7 @@ Display latex inline with fragtog
                    :prepend t
                    :headline "Habits"
                    :type entry
-                   :template ("* TODO %?"
+                   :template ("* [ ] %?"
                               "SCHEDULED: %^{Times:}t"))
                   ("Tasks" :keys "k"
                    :icon ("inbox" :set "octicon" :color "yellow")
@@ -528,7 +534,7 @@ Display latex inline with fragtog
                    :prepend t
                    :headline "Tasks"
                    :type entry
-                   :template ("* TODO %? %^G%{extra}"
+                   :template ("* [ ] %? %^G%{extra}"
                               "%i %a")
                    :children (("General Task" :keys "k"
                                :icon ("inbox" :set "octicon" :color "yellow")
@@ -590,7 +596,8 @@ prefixes.  When you press the key for a single-letter entry, it is selected.
 When you press a prefix key, the commands (and maybe further prefixes)
 under this key will be shown and offered for selection.
 
-TITLE will be placed over the selection in the temporary buffer,
+TITLE doom sync
+ wlljlkwill be placed over the selection in the temporary buffer,
 PROMPT will be used when prompting for a key.  SPECIALS is an
 alist with (\"key\" \"description\") entries.  When one of these
 is selected, only the bare key is returned."
