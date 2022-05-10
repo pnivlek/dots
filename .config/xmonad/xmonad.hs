@@ -52,7 +52,7 @@ myKeysP :: [(String, X ())]
 myKeysP =
   -- Basic commands
   [ ("M-S-<Return>", spawn "urxvtc")
-  , ("M-S-x", spawn "slock")
+  , ("M-S-x", spawn "betterlockscreen -l")
   , ("M-p", spawn "dmenu_run -fn 'PragmataPro for Powerline' -nb '#151515' -nf '#D7D0C7' -sb '#E84F4F' -sf '#151515'")
   , ("M-b", spawn "pkill xmobar")
   , ("M-S-q", kill)
