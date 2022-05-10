@@ -2,6 +2,7 @@ export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d
 export EDITOR="emacs -nw"
 export TERMINAL="urxvtc"
 export READER="zathura"
+export MANPATH="$(manpath):/home/yack/.local/share/man"
 
 # ~/ Clean-up:
 export ZDOTDIR="$HOME/.config/zsh"
@@ -16,4 +17,4 @@ export GOPATH="/home/yack/code/go"
 
 eval "$(ssh-agent -s)"
 
-[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x bspwm > /dev/null && startx
+[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x xmonad > /dev/null && startx
