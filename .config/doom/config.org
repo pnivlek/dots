@@ -33,7 +33,7 @@ This tangles into init.el. Pretty straightforward, defines doom's features.
        ;;(ivy                         ; a search engine for love and life
        ;; +icons                      ; ... icons are nice
        ;; +prescient)                 ; ... I know what I want(ed)
-       vertico			     ; the search engine of the future
+       vertico                      ; the search engine of the future
 
        :ui
        ;;deft                       ; notational velocity for Emacs
