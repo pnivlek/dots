@@ -630,6 +630,30 @@ module. Let's just try to patch on the main things I like the look of.
   )
 #+end_src
 
+* Package Configuration
+** Company
+#+begin_src emacs-lisp
+;; (after! company
+;;   (setq company-idle-delay 0.5
+;;         company-minimum-prefix-length 2)
+;;   (setq company-show-numbers t)
+;;   (add-hook 'evil-normal-state-entry-hook #'company-abort))
+#+end_src
+#+begin_src emacs-lisp
+(set-company-backend!
+  '(text-mode
+    markdown-mode
+    gfm-mode)
+  '(:seperate
+    company-ispell
+    company-files
+    company-yasnippet))
+#+end_src
+** Ispell
+#+begin_src emacs-lisp
+(setq ispell-dictionary "en-custom")
+(setq ispell-personal-dictionary (expand-file-name ".ispell_personal" xdg-directory-documents))
+#+end_src
 * Language Configuration
 ** Org Mode
 :PROPERTIES:

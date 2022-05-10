@@ -1,93 +1,41 @@
-URxvt.font: xft:JetbrainsMono Nerd Font:Medium:size=10
+URxvt.font: xft:PragmataPro for Powerline:pixelsize=13
 URxvt.scrollBar: false
 URxvt*scrollTtyOutput: false
 URxvt*scrollWithBuffer: true
 URxvt*scrollTtyKeypress: true
 
-! ! Base16 Monokai Pro (Spectrum)
-! ! Scheme: Wimer Hazenberg (https://www.monokai.nl)
-! 
-! #define base00 #222222
-! #define base01 #363537
-! #define base02 #525053
-! #define base03 #69676c
-! #define base04 #8b888f
-! #define base05 #f7f1ff
-! #define base06 #fbf8ff
-! #define base07 #ffffff
-! #define base08 #fc618d
-! #define base09 #191919
-! #define base0A #fce566
-! #define base0B #7bd88f
-! #define base0C #5ad4e6
-! #define base0D #948ae3
-! #define base0E #fd9353
-! #define base0F #1e1e1e
-! #define baseCC #363537
-! 
-! *foreground:   base05
-! #ifdef background_opacity
-! *background:   [background_opacity]base00
-! #else
-! *background:   base00
-! #endif
-! *cursorColor:  base05
-! 
-! *color0:       base00
-! *color1:       base08
-! *color2:       base0B
-! *color3:       base0A
-! *color4:       base0D
-! *color5:       base0E
-! *color6:       base0C
-! *color7:       base05
-! 
-! *color8:       base03
-! *color9:       base08
-! *color10:      base0B
-! *color11:      base0A
-! *color12:      base0D
-! *color13:      base0E
-! *color14:      base0C
-! *color15:      base07
-! 
-! ! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
-! ! use 'shell' template to set these if necessary
-! *color16:      base09
-! *color17:      base0F
-! *color18:      base01
-! *color19:      base02
-! *color20:      base04
-! *color21:      base06
+! vim: set filetype=xdefaults :
+*foreground: #D7D0C7
+*background: #151515
 
-! Custom
-! Original theme https://github.com/nathanbuchar/atom-one-dark-terminal
-*.foreground:    #ABB2BF
-*.background:    #1E2127
-*.cursorColor:   #5C6370
-*.highlightColor:#3A3F4B
+!black
+! *color0:     #AF875F
+! *color8:     #AF875F
+*color0:     #101010
+*color8:     #404040
+!red
+*color1:     #E84F4F
+*color9:     #D23D3D
+!green
+*color2:     #B8D68C
+*color10:    #A0CF5D
+!yellow
+*color3:     #E1AA5D
+*color11:    #F39D21
+!blue
+*color4:     #7DC1CF
+*color12:    #4E9FB1
+!magenta
+*color5:     #9B64FB
+*color13:    #8542FF
+!cyan
+*color6:     #6D878D
+*color14:    #42717B
+!white
+*color7:     #dddddd
+*color15:    #dddddd
 
-! Negro y gris
-*.color0:        #1E2127
-*.color8:        #5C6370
-! Rojos
-*.color1:        #E06C75
-*.color9:        #E06C75
-! Verde
-*.color2:        #98C379
-*.color10:       #98C379
-! Amarillo
-*.color3:        #D19A66
-*.color11:       #D19A66
-! Azul
-*.color4:        #61AFEF
-*.color12:       #61AFEF
-! Magenta
-*.color5:        #C678DD
-*.color13:       #C678DD
-! Cyan
-*.color6:        #56B6C2
-*.color14:       #56B6C2
-! Blanco
-*.color7:        #ABB2BF
-*.color15:       #FFFFFF
+URxvt*borderColor:        #151515
+URxvt*colorBD:            #ffffff
+URxvt*cursorColor:        #ff8939
+URxvt*cursorColor2:       #151515
