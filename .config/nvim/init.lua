@@ -26,7 +26,7 @@ require('packer').startup(function(use)
   -- select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-  use 'rebelot/kanagawa.nvim' -- Theme based off the vscode TokyoNight theme.
+  use 'rebelot/kanagawa.nvim' -- Theme based off the great wave of kanagawa.
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
@@ -37,8 +37,7 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter' -- K I S S I N G
   use 'nvim-treesitter/nvim-treesitter-textobjects' -- tree objects go brrr
   ---- Language specific plugins
-  -- use { 'nvim-neorg/neorg', requires = { 'nvim-lua/plenary.nvim' } }
-  use { 'nvim-orgmode/orgmode.nvim' }
+  use { 'nvim-neorg/neorg', requires = {'nvim-lua/plenary.nvim'} }
 end)
 
 --Set path for finding folders.
@@ -137,7 +136,6 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-    { name = 'orgmode' },
   },
 }
 
@@ -145,7 +143,6 @@ cmp.setup {
 require('Comment').setup{}
 
 ---- UI plugins setup
---Set statusbar
 -- Telescope
 require('telescope').setup {
   defaults = {
@@ -280,13 +277,11 @@ lspconfig.sumneko_lua.setup {
 
 -- Treesitter configuration
 
--- Load custom treesitter grammar for orgmode.
-require('orgmode').setup_ts_grammar()
 -- Parsers must be installed manually via :TSInstall
 require('nvim-treesitter.configs').setup {
+  ensure_installed = { "norg" },
   highlight = {
     enable = true, -- false will disable the whole extension
-    additional_vim_regex_highlighting = { 'org' },
   },
   incremental_selection = {
     enable = true,
@@ -335,34 +330,30 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- require('neorg').setup {
---   load = {
---     ["core.defaults"] = {},
---     ["core.norg.dirman"] = {
---       config = {
---         workspaces = {
---           work = "~/doc/norg/work",
---           home = "~/doc/norg/home",
---         }
---       }
---     },
---     ["core.norg.journal"] = {
---       config = {
---         workspace = "home",
---         strategy = "flat",
---       }
---     },
---     ["core.norg.completion"] = {
---       config = {
---         engine = "nvim-cmp",
---       }
---     },
---     ["core.export"] = {}
---   }
--- }
-
-require('orgmode').setup {
-  org_agenda_files = {'/home/yack/doc/org/todo/*',},
-  org_default_notes_file = '/home/yack/doc/org/inbox.org',
+-- Neorg
+require('neorg').setup {
+  load = {
+    ["core.defaults"] = {},
+    ["core.norg.dirman"] = {
+      config = {
+        workspaces = {
+          home = "~/doc/norg/",
+        }
+      }
+    }, 
+    ["core.norg.qol.toc"] = {},
+    ["core.norg.journal"] = {
+      config = {
+        workspace = "home",
+        strategy = "nested",
+      }
+    },
+    ["core.norg.completion"] = {
+      config = {
+        engine = "nvim-cmp",
+      }
+    },
+    ["core.export"] = {},
+  }
 }
 -- vim: ts=2 sts=2 sw=2 et
