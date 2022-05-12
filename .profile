@@ -1,5 +1,5 @@
 export PATH="$PATH:/home/yack/.local/bin:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools:/home/yack/code/go/bin:/opt/devkitpro/devkitPPC/bin"
-export EDITOR="emacs -nw"
+export EDITOR="nvim"
 export TERMINAL="urxvtc"
 export READER="zathura"
 export MANPATH="$(manpath):/home/yack/.local/share/man"
