@@ -3,6 +3,8 @@ import System.Exit
 
 import           XMonad
 
+import           XMonad.Actions.CopyWindow
+
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
@@ -69,6 +71,10 @@ myKeysP =
   -- Password
   , ("M-v", spawn "passmenu -l 5")
   , ("M-S-v", spawn "passmenu --type -l 5")
+  -- Sticky windows
+  , ("M-a"            , windows copyToAll                            ) -- Pin to all workspaces
+  , ("M-C-a"          , killAllOtherCopies                           ) -- remove window from all but current
+  , ("M-S-a"          , kill1                                        ) -- kill this one
   -- Function Keys
   , ("<XF86AudioMute>"        , spawn "amixer sset 'Master' toggle")
   , ("<XF86AudioLowerVolume>" , spawn "amixer sset 'Master' 5%-")
