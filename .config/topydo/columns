@@ -20,7 +20,13 @@ show_all = 0
 
 [Future]
 title = Future
-filterexpr = -due:today -due:tomorrow
+filterexpr = -due:today -due:tomorrow -+Interesting
 sortexpr = desc:importance
 groupexpr = project
+show_all = 0
+
+[Interesting]
+title = Interesting
+filterexpr = +Interesting
+groupexpr = context
 show_all = 0
