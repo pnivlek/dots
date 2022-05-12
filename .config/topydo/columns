@@ -1,0 +1,26 @@
+[Today]
+title = Today
+filterexpr = due:today
+sortexpr = desc:importance
+groupexpr = project
+show_all = 0
+
+[Overdue]
+title = Overdue
+filterexpr = due:<today
+sortexpr = desc:due
+show_all = 1
+
+[Tomorrow]
+title = Tomorrow
+filterexpr = due:tomorrow
+sortexpr = desc:importance
+groupexpr = project
+show_all = 0
+
+[Future]
+title = Future
+filterexpr = -due:today -due:tomorrow
+sortexpr = desc:importance
+groupexpr = project
+show_all = 0

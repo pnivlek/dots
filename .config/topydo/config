@@ -1,0 +1,7 @@
+[topydo]
+archive_filename = /home/yack/doc/todo/done.txt
+filename = /home/yack/doc/todo/todo.txt
+[column]
+column_width = 50
+[colorscheme]
+focus_background_color = darkgray
