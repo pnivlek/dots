@@ -4,6 +4,9 @@ export TERMINAL="urxvtc"
 export READER="zathura"
 export MANPATH="$(manpath):/home/yack/.local/share/man"
 
+# GPG, you're drunk
+export GPG_TTY=$(tty)
+
 # ~/ Clean-up:
 export ZDOTDIR="$HOME/.config/zsh"
 
@@ -15,6 +18,6 @@ export GOPATH="/home/yack/code/go"
 ! pgrep -x mpd >/dev/null && mpd >/dev/null 2>&1 &
 ! pgrep -x mpdscribble >/dev/null && mpdscribble --conf ~/.config/mpdscribble/mpdscribble.conf >/dev/null 2>&1 &
 
-eval "$(ssh-agent -s)"
+! pgrep -x ssh-agent >/dev/null && eval "$(ssh-agent -s)" >/dev/null 2>&1 &
 
 [ "$(tty)" = "/dev/tty1" ] && ! pgrep -x xmonad > /dev/null && startx
