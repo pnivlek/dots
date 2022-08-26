@@ -2,6 +2,7 @@
 
 # Dotfiles
 alias dots='git --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
+alias lgd='lazygit --git-dir=$HOME/.dots.git/ --work-tree=$HOME'
 
 # Anaconda
 alias ana="source /opt/miniconda3/bin/activate"

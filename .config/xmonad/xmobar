@@ -52,5 +52,5 @@ Config { overrideRedirect = False
                     ]
        , sepChar  = "%"
        , alignSep = "}{"
-       , template = " %UnsafeStdinReader% }{ %cpu% | %memory% | %KISP% | %date% "
+       , template = " %UnsafeStdinReader% }{ %cpu% | %memory% | %KISP% | %int% %ext% | %date% "
        }

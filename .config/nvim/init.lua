@@ -37,7 +37,6 @@ require('packer').startup(function(use)
   use 'nvim-treesitter/nvim-treesitter' -- K I S S I N G
   use 'nvim-treesitter/nvim-treesitter-textobjects' -- tree objects go brrr
   ---- Language specific plugins
-  use { 'nvim-neorg/neorg', requires = {'nvim-lua/plenary.nvim'} }
 end)
 
 --Set path for finding folders.
@@ -78,6 +77,9 @@ vim.o.completeopt = 'menuone,noselect'
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+-- Close buffer without closing window
+vim.keymap.set('n', '<C-w>q', ':enew<bar>bd #<cr>', { silent = true })
 
 --Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -141,6 +143,9 @@ cmp.setup {
 
 --Enable Comment.nvim
 require('Comment').setup{}
+
+-- Use a gutentags cache directory
+vim.g.gutentags_cache_dir = '~/.cache/nvim/gutentags/'
 
 ---- UI plugins setup
 -- Telescope
@@ -233,7 +238,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 -- Enable the following language servers
-local servers = { 'clangd', 'gopls', 'rust_analyzer', 'pyright', 'tsserver' }
+local servers = { 'clangd', 'gopls', 'rust_analyzer'}
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -241,7 +246,19 @@ for _, lsp in ipairs(servers) do
   }
 end
 
--- Example custom server
+-- -- Texlab server
+-- lspconfig.texlab.setup {
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   settings = {
+--     texlab = {
+--       build = {
+--         args = { '-pvc', '-pdf', '-interaction=nonstopmode', '-synctex=1', '%f' },
+--       }
+--     }
+--   },
+-- }
+
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
@@ -274,12 +291,9 @@ lspconfig.sumneko_lua.setup {
   },
 }
 
-
 -- Treesitter configuration
-
 -- Parsers must be installed manually via :TSInstall
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "norg" },
   highlight = {
     enable = true, -- false will disable the whole extension
   },
@@ -330,30 +344,4 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- Neorg
-require('neorg').setup {
-  load = {
-    ["core.defaults"] = {},
-    ["core.norg.dirman"] = {
-      config = {
-        workspaces = {
-          home = "~/doc/norg/",
-        }
-      }
-    }, 
-    ["core.norg.qol.toc"] = {},
-    ["core.norg.journal"] = {
-      config = {
-        workspace = "home",
-        strategy = "nested",
-      }
-    },
-    ["core.norg.completion"] = {
-      config = {
-        engine = "nvim-cmp",
-      }
-    },
-    ["core.export"] = {},
-  }
-}
 -- vim: ts=2 sts=2 sw=2 et

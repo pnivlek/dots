@@ -26,7 +26,7 @@ import           XMonad.Hooks.SetWMName
 
 
 myWorkspaces :: [String]
-myWorkspaces = [ "main", "dev1", "dev2", "edu1", "edu2", "msc1", "msc2", "chat" ]
+myWorkspaces = [ "main", "term", "doc", "dev1", "dev2", "edu1", "edu2", "chat", "msc1", "msc2" ]
 
 myManageHook :: ManageHook
 myManageHook =
