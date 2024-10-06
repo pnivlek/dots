@@ -157,6 +157,7 @@ rivertile -view-padding 6 -outer-padding 6 &
 
 # Startup programs
 ! pgrep -x wbg > /dev/null && wbg "$HOME/pic/wal/crshd_orig.png" &
-! pgrep -x yambar > /dev/null && yambar &
+! pgrep -x yambar > /dev/null && yambar -c "$HOME/.config/yambar/$(hostnamectl chassis).yml" &
 ! pgrep -x kanshi > /dev/null && kanshi -c "$HOME/.config/kanshi/config" &
 ! pgrep -x foot > /dev/null && foot --server &
+! pgrep -x swayidle > /dev/null && swayidle -w timeout 300 'swaylock --screenshots --effect-pixelate 15 --effect-greyscale --clock --indicator' &

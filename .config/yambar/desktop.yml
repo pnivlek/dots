@@ -1,0 +1,103 @@
+font1: &pragmata 'PragmataPro for Powerline:pixelsize=32'
+font2: &awesome  'FontAwesome 6 Free:pixelsize=18'
+
+dotshare_crshd:
+    primary:
+      foreground: &foreground 'd7d0c7ff'
+      background: &background '151515ff'
+      background-transparent: '15151599'
+    normal:
+      black:   '101010ff'
+      red:     &date-time-indicator 'e84f4fff'
+      green:   &bat-high-indicator 'b8d68cff'
+      yellow:  &bat-mid-indicator 'e1aa5dff'
+      blue:    '7dc1cfff'
+      magenta: '9b64fbff'
+      cyan:    '6d878dff'
+      white:   &date-date-indicator 'ddddddff'
+    bright:
+      black:  &tag-unfocused '404040ff'
+      red:    &bat-low-indicator 'd23d3dff'
+      red1: &crit-color 'd23d3dff'
+      green:   'a0cf5dff'
+      yellow:  &warn-color 'f39d21ff'
+      blue:   &fg-invisible '4e9fb1ff'
+      magenta: &status-indicator '8542ffff'
+      cyan:   &tag-focused '42717bff'
+      white:   'ddddddff'
+
+warn-underline: &warn-underline {underline: { size: 2, color: *warn-color}}
+crit-underline: &crit-underline {underline: { size: 2, color: *crit-color}}
+
+shared: 
+    on-tag-click: &shared-on-tag-click
+        left: sh -c 'riverctl set-focused-tags $((1 << ({id} - 1)))'
+        right: sh -c 'riverctl toggle-focused-tags $((1 << ({id} - 1)))'
+
+    river-tags: &shared-river-tags
+        map:
+          conditions:
+            state == occupied:
+              string:
+                  margin: 5
+                  text: "{id} "
+                  foreground: *foreground
+                  on-click: *shared-on-tag-click 
+            state == unfocused:
+                string:
+                    margin: 5
+                    text: "{id} "
+                    foreground: *tag-unfocused
+                    on-click: *shared-on-tag-click
+            state == focused:
+                string:
+                    margin: 5
+                    text: "{id} "
+                    foreground: *tag-focused
+                    on-click: *shared-on-tag-click
+            state == invisible && ~occupied: {empty: {}}
+            state == invisible && occupied:
+                string:
+                    margin: 5
+                    text: "{id} "
+                    foreground: *fg-invisible
+                    on-click: *shared-on-tag-click
+      - alsa:
+          card: 'default'
+          mixer: Master
+          content: 
+            list:
+              items:
+                - string:
+                    text: "VOL "
+                    foreground: *status-indicator
+                - string: 
+                    text: "{volume}"
+                - string:
+                    text: " │ "
+      - clock:
+          content:
+              list:
+                  items:
+                      - string:
+                          text: " "
+                          foreground: *status-indicator
+                      - string: 
+                          text: "{date} "
+                          foreground: *date-date-indicator
+                      - string: 
+                          text: "{time}"
+                          foreground: *date-time-indicator
+
+bar:
+    height: 36
+    location: bottom
+    background: *background
+    foreground: *foreground
+    font: *pragmata
+    monitor: eDP-1
+    left:
+        - river:
+            title: {empty: {}}
+            content: *shared-river-tags
+    right: *shared-status
