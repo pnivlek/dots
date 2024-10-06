@@ -287,6 +287,7 @@ require 'lazy'.setup({
         pyright = {},
         ansiblels = {},
         terraformls = {},
+        omnisharp = {cmd = {"/usr/bin/omnisharp"}},
         gopls = {},
         rust_analyzer = {},
         tsserver = {},
