@@ -73,9 +73,6 @@ function mnml_cwd {
 }
 
 function mnml_git {
-    if `echo "$(pwd)" | grep -q "cse416/proj"`; then
-	    return 0
-    fi
     local statc="%{\e[0;3${MNML_OK_COLOR}m%}" # assume clean
     local bname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
 

@@ -1,4 +1,4 @@
-URxvt.font: xft:PragmataPro for Powerline:pixelsize=13
+URxvt.font: xft:PragmataProMono Nerd Font:style=Regular:pixelsize=12
 URxvt.scrollBar: false
 URxvt*scrollTtyOutput: false
 URxvt*scrollWithBuffer: true

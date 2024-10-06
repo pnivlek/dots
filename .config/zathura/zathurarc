@@ -19,7 +19,7 @@ set inputbar-fg "#B8D68C"
 
 set recolor-lightcolor "#151515"
 set recolor-darkcolor "#D7D0C7"
-set recolor "true"
+set recolor "false"
 
 set completion-bg "#151515"
 set completion-fg "#D7D0C7"
