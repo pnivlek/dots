@@ -17,3 +17,8 @@ alias m="f -e mpv"
 alias o="f -e xdg-open"
 
 alias nvim="TERM=tmux-256color nvim"
+
+function cv() { python -m venv $HOME/doc/venv/$1 }
+function av() { source $HOME/doc/venv/$1/bin/activate }
+function dv() { source $HOME/doc/venv/$1/bin/deactivate }
+function lv() { ls $HOME/doc/venv/ }

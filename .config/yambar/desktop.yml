@@ -1,5 +1,5 @@
-font1: &pragmata 'PragmataPro for Powerline:pixelsize=32'
-font2: &awesome  'FontAwesome 6 Free:pixelsize=18'
+font1: &pragmata 'PragmataPro for Powerline:pixelsize=13'
+font2: &awesome  'FontAwesome 6 Free:pixelsize=14'
 
 dotshare_crshd:
     primary:
@@ -62,6 +62,7 @@ shared:
                     text: "{id} "
                     foreground: *fg-invisible
                     on-click: *shared-on-tag-click
+    status: &shared-status
       - alsa:
           card: 'default'
           mixer: Master
@@ -90,7 +91,7 @@ shared:
                           foreground: *date-time-indicator
 
 bar:
-    height: 36
+    height: 14
     location: bottom
     background: *background
     foreground: *foreground

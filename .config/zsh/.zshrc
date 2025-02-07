@@ -15,6 +15,9 @@ setopt INC_APPEND_HISTORY_TIME
 # Completion
 autoload -Uz compinit && compinit
 
+# Use fzf
+source <(fzf --zsh)
+
 # Redefine fasd to use fzf
 j () {
   local dir
@@ -23,6 +26,3 @@ j () {
 
 # Keychain
 eval $(keychain --eval --confhost --quiet id_ed25519 --noask)
-
-# Used for java stuff
-# [[ -s "/home/yack/.sdkman/bin/sdkman-init.sh" ]] && source "/home/yack/.sdkman/bin/sdkman-init.sh"

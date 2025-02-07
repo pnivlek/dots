@@ -1,4 +1,3 @@
-export XKB_DEFAULT_OPTIONS="caps:ctrl_modifier"
 export PATH="$PATH:/home/yack/.local/bin/:/home/yack/pub/bin/:/home/yack/.emacs.d/bin/:/home/yack/.dotnet/tools:/home/yack/code/go/bin:/opt/devkitpro/devkitPPC/bin/:/home/yack/.cargo/bin/"
 export EDITOR="nvim"
 export TERMINAL="urxvtc"
@@ -10,6 +9,8 @@ export GPG_TTY=$(tty)
 
 # ~/ Clean-up:
 export ZDOTDIR="$HOME/.config/zsh"
+
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
 
 # Program settings.
 export SDKMAN_DIR="/home/yack/.sdkman"

@@ -229,6 +229,23 @@ require 'lazy'.setup({
       require('windows').setup()
     end
   },
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+    },
+    keys = {
+      { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+    },
+  },
   -- Add indentation guides even on blank lines
   { 'lukas-reineke/indent-blankline.nvim', name = 'ibl', event = 'VimEnter' },
   -- Add git related info in the signs columns and popups
@@ -253,6 +270,7 @@ require 'lazy'.setup({
   },
   {
     'neovim/nvim-lspconfig',
+    dependencies = { {"Hoffs/omnisharp-extended-lsp.nvim", lazy = true } },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('pnivlek-lsp-attach', { clear = true }),
@@ -287,10 +305,18 @@ require 'lazy'.setup({
         pyright = {},
         ansiblels = {},
         terraformls = {},
-        omnisharp = {cmd = {"/usr/bin/omnisharp"}},
+        omnisharp = {
+          cmd = { "/usr/bin/omnisharp" },
+          handlers = {
+            ["textDocument/definition"] = require('omnisharp_extended').definition_handler,
+            ["textDocument/typeDefinition"] = require('omnisharp_extended').type_definition_handler,
+            ["textDocument/references"] = require('omnisharp_extended').references_handler,
+            ["textDocument/implementation"] = require('omnisharp_extended').implementation_handler,
+          },
+        },
         gopls = {},
         rust_analyzer = {},
-        tsserver = {},
+        ts_ls = {},
         bashls = {},
         lua_ls = {
           diagnostics = { globals = { 'vim', 'require' } }
