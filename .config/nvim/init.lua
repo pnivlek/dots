@@ -151,18 +151,27 @@ require 'lazy'.setup({
     end
   },
   -- UI
+  -- {
+  --   'dgox16/oldworld.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     require 'oldworld'.setup {
+  --       styles = {
+  --         comments = { italic = true },
+  --       },
+  --     }
+  --     vim.cmd.colorscheme("oldworld")
+  --   end,
+  -- },
   {
-    'dgox16/oldworld.nvim',
+    'ribru17/bamboo.nvim',
     lazy = false,
     priority = 1000,
     config = function()
-      require 'oldworld'.setup {
-        styles = {
-          comments = { italic = true },
-        },
-      }
-      vim.cmd.colorscheme("oldworld")
-    end,
+      require('bamboo').setup {}
+      vim.cmd.colorscheme('bamboo')
+    end
   },
   {
     'nvim-lualine/lualine.nvim',
@@ -270,7 +279,12 @@ require 'lazy'.setup({
   },
   {
     'neovim/nvim-lspconfig',
-    dependencies = { {"Hoffs/omnisharp-extended-lsp.nvim", lazy = true } },
+    dependencies = {
+      { 'williamboman/mason.nvim',           opts = {} },
+      'williamboman/mason-lspconfig.nvim',
+      'WhoIsSethDaniel/mason-tool-installer.nvim',
+      { "Hoffs/omnisharp-extended-lsp.nvim", lazy = true },
+    },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('pnivlek-lsp-attach', { clear = true }),
@@ -281,7 +295,7 @@ require 'lazy'.setup({
           vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
           vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
           vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-          vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+          vim.keymap.set('n', 'gk', vim.lsp.buf.signature_help, opts)
           vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
           vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
           vim.keymap.set('n', '<leader>wl', function()
@@ -302,11 +316,21 @@ require 'lazy'.setup({
       capabilities = vim.tbl_deep_extend('force', capabilities, require 'cmp_nvim_lsp'.default_capabilities())
 
       local servers = {
-        pyright = {},
+        bashls = {},
         ansiblels = {},
         terraformls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              directoryFilters = {
+                "-bazel-bin",
+                "-bazel-out",
+                "-bazel-testlogs",
+              },
+            },
+          },
+        },
         omnisharp = {
-          cmd = { "/usr/bin/omnisharp" },
           handlers = {
             ["textDocument/definition"] = require('omnisharp_extended').definition_handler,
             ["textDocument/typeDefinition"] = require('omnisharp_extended').type_definition_handler,
@@ -314,18 +338,28 @@ require 'lazy'.setup({
             ["textDocument/implementation"] = require('omnisharp_extended').implementation_handler,
           },
         },
-        gopls = {},
-        rust_analyzer = {},
-        ts_ls = {},
-        bashls = {},
-        lua_ls = {
-          diagnostics = { globals = { 'vim', 'require' } }
-        }
+        golangci_lint_ls = {},
+        lua_ls = { diagnostics = { globals = { 'vim', 'require' } }
+        },
+        jdtls = {},
+        pyright = {},
       }
-      for server, config in pairs(servers) do
-        config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-        require 'lspconfig'[server].setup(config)
-      end
+
+      local ensure_installed = vim.tbl_keys(servers or {})
+      vim.list_extend(ensure_installed, {
+        'stylua', -- Used to format Lua code
+      })
+      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+      require('mason-lspconfig').setup {
+        handlers = {
+          function(server_name)
+            local server = servers[server_name] or {}
+            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            require('lspconfig')[server_name].setup(server)
+          end,
+        },
+      }
     end
   },
   ---- Tools

@@ -25,4 +25,4 @@ j () {
 }
 
 # Keychain
-eval $(keychain --eval --confhost --quiet id_ed25519 --noask)
+eval $(keychain --eval --quiet id_ed25519 --noask)

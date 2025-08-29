@@ -1,3 +1,8 @@
 profile "scaled" {
  output eDP-1 scale 1.3229
 }
+
+profile "desktop" {
+  output HDMI-A-2 mode 1920x1080@60Hz position 0,320
+  output HDMI-A-1 mode 2560x1440@60Hz position 1920,0
+}
