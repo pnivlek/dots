@@ -147,8 +147,9 @@ riverctl map normal Control Print spawn 'grim -g "$(slurp)"'
 riverctl border-color-focused 0xd7d0c7
 riverctl border-color-unfocused 0x151515
 
-# Set keyboard repeat rate
+# Set keyboard repeat rate/layout
 riverctl set-repeat 50 300
+riverctl keyboard-layout -options ctrl:nocaps us
 
 # Set the default layout generator to be rivertile and start it.
 # River will send the process group of the init executable SIGTERM on exit.
