@@ -1,0 +1,7 @@
+/* https://codeberg.org/river/river/issues/24#issuecomment-1708014 */
+.titlebar, .css, headerbar {
+  background-image:none;
+  background-color:transparent;
+  margin-top:-100px;
+  margin-bottom:50px;
+}
