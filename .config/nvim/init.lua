@@ -1,4 +1,3 @@
-
 --Set path for finding folders.
 vim.o.path = vim.o.path .. "**"
 
@@ -596,5 +595,42 @@ require("lazy").setup({
 		end,
 	},
 	"hashivim/vim-terraform",
+	{
+		"ramilito/kubectl.nvim",
+		-- use a release tag to download pre-built binaries
+		version = "2.*",
+		-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+		-- build = 'cargo build --release',
+		dependencies = "saghen/blink.download",
+		config = function()
+			require("kubectl").setup()
+			vim.keymap.set(
+				"n",
+				"<leader>k",
+				'<cmd>lua require("kubectl").toggle()<cr>',
+				{ noremap = true, silent = true }
+			)
+		end,
+	},
+	{
+		"someone-stole-my-name/yaml-companion.nvim",
+		dependencies = {
+			{ "neovim/nvim-lspconfig" },
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-telescope/telescope.nvim" },
+		},
+		config = function()
+			require("telescope").load_extension("yaml_schema")
+		end,
+	},
+	{
+		"lervag/vimtex",
+		lazy = false, -- we don't want to lazy load VimTeX
+		-- tag = "v2.15", -- uncomment to pin to a specific release
+		init = function()
+			-- VimTeX configuration goes here, e.g.
+			vim.g.vimtex_view_method = "zathura"
+		end,
+	},
 }, {})
 -- vim: ts=2 sts=2 sw=2 et
